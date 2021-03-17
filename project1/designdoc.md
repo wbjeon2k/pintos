@@ -65,6 +65,11 @@ make has_yielded variable in thread data structure
 if the thread has been yielded, sleep for timeslice  
 it will prevent threads from waiting infinitely  
 
+running->waiting: sleep, sema_down, sleep when has_yield
+->ready: sema_up, wakeup, new thread, time slice yield
+
+add sleep tick, ready tick, wait tick, last_priority_update_tick -> use it to aging
+
 original quote from FAQ
 
 What thread should run after a lock has been released?
@@ -74,3 +79,9 @@ What thread should run after a lock has been released?
 If the highest-priority thread yields, does it continue running?
 
     Yes. If there is a single highest-priority thread, it continues running until it blocks or finishes, even if it calls thread_yield(). If multiple threads have the same highest priority, thread_yield() should switch among them in "round robin" order. 
+
+### Set priority  
+
+if thread is ready: erase thread from ready list, change priority, reorder, schedule
+if thread is waiting: just change priority, order at sema_up
+if thread is running: change priority, yield
