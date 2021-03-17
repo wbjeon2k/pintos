@@ -118,7 +118,7 @@ void thread_start (void);
 //now is the current time, given by timer_interrupt
 void thread_tick(int64_t now);
 void thread_sleep(int64_t wakeup);
-//void thread_wakeup(int64_t now);
+void thread_wakeup(int64_t now);
 void thread_print_stats (void);
 
 typedef void thread_func (void *aux);

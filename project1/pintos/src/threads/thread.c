@@ -192,7 +192,7 @@ thread_tick (int64_t now)
   else
     kernel_ticks++;
 
-  //for (e = list_begin (list); e != list_end (list); e = list_next (e))
+  thread_wakeup(now);
 
   /* Enforce preemption. */
   if (++thread_ticks >= TIME_SLICE)
@@ -212,15 +212,43 @@ thread_sleep(int64_t wakeup) {
     thread_block();
 }
 
+
+/*
+wakeup thread if wakeup time has passed
+
+   Iteration is a typical situation where it is necessary to
+   convert from a struct list_elem back to its enclosing
+   structure.  Here's an example using foo_list:
+
+      struct list_elem *e;
+
+      for (e = list_begin (&foo_list); e != list_end (&foo_list);
+           e = list_next (e))
+        {
+          struct foo *f = list_entry (e, struct foo, elem);
+          ...do something with f...
+        }
+*/
 void
-thread_wake() {
+thread_wakeup(int64_t now) {
     struct list_elem* e;
+    enum intr_level old_level;
 
     for (e = list_begin(&sleeping_list); e != list_end(&sleeping_list);
         e = sleeping_next(e))
     {
         struct thread* f = list_entry(e, struct thread, sleeping_elem);
+        //interrupt off. atomically executed
+        if (f->wakeup_tick <= now) {
+            old_level = intr_disable();
 
+            f->wakeup_tick = -1;
+            list_remove(&f->sleep_elem);
+            thread_unblock(f);
+
+            intr_set_level(old_level);
+        }
+        else break;
     }
 }
 
