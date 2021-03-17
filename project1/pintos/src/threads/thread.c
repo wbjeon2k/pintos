@@ -163,8 +163,11 @@ struct list_elem *e;
         }
 */
 bool comparator_sleep_time(const struct list_elem* a, const struct list_elem* b, void* aux UNUSED) {
-    ASSERT(a == NULL || b == NULL);
-    if (a->wakeup_tick < b->wakeup_tick) return true;
+    ASSERT(a != NULL && b != NULL);
+    struct thread* thread_a = list_entry(a, struct thread, sleeping_elem);
+    struct thread* thread_b = list_entry(b, struct thread, sleeping_elem);
+
+    if (thread_a->wakeup_tick < thread_b->wakeup_tick) return true;
     else return false;
 }
 
@@ -235,7 +238,7 @@ thread_wakeup(int64_t now) {
     enum intr_level old_level;
 
     for (e = list_begin(&sleeping_list); e != list_end(&sleeping_list);
-        e = sleeping_next(e))
+        e = list_next(e))
     {
         struct thread* f = list_entry(e, struct thread, sleeping_elem);
         //interrupt off. atomically executed
