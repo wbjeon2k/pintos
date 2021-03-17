@@ -1,4 +1,5 @@
 This is a designdoc for my own.
+Original document is written by hand.
 Readability will not be considered.
 
 # Original semantics & How to improve
@@ -24,3 +25,35 @@ make a waiting queue only for sleeping,
 insert in waking order,
 check which thread to wake for each thread_tick
 if a thread is awake, put it into ready_list.
+
+## Priority scheduling
+
+Original:
+thread data structure has a priority variable,
+but original skeleton code does not use it in anywhere.
+
+thread_tick yields after timeslice
+thread_yield put it into ready queue and call schedule
+thread_block set the current thread into blocked and call schedule
+thread_unblock push the thread into ready list
+next_thread pop_fronts ready list
+schedule checks if cur is blocked, change with next
+
+each semaphores have their own waiter list
+semadown push thread into waiter, block it, sema--
+semaup 
+
+How to improve:
+use list_insert_ordered in list.c
+use comparator functions like in C++ STL vector.
+each insert operation: O(N) -> fast enough?
+
+every lists are ordered by ascending order. priority,sleeping time, sema waiting ....
+use pop_back to get the maximum, pop_front vice versa.
+
+implement aging
+record the time when it is  pushed into whatever wating queue(sleep, sema,...)
+after some time ticks, increase priority
+
+to prevent starvation
+original thread_tick yields after time slice
