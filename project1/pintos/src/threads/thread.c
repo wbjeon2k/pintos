@@ -165,7 +165,7 @@ struct list_elem *e;
 bool comparator_sleep_time(const struct list_elem* a, const struct list_elem* b, void* aux UNUSED) {
     ASSERT(a != NULL && b != NULL);
     struct thread* thread_a = list_entry(a, struct thread, sleeping_elem);
-    struct thread* thread_b = list_entry(b, struct thread, sleeping_elem);
+    struct thread* thread_b = list_entry(b, struct thread, elem);
 
     if (thread_a->wakeup_tick < thread_b->wakeup_tick) return true;
     else return false;
@@ -211,7 +211,7 @@ void
 thread_sleep(int64_t wakeup) {
     struct thread* t = thread_current();
     t->wakeup_tick = wakeup;
-    list_insert_ordered(&sleeping_list, &t->sleep_elem, comparator_sleep_time);
+    list_insert_ordered(&sleeping_list, &t->sleep_elem, comparator_sleep_time, NULL);
     thread_block();
 }
 
