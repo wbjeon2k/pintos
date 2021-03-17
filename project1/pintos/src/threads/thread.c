@@ -210,10 +210,16 @@ push it into sleeping list by ascending order
 */
 void
 thread_sleep(int64_t wakeup) {
+    enum intr_level old_level;
+    old_level = intr_disable();
+
     struct thread* t = thread_current();
+    ASSERT(t->status == THREAD_RUNNING);
     t->wakeup_tick = wakeup;
     list_insert_ordered(&sleeping_list, &t->sleep_elem, comparator_sleep_time, NULL);
     thread_block();
+
+    intr_set_level(old_level);
 }
 
 
@@ -237,6 +243,7 @@ void
 thread_wakeup(int64_t now) {
     struct list_elem* e;
     enum intr_level old_level;
+    old_level = intr_disable();
 
     for (e = list_begin(&sleeping_list); e != list_end(&sleeping_list);
         e = list_next(e))
@@ -244,16 +251,18 @@ thread_wakeup(int64_t now) {
         struct thread* f = list_entry(e, struct thread, sleep_elem);
         //interrupt off. atomically executed
         if (f->wakeup_tick <= now) {
-            old_level = intr_disable();
+            
 
             f->wakeup_tick = -1;
             list_remove(&f->sleep_elem);
             thread_unblock(f);
 
-            intr_set_level(old_level);
+            
         }
         else break;
     }
+
+    intr_set_level(old_level);
 }
 
 /* Prints thread statistics. */
