@@ -28,6 +28,10 @@ static struct list ready_list;
    when they are first scheduled and removed when they exit. */
 static struct list all_list;
 
+static struct list sleeping_list;
+
+
+
 /* Idle thread. */
 static struct thread *idle_thread;
 
@@ -46,6 +50,9 @@ struct kernel_thread_frame
   };
 
 /* Statistics. */
+static long long cur_ticks; // same with ticks in timer.c
+
+/*original ticks*/
 static long long idle_ticks;    /* # of timer ticks spent idle. */
 static long long kernel_ticks;  /* # of timer ticks in kernel threads. */
 static long long user_ticks;    /* # of timer ticks in user programs. */
@@ -117,10 +124,61 @@ thread_start (void)
   sema_down (&idle_started);
 }
 
+//return true if wakeup time of a is earlier than b, vice versa 
+
+/*
+
+ The list_entry macro allows conversion from a
+   struct list_elem back to a structure object that contains it.
+
+   For example, suppose there is a needed for a list of `struct
+   foo'.  `struct foo' should contain a `struct list_elem'
+   member, like so:
+
+      struct foo
+        {
+          struct list_elem elem;
+          int bar;
+          ...other members...
+        };
+
+   Then a list of `struct foo' can be be declared and initialized
+   like so:
+
+      struct list foo_list;
+
+      list_init (&foo_list);
+
+   Iteration is a typical situation where it is necessary to
+   convert from a struct list_elem back to its enclosing
+   structure.  Here's an example using foo_list:
+
+struct list_elem *e;
+
+      for (e = list_begin (&foo_list); e != list_end (&foo_list);
+           e = list_next (e))
+        {
+          struct foo *f = list_entry (e, struct foo, elem);
+          ...do something with f...
+        }
+*/
+bool comparator_sleep_time(const struct list_elem* a, const struct list_elem* b, void* aux UNUSED) {
+    ASSERT(a == NULL || b == NULL);
+    if (a->wakeup_tick < b->wakeup_tick) return true;
+    else return false;
+}
+
+
+//original
 /* Called by the timer interrupt handler at each timer tick.
    Thus, this function runs in an external interrupt context. */
+//custom
+/* iterate through sleeping_list,
+   wake up threads when wakeuptime <= now
+   wake threads are pushed into ready queue
+   */
 void
-thread_tick (void) 
+thread_tick (int64_t now) 
 {
   struct thread *t = thread_current ();
 
@@ -134,9 +192,36 @@ thread_tick (void)
   else
     kernel_ticks++;
 
+  //for (e = list_begin (list); e != list_end (list); e = list_next (e))
+
   /* Enforce preemption. */
   if (++thread_ticks >= TIME_SLICE)
     intr_yield_on_return ();
+}
+
+/*
+set wakeup time,
+push it into sleeping list by ascending order
+(&ready_list, &t->elem);
+*/
+void
+thread_sleep(int64_t wakeup) {
+    struct thread* t = thread_current();
+    t->wakeup_tick = wakeup;
+    list_insert_ordered(&sleeping_list, &t->sleep_elem, comparator_sleep_time);
+    thread_block();
+}
+
+void
+thread_wake() {
+    struct list_elem* e;
+
+    for (e = list_begin(&sleeping_list); e != list_end(&sleeping_list);
+        e = sleeping_next(e))
+    {
+        struct thread* f = list_entry(e, struct thread, sleeping_elem);
+
+    }
 }
 
 /* Prints thread statistics. */

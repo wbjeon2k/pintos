@@ -88,6 +88,10 @@ struct thread
     char name[16];                      /* Name (for debugging purposes). */
     uint8_t *stack;                     /* Saved stack pointer. */
     int priority;                       /* Priority. */
+
+    uint64_t wakeup_tick; // time to wake up
+    struct list_elem sleep_elem;
+
     struct list_elem allelem;           /* List element for all threads list. */
 
     /* Shared between thread.c and synch.c. */
@@ -110,7 +114,11 @@ extern bool thread_mlfqs;
 void thread_init (void);
 void thread_start (void);
 
-void thread_tick (void);
+//void thread_tick (void);
+//now is the current time, given by timer_interrupt
+void thread_tick(int64_t now);
+void thread_sleep(int64_t wakeup);
+//void thread_wakeup(int64_t now);
 void thread_print_stats (void);
 
 typedef void thread_func (void *aux);
@@ -132,6 +140,13 @@ void thread_foreach (thread_action_func *, void *);
 
 int thread_get_priority (void);
 void thread_set_priority (int);
+
+//return true if wakeup time of a is earlier than b, vice versa 
+bool comparator_sleep_time(const struct list_elem* a,
+    const struct list_elem* b,
+    void* aux UNUSED);
+
+
 
 int thread_get_nice (void);
 void thread_set_nice (int);

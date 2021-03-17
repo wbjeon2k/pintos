@@ -1,6 +1,6 @@
-This is a designdoc for my own.
-Original document is written by hand.
-Readability will not be considered.
+This is a designdoc for my own.  
+Original document is written by hand.  
+Readability will not be considered.  
 
 # Original semantics & How to improve
 
@@ -22,6 +22,8 @@ thread_tick checks each thread's running time / idle time
 add a variable sleep_ticks in thread data structure
 make thread_tick check sleep_ticks like other _ticks variable.
 
+thread_tick(void) -> thread_tick(now). get time right now as parameter  
+wakeuptime >= now then wake up  
 sleeping makes running -> waiting state.  
 make a waiting queue only for sleeping,  
 insert in waking order,  
@@ -34,6 +36,7 @@ if a thread is awake, put it into ready_list.
 
 thread data structure has a priority variable,
 but original skeleton code does not use it in anywhere.
+
 
 thread_tick yields after timeslice  
 thread_yield put it into ready queue and call schedule  
@@ -82,6 +85,6 @@ If the highest-priority thread yields, does it continue running?
 
 ### Set priority  
 
-if thread is ready: erase thread from ready list, change priority, reorder, schedule
-if thread is waiting: just change priority, order at sema_up
-if thread is running: change priority, yield
+if thread is ready: erase thread from ready list, change priority, reorder, schedule  
+if thread is waiting: just change priority, order at sema_up  
+if thread is running: change priority, yield  
