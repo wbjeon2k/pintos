@@ -57,3 +57,15 @@ after some time ticks, increase priority
 
 to prevent starvation
 original thread_tick yields after time slice
+make has_yielded variable in thread data structure
+if the thread has been yielded, sleep for timeslice
+it will prevent threads from waiting infinitely
+
+original quote from FAQ
+What thread should run after a lock has been released?
+
+    When a lock is released, the highest priority thread waiting for that lock should be unblocked and put on the list of ready threads. The scheduler should then run the highest priority thread on the ready list.
+
+If the highest-priority thread yields, does it continue running?
+
+    Yes. If there is a single highest-priority thread, it continues running until it blocks or finishes, even if it calls thread_yield(). If multiple threads have the same highest priority, thread_yield() should switch among them in "round robin" order. 
