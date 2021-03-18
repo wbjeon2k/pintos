@@ -549,6 +549,8 @@ thread_set_priority (int new_priority)
     if (!list_empty(&ready_list)) {
         struct thread* t = list_back(&ready_list);
         ///if (t->priority >= thread_current()->priority) thread_yield();
+        printf("ready %s priority %d\n", t->name, t->priority);
+        printf("current %s priority %d\n", thread_current()->name, thread_current()->priority);
         if (t->priority > thread_current()->priority) thread_yield();
     }
 
