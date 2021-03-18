@@ -239,6 +239,7 @@ thread_sleep(int64_t wakeup) {
 
     struct thread* t = thread_current();
     ASSERT(t->status == THREAD_RUNNING);
+
     t->wakeup_tick = wakeup;
     t->ready_tick = -1;
     list_insert_ordered(&sleeping_list, &t->sleep_elem, comparator_sleep_time, NULL);
@@ -282,7 +283,7 @@ thread_wakeup(int64_t now) {
             thread_unblock(f);
             
         }
-        else break;
+        //else break;
     }
 
     // schedule(); // no need
@@ -409,7 +410,7 @@ thread_unblock (struct thread *t)
 
   t->status = THREAD_READY;
 
-  list_sort(&ready_list, comparator_priority_ready_time, NULL);
+  //list_sort(&ready_list, comparator_priority_ready_time, NULL);
 
   //waiting->ready °¥ ¶§µµ scheduling, preemptive
   //schedule();
@@ -524,6 +525,8 @@ thread_set_priority (int new_priority)
     ///*
     enum intr_level old_level;
     old_level = intr_disable();
+
+    ASSERT(thread_current()->status == THREAD_RUNNING);
 
     thread_current()->priority = new_priority;
     thread_yield();
