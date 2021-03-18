@@ -16,3 +16,5 @@ waiting, exiting, ready 고려할 필요 없음.
 
 sleep tick 이 0 이 될수도 있다!
 sleep tick 0 보다 커야만 재우기?  
+thread create 에 문제가 있다.  
+왜 priority change 에서 changing threads 가 실행도 안되고  종료?  
