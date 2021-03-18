@@ -151,10 +151,11 @@ bool comparator_priority(const struct list_elem* a, const struct list_elem* b, v
 
 void
 thread_sleep(int64_t ticks) {
-    enum intr_level old_level;
-    old_level = intr_disable();
 
     if (ticks < current_tick) return;
+
+    enum intr_level old_level;
+    old_level = intr_disable();
 
     struct thread* t = thread_current();
     t->wakeup_tick = ticks;
