@@ -89,8 +89,6 @@ struct thread
     uint8_t *stack;                     /* Saved stack pointer. */
     int priority;                       /* Priority. */
 
-    int64_t now_tick;
-
     int64_t waiting_tick;
     int64_t ready_tick;//time elapsed since push into ready queue
     int64_t wakeup_tick; // time to wake up
