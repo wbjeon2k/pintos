@@ -28,6 +28,8 @@ static struct list ready_list;
    when they are first scheduled and removed when they exit. */
 static struct list all_list;
 
+static struct list sleeping_list;
+
 /* Idle thread. */
 static struct thread *idle_thread;
 
@@ -49,6 +51,8 @@ struct kernel_thread_frame
 static long long idle_ticks;    /* # of timer ticks spent idle. */
 static long long kernel_ticks;  /* # of timer ticks in kernel threads. */
 static long long user_ticks;    /* # of timer ticks in user programs. */
+
+static int64_t current_tick;
 
 /* Scheduling. */
 #define TIME_SLICE 4            /* # of timer ticks to give each thread. */
@@ -92,6 +96,7 @@ thread_init (void)
   lock_init (&tid_lock);
   list_init (&ready_list);
   list_init (&all_list);
+  list_init(&sleeping_list);
 
   /* Set up a thread structure for the running thread. */
   initial_thread = running_thread ();
@@ -117,10 +122,50 @@ thread_start (void)
   sema_down (&idle_started);
 }
 
+//ascending order. sleeping time increases.
+bool comparator_sleep(const struct list_elem* a, const struct list_elem* b, void* aux) {
+    struct thread* thread_a, thread_b;
+    thread_a = list_entry(a, struct thread, sleep_elem);
+    thread_b = list_entry(a, struct thread, sleep_elem);
+
+    if (thread_a->wakeup_tick > thread_b->wakeup_tick) return true;
+    else return false;
+}
+
+void
+thread_sleep(int64_t ticks) {
+    enum intr_level old_level;
+    old_level = intr_disable();
+
+    struct thread* t = thread_current();
+    t->wakeup_tick = ticks;
+    list_insert_ordered(&sleeping_list, &t->sleep_elem, comparator_sleep, NULL);
+    thread_block();
+
+    intr_set_level(old_level);
+}
+
+void
+thread_wakeup(int64_t now) {
+    struct list_elem* e;
+    for (e = list_begin(&sleeping_list); e != list_end(&sleeping_list); e = list_next(e)) {
+        struct thread* tmp = list_entry(e, struct thread, sleep_elem);
+        if (tmp->wakeup_tick <= now) {
+            enum intr_level old_level;
+            old_level = intr_disable();
+
+            list_remove(&tmp->sleep_elem);
+            thread thread_unblock(tmp);
+
+            intr_set_level(old_level);
+        }
+    }
+}
+
 /* Called by the timer interrupt handler at each timer tick.
    Thus, this function runs in an external interrupt context. */
 void
-thread_tick (void) 
+thread_tick (int64_t now) 
 {
   struct thread *t = thread_current ();
 
@@ -133,6 +178,9 @@ thread_tick (void)
 #endif
   else
     kernel_ticks++;
+
+  current_ticks = now;
+  thread_wakeup(now);
 
   /* Enforce preemption. */
   if (++thread_ticks >= TIME_SLICE)
