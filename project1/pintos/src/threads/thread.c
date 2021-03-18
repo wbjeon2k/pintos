@@ -146,14 +146,14 @@ void thread_sleep(int64_t wakeuptime) {
 }
 
 void thread_wakeup(int64_t now) {
-    enum intr_level = old_level;
+    enum intr_level old_level;
     old_level = intr_disable();
 
     struct list_elem* e;
     for (e = list_begin(&sleeping_list); e != list_end(&sleeping_list); e = list_next(e)) {
         struct t = list_entry(e, struct thread, sleep_elem);
         if (t->wakeup_tick <= now) {
-            list_remove(&sleeping_list, e);
+            list_remove(e);
             thread_unblock(t);
         }
     }
