@@ -186,12 +186,15 @@ bool comparator_priority_ready_time(const struct list_elem* a, const struct list
     struct thread* thread_b = list_entry(b, struct thread, elem);
 
     if (thread_a->priority < thread_b->priority) return true;
+    else return false;
+    /*
     if (thread_a->priority > thread_b->priority) return false;
 
     ASSERT(thread_a->priority == thread_b->priority);
 
     if (thread_a->ready_tick > thread_b->ready_tick) return true;
     else return false;
+    */
 }
 
 
@@ -483,6 +486,9 @@ thread_yield (void)
   ASSERT (!intr_context ());
 
   old_level = intr_disable ();
+
+  ASSERT(cur->status == THREAD_RUNNING);
+
   /****change as priority list_insert_ordered****/
   if (cur != idle_thread){
       cur->ready_tick = cur_ticks;
