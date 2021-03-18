@@ -525,10 +525,8 @@ thread_set_priority (int new_priority)
     enum intr_level old_level;
     old_level = intr_disable();
 
-    if (now_status == THREAD_RUNNING) {
-        thread_current()->priority = new_priority;
-        thread_yield();
-    }
+    thread_current()->priority = new_priority;
+    thread_yield();
 
     intr_set_level(old_level);
     return;
