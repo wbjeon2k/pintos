@@ -135,7 +135,8 @@ bool comparator_sleep(const struct list_elem* a, const struct list_elem* b, void
 }
 
 void thread_sleep(int64_t wakeuptime) {
-    enum intr_level = old_level;
+    int a;
+    enum intr_level old_level;
     old_level = intr_disable();
 
     list_insert_sorted(&sleeping_list, thread_current()->sleep_elem, comparator_sleep, NULL);
