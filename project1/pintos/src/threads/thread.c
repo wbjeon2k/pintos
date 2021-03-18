@@ -541,7 +541,8 @@ thread_set_priority (int new_priority)
     thread_current()->priority = new_priority;
 
     struct thread* t = list_back(&ready_list);
-    if (t->priority >= thread_current()->priority) thread_yield();
+    ///if (t->priority >= thread_current()->priority) thread_yield();
+    if (t->priority > thread_current()->priority) thread_yield();
 
     intr_set_level(old_level);
     return;
