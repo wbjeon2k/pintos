@@ -64,7 +64,7 @@ sema_down (struct semaphore *sema)
 
   ASSERT (sema != NULL);
   ASSERT (!intr_context ());
-
+  printf("sema value %d\n", sema->value);
   old_level = intr_disable ();
   while (sema->value == 0) 
     {
