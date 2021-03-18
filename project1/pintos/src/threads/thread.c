@@ -577,6 +577,7 @@ next_thread_to_run (void)
   else {
       list_sort(&ready_list, comparator_priority, NULL);
       struct thread* ret = list_entry(list_pop_back(&ready_list), struct thread, elem);
+      return ret;
   }
     
 }
