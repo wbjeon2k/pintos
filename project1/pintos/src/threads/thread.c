@@ -151,7 +151,7 @@ void thread_wakeup(int64_t now) {
 
     struct list_elem* e;
     for (e = list_begin(&sleeping_list); e != list_end(&sleeping_list); e = list_next(e)) {
-        struct t = list_entry(e, struct thread, sleep_elem);
+        struct thread* t = list_entry(e, struct thread, sleep_elem);
         if (t->wakeup_tick <= now) {
             list_remove(e);
             thread_unblock(t);
