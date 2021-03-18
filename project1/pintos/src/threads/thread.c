@@ -540,14 +540,17 @@ thread_set_priority (int new_priority)
     }
 
     /*test code*/
+    struct list_elem* e;
     for (e = list_begin(&ready_list); e != list_end(&ready_list);
         e = list_next(e))
     {
-        struct thread* t = list_entry(e, struct thread, allelem);
-        printf("thread %d's priority %d\n", t->tid, t->priority);
+        struct thread* t = list_entry(e, struct thread, ready_elem);
+        printf("thread %d priority %d\n", t->tid, t->priority);
     }
 
-    printf("current %d's priority %d\n", thead_current()->tid, thread_current()->priority);
+    printf("current %d priority %d\n", thead_current()->tid, thread_current()->priority);
+
+    /*test code*/
 
     intr_set_level(old_level);
     return;
