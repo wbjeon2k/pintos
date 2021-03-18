@@ -365,7 +365,8 @@ thread_create (const char *name, int priority,
 
   /* Add to run queue. */
   thread_unblock (t);
-
+    
+  printf("priority %d current prio %d\n", priority, thread->current()->priority);
   if (priority > thread_current()->priority) thread_yield();
 
   return tid;
