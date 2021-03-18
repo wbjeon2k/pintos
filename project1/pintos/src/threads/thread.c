@@ -218,7 +218,7 @@ thread_tick (int64_t now)
   else
     kernel_ticks++;
 
-  now_tick = now;
+  //now_tick = now;
   cur_ticks = now;
   thread_wakeup(now);
 
@@ -480,7 +480,7 @@ thread_yield (void)
 
   old_level = intr_disable ();
   /****change as priority list_insert_ordered****/
-  if (cur != idle_thread{
+  if (cur != idle_thread){
       cur->ready_tick = cur_ticks;
       //list_insert_ordered(&ready_list, &t->elem, comparator_priority_ready_time, NULL);
       list_push_back(&ready_list, &cur->elem);
