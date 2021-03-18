@@ -408,8 +408,10 @@ thread_unblock (struct thread *t)
 
   t->status = THREAD_READY;
 
+  list_sort(&ready_list, comparator_priority_ready_time, NULL);
+
   //waiting->ready °¥ ¶§µµ scheduling, preemptive
-  schedule();
+  //schedule();
 
   intr_set_level (old_level);
 }
