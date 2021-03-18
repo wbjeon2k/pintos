@@ -287,6 +287,8 @@ thread_wakeup(int64_t now) {
         else break;
     }
 
+    // schedule(); // no need
+
     intr_set_level(old_level);
 }
 
@@ -402,9 +404,15 @@ thread_unblock (struct thread *t)
   //list_push_back (&ready_list, &t->elem);
   t->waiting_tick = -1;
   t->ready_tick = cur_ticks;
-  list_insert_ordered(&ready_list, &t->elem, comparator_priority_ready_time, NULL);
+  //list_insert_ordered(&ready_list, &t->elem, comparator_priority_ready_time, NULL);
+  list_push_back(&ready_list, &t->elem);
+  //sort at next_thread
 
   t->status = THREAD_READY;
+
+  //waiting->ready °¥ ¶§µµ scheduling, preemptive
+  schedule();
+
   intr_set_level (old_level);
 }
 
@@ -476,7 +484,8 @@ thread_yield (void)
   /****change as priority list_insert_ordered****/
   if (cur != idle_thread{
       cur->ready_tick = cur_ticks;
-      list_insert_ordered(&ready_list, &t->elem, comparator_priority_ready_time, NULL);
+      //list_insert_ordered(&ready_list, &t->elem, comparator_priority_ready_time, NULL);
+      list_push_back(&ready_list, &cur->elem);
   }    
   //list_push_back (&ready_list, &cur->elem);
   cur->status = THREAD_READY;
@@ -636,7 +645,7 @@ init_thread (struct thread *t, const char *name, int priority)
   t->wakeup_tick = -1;
   /****change as priority list_insert_ordered****/
   t->ready_tick = cur_ticks;
-  list_insert_ordered(&ready_list, &t->elem, comparator_priority_ready_time, NULL);
+  list_insert(&ready_list, &t->elem);
 }
 
 /* Allocates a SIZE-byte frame at the top of thread T's stack and
@@ -662,12 +671,15 @@ next_thread_to_run (void)
 {
     if (list_empty(&ready_list))
         return idle_thread;
-    else
+    else {
         /****change as pop back. ascending order****/
-      //return list_entry (list_pop_front (&ready_list), struct thread, elem);
+        //return list_entry (list_pop_front (&ready_list), struct thread, elem);
+        list_sort(&ready_list, comparator_priority_ready_time, NULL);
         struct thread* ret = list_entry(list_pop_back(&ready_list), struct thread, elem);
         ret->ready_tick = -1;
         return ret;
+    }
+      
 }
 
 /* Completes a thread switch by activating the new thread's page

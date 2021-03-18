@@ -88,9 +88,23 @@ If the highest-priority thread yields, does it continue running?
 
 
 매번 ordered insert 하지 않고, next_thread 에서 ready list에서 뽑을때만 정렬해서 뽑는다면?
+sema waiting 에서는 뽑을때만 정렬하고, 일반 ready 나 waiting 에서는 그렇게 안 할 이유가 없다.  
+
+교과서: preemptive scheduling
+1. run->waiting
+2. run->ready
+3. wait->ready
+4. exit
+wait->ready 일때도 schedule 해야한다.
+quote from pintos guide:  
+three public thread functions that need to switch threads: thread_block(), thread_exit(), and thread_yield().  
+
+wait->ready 일 때 schedule() 안되어 있음.
 
 ### Set priority  
 
-if thread is ready: erase thread from ready list, change priority, reorder, schedule  
+if thread is ready:  
+erase thread from ready list, change priority, reorder, schedule  // 할 필요 없다
+change priority, schedule->schdule 에서 어짜피 sort 되기때문
 if thread is waiting: just change priority, order at sema_up  
 if thread is running: change priority, yield  
