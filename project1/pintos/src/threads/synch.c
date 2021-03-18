@@ -68,9 +68,9 @@ sema_down (struct semaphore *sema)
   old_level = intr_disable ();
   while (sema->value == 0) 
     {
-      list_push_back (&sema->waiters, &thread_current ()->elem);
+      list_push_back(&sema->waiters, &thread_current()->elem);
+      thread_block();
       //waiting tick is managed at thread_block, thread.c
-      thread_block ();
     }
   sema->value--;
   intr_set_level (old_level);

@@ -306,8 +306,10 @@ thread_create (const char *name, int priority,
   /* Add to run queue. */
   thread_unblock (t);
     
-  printf("priority %d current prio %d\n", priority, thread_current()->priority);
-  if (priority > thread_current()->priority) thread_yield();
+  //printf("priority %d current prio %d\n", priority, thread_current()->priority);
+  if (priority > thread_current()->priority) {
+      thread_yield();
+  }
 
   return tid;
 }
@@ -350,14 +352,15 @@ thread_unblock (struct thread *t)
   old_level = intr_disable();
   ASSERT(t->status == THREAD_BLOCKED);
 
+  struct thread* maxi = list_entry(list_back(&ready_list), struct thread, elem);
+
   t->waiting_tick = -1;
   t->ready_tick = cur_ticks;
   list_insert_ordered(&ready_list, &t->elem, comparator_priority, NULL);
 
   t->status = THREAD_READY;
-
-  struct thread* maxi = list_entry(list_back(&ready_list), struct thread, elem);
-  if (maxi->priority > thread_current()->priority) thread_yield();
+  
+  if (list_empty(&ready_list) && maxi->priority > thread_current()->priority) thread_yield();
 
   intr_set_level(old_level);
   
