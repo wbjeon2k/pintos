@@ -126,9 +126,19 @@ thread_start (void)
 bool comparator_sleep(const struct list_elem* a, const struct list_elem* b, void* aux) {
     struct thread* thread_a, thread_b;
     thread_a = list_entry(a, struct thread, sleep_elem);
-    thread_b = list_entry(a, struct thread, sleep_elem);
+    thread_b = list_entry(b, struct thread, sleep_elem);
 
     if (thread_a->wakeup_tick > thread_b->wakeup_tick) return true;
+    else return false;
+}
+
+//ascending order. priority increases.
+bool comparator_sleep(const struct list_elem* a, const struct list_elem* b, void* aux) {
+    struct thread* thread_a, thread_b;
+    thread_a = list_entry(a, struct thread, sleep_elem);
+    thread_b = list_entry(b, struct thread, sleep_elem);
+
+    if (thread_a->priority < thread_b->priority) return true;
     else return false;
 }
 
@@ -154,8 +164,9 @@ thread_wakeup(int64_t now) {
             enum intr_level old_level;
             old_level = intr_disable();
 
+            int t;
             list_remove(&tmp->sleep_elem);
-            thread thread_unblock(tmp);
+            thread_unblock(tmp);
 
             intr_set_level(old_level);
         }
