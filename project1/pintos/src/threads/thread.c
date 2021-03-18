@@ -184,15 +184,15 @@ bool comparator_priority_ready_time(const struct list_elem* a, const struct list
     struct thread* thread_b = list_entry(b, struct thread, elem);
 
     if (thread_a->priority < thread_b->priority) return true;
-    //else return false;
-    ///*
+    else return false;
+    /*
     if (thread_a->priority > thread_b->priority) return false;
 
     ASSERT(thread_a->priority == thread_b->priority);
 
     if (thread_a->ready_tick > thread_b->ready_tick) return true;
     else return false;
-    //*/
+    */
 }
 
 
@@ -405,24 +405,18 @@ thread_unblock (struct thread *t)
 
   ASSERT (is_thread (t));
 
-  old_level = intr_disable ();
-  ASSERT (t->status == THREAD_BLOCKED);
-  /****change as priority list_insert_ordered****/
-  //list_push_back (&ready_list, &t->elem);
+  old_level = intr_disable();
+  ASSERT(t->status == THREAD_BLOCKED);
+
   t->waiting_tick = -1;
   t->ready_tick = cur_ticks;
-  //list_insert_ordered(&ready_list, &t->elem, comparator_priority_ready_time, NULL);
-  list_push_back(&ready_list, &t->elem);
+  list_insert_ordered(&ready_list, &t->elem, comparator_priority_ready_time, NULL);
   //sort at next_thread
 
   t->status = THREAD_READY;
 
-  //list_sort(&ready_list, comparator_priority_ready_time, NULL);
-
-  //waiting->ready °¥ ¶§µµ scheduling, preemptive
-  //schedule();
-
-  intr_set_level (old_level);
+  intr_set_level(old_level);
+  
 }
 
 /* Returns the name of the running thread. */
@@ -496,8 +490,8 @@ thread_yield (void)
   /****change as priority list_insert_ordered****/
   if (cur != idle_thread){
       cur->ready_tick = cur_ticks;
-      //list_insert_ordered(&ready_list, &t->elem, comparator_priority_ready_time, NULL);
-      list_push_back(&ready_list, &cur->elem);
+      list_insert_ordered(&ready_list, &t->elem, comparator_priority_ready_time, NULL);
+      //list_push_back(&ready_list, &cur->elem);
   }    
   //list_push_back (&ready_list, &cur->elem);
   cur->status = THREAD_READY;
