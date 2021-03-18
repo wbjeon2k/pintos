@@ -123,18 +123,20 @@ thread_start (void)
 }
 
 //ascending order. priority increases. sleeping time increases.
+//list for 문 사용이 불편해지니까 앞에서 부터 priority 높은순, 많이 잔 순서대로 하는게 낫다.
+//억지로 ascending order 지킬 필요 없음.
 bool comparator_sleep(const struct list_elem* a, const struct list_elem* b, void* aux) {
     struct thread* thread_a;
     struct thread* thread_b;
     thread_a = list_entry(a, struct thread, sleep_elem);
     thread_b = list_entry(b, struct thread, sleep_elem);
 
-    if (thread_a->priority < thread_b->priority) return true;
-    else if (thread_a->priority > thread_b->priority) return false;
+    if (thread_a->priority > thread_b->priority) return true;
+    else if (thread_a->priority < thread_b->priority) return false;
 
     ASSERT(thread_a->priority == thread_b->priority);
 
-    if (thread_a->wakeup_tick > thread_b->wakeup_tick) return true;
+    if (thread_a->wakeup_tick < thread_b->wakeup_tick) return true;
     else return false;
 }
 
@@ -154,6 +156,7 @@ thread_sleep(int64_t ticks) {
 
     if (ticks < current_tick) return;
 
+    //disable 을 if 문 앞에 놔두면 disable 된 채로 작동한다. 사소한것에도 신경 써야한다.
     enum intr_level old_level;
     old_level = intr_disable();
 
@@ -166,7 +169,7 @@ thread_sleep(int64_t ticks) {
 }
 
 
-//wakeup call. 
+//wakeup call. seem to work fine.
 void
 thread_wakeup(int64_t now) {
     enum intr_level old_level;
