@@ -154,6 +154,8 @@ thread_sleep(int64_t ticks) {
     enum intr_level old_level;
     old_level = intr_disable();
 
+    if (ticks < current_tick) return;
+
     struct thread* t = thread_current();
     t->wakeup_tick = ticks;
     list_insert_ordered(&sleeping_list, &t->sleep_elem, comparator_sleep, NULL);
