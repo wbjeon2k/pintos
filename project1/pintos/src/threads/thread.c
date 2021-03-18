@@ -137,8 +137,8 @@ ascending order. lower -> higher priority
 bool comparator_sleep_time(const struct list_elem* a, const struct list_elem* b, void* aux UNUSED) {
     ASSERT(a != NULL && b != NULL);
     //elem is for ready list
-    struct thread* thread_a = list_entry(a, struct thread, elem);
-    struct thread* thread_b = list_entry(b, struct thread, elem);
+    struct thread* thread_a = list_entry(a, struct thread, sleep_elem);
+    struct thread* thread_b = list_entry(b, struct thread, sleep_elem);
 
     if (thread_a->wakeup_tick < thread_b->wakeup_tick) return true;
     else return false;
@@ -180,10 +180,10 @@ struct list_elem *e;
           ...do something with f...
         }
 */
-bool comparator_ready_time(const struct list_elem* a, const struct list_elem* b, void* aux UNUSED) {
+bool comparator_priority_ready_time(const struct list_elem* a, const struct list_elem* b, void* aux UNUSED) {
     ASSERT(a != NULL && b != NULL);
-    struct thread* thread_a = list_entry(a, struct thread, sleep_elem);
-    struct thread* thread_b = list_entry(b, struct thread, sleep_elem);
+    struct thread* thread_a = list_entry(a, struct thread, elem);
+    struct thread* thread_b = list_entry(b, struct thread, elem);
 
     if (thread_a->priority < thread_b->priority) return true;
     if (thread_a->priority > thread_b->priority) return false;
@@ -218,6 +218,7 @@ thread_tick (int64_t now)
   else
     kernel_ticks++;
 
+  now_tick = now;
   cur_ticks = now;
   thread_wakeup(now);
 
@@ -239,6 +240,7 @@ thread_sleep(int64_t wakeup) {
     struct thread* t = thread_current();
     ASSERT(t->status == THREAD_RUNNING);
     t->wakeup_tick = wakeup;
+    t->ready_tick = -1;
     list_insert_ordered(&sleeping_list, &t->sleep_elem, comparator_sleep_time, NULL);
     thread_block();
 
@@ -374,6 +376,8 @@ thread_block (void)
   ASSERT (intr_get_level () == INTR_OFF);
 
   thread_current ()->status = THREAD_BLOCKED;
+  thread_current()->waiting_tick = cur_ticks;
+  thread_current()->ready_tick = -1;
   schedule ();
 }
 
@@ -395,7 +399,11 @@ thread_unblock (struct thread *t)
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
   /****change as priority list_insert_ordered****/
-  list_push_back (&ready_list, &t->elem);
+  //list_push_back (&ready_list, &t->elem);
+  t->waiting_tick = -1;
+  t->ready_tick = cur_ticks;
+  list_insert_ordered(&ready_list, &t->elem, comparator_priority_ready_time, NULL);
+
   t->status = THREAD_READY;
   intr_set_level (old_level);
 }
@@ -465,9 +473,12 @@ thread_yield (void)
   ASSERT (!intr_context ());
 
   old_level = intr_disable ();
-  if (cur != idle_thread) 
-      /****change as priority list_insert_ordered****/
-    list_push_back (&ready_list, &cur->elem);
+  /****change as priority list_insert_ordered****/
+  if (cur != idle_thread{
+      cur->ready_tick = cur_ticks;
+      list_insert_ordered(&ready_list, &t->elem, comparator_priority_ready_time, NULL);
+  }    
+  //list_push_back (&ready_list, &cur->elem);
   cur->status = THREAD_READY;
   schedule ();
   intr_set_level (old_level);
@@ -620,8 +631,12 @@ init_thread (struct thread *t, const char *name, int priority)
   t->stack = (uint8_t *) t + PGSIZE;
   t->priority = priority;
   t->magic = THREAD_MAGIC;
+
+
+  t->wakeup_tick = -1;
   /****change as priority list_insert_ordered****/
-  list_push_back (&all_list, &t->allelem);
+  t->ready_tick = cur_ticks;
+  list_insert_ordered(&ready_list, &t->elem, comparator_priority_ready_time, NULL);
 }
 
 /* Allocates a SIZE-byte frame at the top of thread T's stack and
@@ -645,11 +660,14 @@ alloc_frame (struct thread *t, size_t size)
 static struct thread *
 next_thread_to_run (void) 
 {
-  if (list_empty (&ready_list))
-    return idle_thread;
-  else
-      /****change as pop back. ascending order****/
-    return list_entry (list_pop_front (&ready_list), struct thread, elem);
+    if (list_empty(&ready_list))
+        return idle_thread;
+    else
+        /****change as pop back. ascending order****/
+      //return list_entry (list_pop_front (&ready_list), struct thread, elem);
+        struct thread* ret = list_entry(list_pop_back(&ready_list), struct thread, elem);
+        ret->ready_tick = -1;
+        return ret;
 }
 
 /* Completes a thread switch by activating the new thread's page

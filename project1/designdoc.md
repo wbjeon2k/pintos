@@ -86,6 +86,9 @@ If the highest-priority thread yields, does it continue running?
 
     Yes. If there is a single highest-priority thread, it continues running until it blocks or finishes, even if it calls thread_yield(). If multiple threads have the same highest priority, thread_yield() should switch among them in "round robin" order. 
 
+
+매번 ordered insert 하지 않고, next_thread 에서 ready list에서 뽑을때만 정렬해서 뽑는다면?
+
 ### Set priority  
 
 if thread is ready: erase thread from ready list, change priority, reorder, schedule  
