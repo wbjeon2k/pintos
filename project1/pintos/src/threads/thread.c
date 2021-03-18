@@ -30,8 +30,6 @@ static struct list all_list;
 
 static struct list sleeping_list;
 
-
-
 /* Idle thread. */
 static struct thread *idle_thread;
 
@@ -186,15 +184,15 @@ bool comparator_priority_ready_time(const struct list_elem* a, const struct list
     struct thread* thread_b = list_entry(b, struct thread, elem);
 
     if (thread_a->priority < thread_b->priority) return true;
-    else return false;
-    /*
+    //else return false;
+    ///*
     if (thread_a->priority > thread_b->priority) return false;
 
     ASSERT(thread_a->priority == thread_b->priority);
 
     if (thread_a->ready_tick > thread_b->ready_tick) return true;
     else return false;
-    */
+    //*/
 }
 
 
@@ -665,11 +663,9 @@ init_thread (struct thread *t, const char *name, int priority)
   t->stack = (uint8_t *) t + PGSIZE;
   t->priority = priority;
   
-
-
   t->wakeup_tick = -1;
   /****change as priority list_insert_ordered****/
-  t->ready_tick = cur_ticks;
+  t->ready_tick = -1;
   t->magic = THREAD_MAGIC;
   list_push_back(&all_list, &t->allelem);
 }
