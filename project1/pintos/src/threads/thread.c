@@ -375,9 +375,10 @@ thread_block (void)
   ASSERT (!intr_context ());
   ASSERT (intr_get_level () == INTR_OFF);
 
-  thread_current ()->status = THREAD_BLOCKED;
-  thread_current()->waiting_tick = cur_ticks;
-  thread_current()->ready_tick = -1;
+  struct thread* t = thread_current();
+  t->status = THREAD_BLOCKED;
+  t->waiting_tick = cur_ticks;
+  t->ready_tick = -1;
   schedule ();
 }
 
@@ -519,6 +520,8 @@ if thread is running: change priority, yield
 void
 thread_set_priority (int new_priority) 
 {
+    thread_current()->priority = new_priority;
+    /*
     enum intr_level old_level;
     old_level = intr_disable();
     enum thread_status now_status = thread_current()->status;
@@ -541,6 +544,7 @@ thread_set_priority (int new_priority)
 
     intr_set_level(old_level);
     return;
+    */
 }
 
 /* Returns the current thread's priority. */
