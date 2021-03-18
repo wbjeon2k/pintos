@@ -490,7 +490,7 @@ thread_yield (void)
   /****change as priority list_insert_ordered****/
   if (cur != idle_thread){
       cur->ready_tick = cur_ticks;
-      list_insert_ordered(&ready_list, &t->elem, comparator_priority_ready_time, NULL);
+      list_insert_ordered(&ready_list, &cur->elem, comparator_priority_ready_time, NULL);
       //list_push_back(&ready_list, &cur->elem);
   }    
   //list_push_back (&ready_list, &cur->elem);
