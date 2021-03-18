@@ -124,7 +124,8 @@ thread_start (void)
 
 //ascending order. priority increases. sleeping time increases.
 bool comparator_sleep(const struct list_elem* a, const struct list_elem* b, void* aux) {
-    struct thread* thread_a, thread_b;
+    struct thread* thread_a;
+    struct thread* thread_b;
     thread_a = list_entry(a, struct thread, sleep_elem);
     thread_b = list_entry(b, struct thread, sleep_elem);
 
@@ -138,7 +139,7 @@ bool comparator_sleep(const struct list_elem* a, const struct list_elem* b, void
 }
 
 //ascending order. priority increases.
-bool comparator_sleep(const struct list_elem* a, const struct list_elem* b, void* aux) {
+bool comparator_priority(const struct list_elem* a, const struct list_elem* b, void* aux) {
     struct thread* thread_a, thread_b;
     thread_a = list_entry(a, struct thread, sleep_elem);
     thread_b = list_entry(b, struct thread, sleep_elem);
