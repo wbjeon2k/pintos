@@ -179,7 +179,7 @@ thread_tick (int64_t now)
     kernel_ticks++;
 
   cur_ticks = now;
-  thread_wa
+  thread_wakeup(now);
 
   /* Enforce preemption. */
   if (++thread_ticks >= TIME_SLICE)
