@@ -126,11 +126,10 @@ thread_start (void)
 //list for 문 사용이 불편해지니까 앞에서 부터 priority 높은순, 많이 잔 순서대로 하는게 낫다.
 //억지로 ascending order 지킬 필요 없음.
 bool comparator_sleep(const struct list_elem* a, const struct list_elem* b, void* aux) {
-    struct thread* thread_a;
-    struct thread* thread_b;
-    thread_a = list_entry(a, struct thread, sleep_elem);
-    thread_b = list_entry(b, struct thread, sleep_elem);
+    struct thread* thread_a = list_entry(a, struct thread, sleep_elem);
+    struct thread* thread_b = list_entry(b, struct thread, sleep_elem);
 
+    /*
     if (thread_a->priority > thread_b->priority) return true;
     else if (thread_a->priority < thread_b->priority) return false;
 
@@ -138,6 +137,13 @@ bool comparator_sleep(const struct list_elem* a, const struct list_elem* b, void
 
     if (thread_a->wakeup_tick < thread_b->wakeup_tick) return true;
     else return false;
+    */
+    if (thread_a->wakeup_tick < thread_b->wakeup_tick) return true;
+    else if (thread_a->wakeup_tick > thread_b->wakeup_tick) return false;
+
+    if (thread_a->priority > thread_b->priority) return true;
+    else if (thread_a->priority < thread_b->priority) return false;
+
 }
 
 //ascending order. priority increases.
