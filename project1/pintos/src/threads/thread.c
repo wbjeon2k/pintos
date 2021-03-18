@@ -531,6 +531,19 @@ thread_set_priority (int new_priority)
 
     ASSERT(thread_current()->status == THREAD_RUNNING);
 
+    /*test code*/
+    struct list_elem* e;
+    for (e = list_begin(&ready_list); e != list_end(&ready_list);
+        e = list_next(e))
+    {
+        struct thread* t = list_entry(e, struct thread, elem);
+        printf("threadname %s priority %d\n", t->name, t->priority);
+    }
+
+    printf("current %s priority %d\n", thread_current()->name, thread_current()->priority);
+
+    /*test code*/
+
     thread_current()->priority = new_priority;
 
     if (!list_empty(&ready_list)) {
@@ -539,18 +552,7 @@ thread_set_priority (int new_priority)
         if (t->priority > thread_current()->priority) thread_yield();
     }
 
-    /*test code*/
-    struct list_elem* e;
-    for (e = list_begin(&ready_list); e != list_end(&ready_list);
-        e = list_next(e))
-    {
-        struct thread* t = list_entry(e, struct thread, elem);
-        printf("thread %d priority %d\n", t->tid, t->priority);
-    }
-
-    printf("current %d priority %d\n", thread_tid(), thread_current()->priority);
-
-    /*test code*/
+    
 
     intr_set_level(old_level);
     return;

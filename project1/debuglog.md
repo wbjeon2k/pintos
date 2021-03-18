@@ -19,3 +19,4 @@ sleep tick 0 보다 커야만 재우기?
 thread create 에 문제가 있다.  
 왜 priority change 에서 changing threads 가 실행도 안되고  종료?  
 왜 priority change 를 고치려는 디버깅을 했는데 preempt 가 통과????
+하 ㅅㅂ  
