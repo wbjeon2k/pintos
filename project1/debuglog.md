@@ -9,5 +9,10 @@
 
 ### 2. priority
 
-thread current 는 애초에 running thread 만 return.
-waiting, exiting, ready 고려할 필요 없음.
+thread current 는 애초에 running thread 만 return.  
+waiting, exiting, ready 고려할 필요 없음.  
+
+### 3. alarm simulatenous
+
+sleep tick 이 0 이 될수도 있다!
+sleep tick 0 보다 커야만 재우기?  
