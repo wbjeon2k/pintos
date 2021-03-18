@@ -108,12 +108,15 @@ bool comparator_priority_waiting_time(const struct list_elem* a, const struct li
     struct thread* thread_b = list_entry(b, struct thread, sleep_elem);
 
     if (thread_a->priority < thread_b->priority) return true;
+    else return false;
+    /*
     if (thread_a->priority > thread_b->priority) return false;
 
     ASSERT(thread_a->priority == thread_b->priority);
 
     if (thread_a->waiting_tick > thread_b->waiting_tick) return true;
     else return false;
+    */
 }
 
 /* Up or "V" operation on a semaphore.  Increments SEMA's value

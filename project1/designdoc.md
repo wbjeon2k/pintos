@@ -103,6 +103,9 @@ wait->ready 일 때 schedule() 안되어 있음.
 
 ### Set priority  
 
+Sets the current thread's priority to new_priority.  
+If the current thread no longer has the highest priority, yields.  
+
 if thread is ready:  
 erase thread from ready list, change priority, reorder, schedule  // 할 필요 없다
 change priority, reset ready_tick, schedule    ->schdule 에서 어짜피 sort 되기때문

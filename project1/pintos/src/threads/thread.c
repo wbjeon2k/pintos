@@ -125,13 +125,6 @@ thread_start (void)
 
 //return true if wakeup time of a is earlier than b, vice versa 
 
-
-
-/*
-comparator for priority.
-if priority is same, the thread resided longer in the  ready queue has higher priority.
-ascending order. lower -> higher priority 
-*/
 bool comparator_sleep_time(const struct list_elem* a, const struct list_elem* b, void* aux UNUSED) {
     ASSERT(a != NULL && b != NULL);
     //elem is for ready list
@@ -143,57 +136,22 @@ bool comparator_sleep_time(const struct list_elem* a, const struct list_elem* b,
 }
 
 /*
-
- The list_entry macro allows conversion from a
-   struct list_elem back to a structure object that contains it.
-
-   For example, suppose there is a needed for a list of `struct
-   foo'.  `struct foo' should contain a `struct list_elem'
-   member, like so:
-
-      struct foo
-        {
-          struct list_elem elem;
-          int bar;
-          ...other members...
-        };
-
-   Then a list of `struct foo' can be be declared and initialized
-   like so:
-
-      struct list foo_list;
-
-      list_init (&foo_list);
-
-   Iteration is a typical situation where it is necessary to
-   convert from a struct list_elem back to its enclosing
-   structure.  Here's an example using foo_list:
-
-struct list_elem *e;
-
-      for (e = list_begin (&foo_list); e != list_end (&foo_list);
-           e = list_next (e))
-        {
-          struct foo *f = list_entry (e, struct foo, elem);
-          ...do something with f...
-        }
+comparator for priority.
+if priority is same, the thread resided longer in the  ready queue has higher priority.
+ascending order. lower -> higher priority 
 */
-bool comparator_priority_ready_time(const struct list_elem* a, const struct list_elem* b, void* aux UNUSED) {
+
+bool comparator_priority(const struct list_elem* a, const struct list_elem* b, void* aux UNUSED) {
     ASSERT(a != NULL && b != NULL);
     struct thread* thread_a = list_entry(a, struct thread, elem);
     struct thread* thread_b = list_entry(b, struct thread, elem);
 
     if (thread_a->priority < thread_b->priority) return true;
     else return false;
-    /*
-    if (thread_a->priority > thread_b->priority) return false;
-
-    ASSERT(thread_a->priority == thread_b->priority);
-
-    if (thread_a->ready_tick > thread_b->ready_tick) return true;
-    else return false;
-    */
 }
+
+
+
 
 
 //original
@@ -231,7 +189,6 @@ thread_tick (int64_t now)
 /*
 set wakeup time,
 push it into sleeping list by ascending order
-(&ready_list, &t->elem);
 */
 void
 thread_sleep(int64_t wakeup) {
@@ -252,25 +209,12 @@ thread_sleep(int64_t wakeup) {
 
 /*
 wakeup thread if wakeup time has passed
-
-   Iteration is a typical situation where it is necessary to
-   convert from a struct list_elem back to its enclosing
-   structure.  Here's an example using foo_list:
-
-      struct list_elem *e;
-
-      for (e = list_begin (&foo_list); e != list_end (&foo_list);
-           e = list_next (e))
-        {
-          struct foo *f = list_entry (e, struct foo, elem);
-          ...do something with f...
-        }
 */
 void
 thread_wakeup(int64_t now) {
     struct list_elem* e;
     enum intr_level old_level;
-    old_level = intr_disable();
+    
 
     for (e = list_begin(&sleeping_list); e != list_end(&sleeping_list);
         e = list_next(e))
@@ -278,20 +222,16 @@ thread_wakeup(int64_t now) {
         struct thread* f = list_entry(e, struct thread, sleep_elem);
         //interrupt off. atomically executed
         if (f->wakeup_tick <= now) {
-            
+            old_level = intr_disable();
 
             f->wakeup_tick = -1;
             list_remove(&f->sleep_elem);
             thread_unblock(f);
 
-            
+            intr_set_level(old_level);
         }
         else break;
     }
-
-    intr_set_level(old_level);
-
-    // schedule(); // no need
 
     
 }
@@ -366,7 +306,7 @@ thread_create (const char *name, int priority,
   /* Add to run queue. */
   thread_unblock (t);
     
-  printf("priority %d current prio %d\n", priority, thread->current()->priority);
+  printf("priority %d current prio %d\n", priority, thread_current()->priority);
   if (priority > thread_current()->priority) thread_yield();
 
   return tid;
@@ -388,6 +328,7 @@ thread_block (void)
   t->status = THREAD_BLOCKED;
   //t->waiting_tick = cur_ticks;
   t->ready_tick = -1;
+  t->waiting_tick = cur_ticks;
   schedule ();
 }
 
@@ -411,9 +352,12 @@ thread_unblock (struct thread *t)
 
   t->waiting_tick = -1;
   t->ready_tick = cur_ticks;
-  list_insert_ordered(&ready_list, &t->elem, comparator_priority_ready_time, NULL);
+  list_insert_ordered(&ready_list, &t->elem, comparator_priority, NULL);
 
   t->status = THREAD_READY;
+
+  struct thread* t = list_entry(list_back(&ready_list), struct thread, elem);
+  if (t->priority > thread_current()->priority) thread_yield();
 
   intr_set_level(old_level);
   
@@ -490,10 +434,10 @@ thread_yield (void)
   /****change as priority list_insert_ordered****/
   if (cur != idle_thread){
       cur->ready_tick = cur_ticks;
-      list_insert_ordered(&ready_list, &cur->elem, comparator_priority_ready_time, NULL);
+      list_insert_ordered(&ready_list, &cur->elem, comparator_priority, NULL);
       //list_push_back(&ready_list, &cur->elem);
   }    
-  //list_push_back (&ready_list, &cur->elem);
+
   cur->status = THREAD_READY;
   schedule ();
   intr_set_level (old_level);
@@ -532,30 +476,12 @@ thread_set_priority (int new_priority)
 
     ASSERT(thread_current()->status == THREAD_RUNNING);
 
-    /*test code*/
-    struct list_elem* e;
-    for (e = list_begin(&ready_list); e != list_end(&ready_list);
-        e = list_next(e))
-    {
-        struct thread* t = list_entry(e, struct thread, elem);
-        printf("threadname %s priority %d\n", t->name, t->priority);
-    }
-
-    printf("current %s priority %d\n", thread_current()->name, thread_current()->priority);
-
-    /*test code*/
-
     thread_current()->priority = new_priority;
 
     if (!list_empty(&ready_list)) {
-        struct thread* t = list_back(&ready_list);
-        ///if (t->priority >= thread_current()->priority) thread_yield();
-        printf("ready %s priority %d\n", t->name, t->priority);
-        printf("current %s priority %d\n", thread_current()->name, thread_current()->priority);
+        struct thread* t = list_entry(list_back(&ready_list), struct thread, elem);
         if (t->priority > thread_current()->priority) thread_yield();
     }
-
-    
 
     intr_set_level(old_level);
     return;
@@ -718,7 +644,7 @@ next_thread_to_run (void)
     else {
         /****change as pop back. ascending order****/
         //return list_entry (list_pop_front (&ready_list), struct thread, elem);
-        list_sort(&ready_list, comparator_priority_ready_time, NULL);
+        list_sort(&ready_list, comparator_priority, NULL);
         struct thread* ret = list_entry(list_pop_back(&ready_list), struct thread, elem);
         ret->ready_tick = -1;
         return ret;

@@ -89,15 +89,15 @@ struct thread
     uint8_t *stack;                     /* Saved stack pointer. */
     int priority;                       /* Priority. */
 
-    int64_t waiting_tick;
-    int64_t ready_tick;//time elapsed since push into ready queue
-    int64_t wakeup_tick; // time to wake up
-    struct list_elem sleep_elem;
-
     struct list_elem allelem;           /* List element for all threads list. */
 
     /* Shared between thread.c and synch.c. */
     struct list_elem elem;              /* List element. */
+
+    int64_t waiting_tick;
+    int64_t ready_tick;//time elapsed since push into ready queue
+    int64_t wakeup_tick; // time to wake up
+    struct list_elem sleep_elem;
 
 #ifdef USERPROG
     /* Owned by userprog/process.c. */
