@@ -61,15 +61,16 @@ void
 sema_down (struct semaphore *sema) 
 {
   enum intr_level old_level;
+  old_level = intr_disable();
 
   ASSERT (sema != NULL);
   ASSERT (!intr_context ());
-
-  old_level = intr_disable ();
+  
   while (sema->value == 0) 
     {
-      list_push_back (&sema->waiters, &thread_current ()->elem);
-      thread_block ();
+      list_push_back(&sema->waiters, &thread_current()->elem);
+      thread_block();
+      //waiting tick is managed at thread_block, thread.c
     }
   sema->value--;
   intr_set_level (old_level);
@@ -101,6 +102,23 @@ sema_try_down (struct semaphore *sema)
   return success;
 }
 
+bool comparator_priority_waiting_time(const struct list_elem* a, const struct list_elem* b, void* aux UNUSED) {
+    ASSERT(a != NULL && b != NULL);
+    struct thread* thread_a = list_entry(a, struct thread, sleep_elem);
+    struct thread* thread_b = list_entry(b, struct thread, sleep_elem);
+
+    if (thread_a->priority < thread_b->priority) return true;
+    else return false;
+    /*
+    if (thread_a->priority > thread_b->priority) return false;
+
+    ASSERT(thread_a->priority == thread_b->priority);
+
+    if (thread_a->waiting_tick > thread_b->waiting_tick) return true;
+    else return false;
+    */
+}
+
 /* Up or "V" operation on a semaphore.  Increments SEMA's value
    and wakes up one thread of those waiting for SEMA, if any.
 
@@ -113,9 +131,10 @@ sema_up (struct semaphore *sema)
   ASSERT (sema != NULL);
 
   old_level = intr_disable ();
-  if (!list_empty (&sema->waiters)) 
-    thread_unblock (list_entry (list_pop_front (&sema->waiters),
-                                struct thread, elem));
+  if (!list_empty(&sema->waiters)) {
+      list_sort(&sema->waiters, comparator_priority_waiting_time, NULL);
+      thread_unblock(list_entry(list_pop_back(&sema->waiters), struct thread, elem));
+  }
   sema->value++;
   intr_set_level (old_level);
 }
