@@ -533,7 +533,9 @@ thread_set_priority (int new_priority)
     ASSERT(thread_current()->status == THREAD_RUNNING);
 
     thread_current()->priority = new_priority;
-    thread_yield();
+
+    struct thread* t = list_back(&ready_list);
+    if (t->priority >= thread_current()->priority) thread_yield();
 
     intr_set_level(old_level);
     return;
