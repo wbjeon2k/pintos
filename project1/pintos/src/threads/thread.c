@@ -139,7 +139,7 @@ void thread_sleep(int64_t wakeuptime) {
     enum intr_level old_level;
     old_level = intr_disable();
 
-    list_insert_sorted(&sleeping_list, thread_current()->sleep_elem, comparator_sleep, NULL);
+    list_insert_ordered(&sleeping_list, thread_current()->sleep_elem, comparator_sleep, NULL);
     thread_block();
 
     intr_set_level(old_level);
