@@ -701,7 +701,7 @@ next_thread_to_run (void)
     else {
         /****change as pop back. ascending order****/
         //return list_entry (list_pop_front (&ready_list), struct thread, elem);
-        list_sort(&ready_list, comparator_priority_ready_time, NULL);
+        //list_sort(&ready_list, comparator_priority_ready_time, NULL);
         struct thread* ret = list_entry(list_pop_back(&ready_list), struct thread, elem);
         ret->ready_tick = -1;
         return ret;
