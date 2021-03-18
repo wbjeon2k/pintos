@@ -50,7 +50,7 @@ sema_init (struct semaphore *sema, unsigned value)
   list_init (&sema->waiters);
 }
 
-bool comparator_priority(const struct list_elem* a, const struct list_elem* b, void* aux) {
+bool comparator_waiting(const struct list_elem* a, const struct list_elem* b, void* aux) {
     struct thread* thread_a;
     struct thread* thread_b;
     thread_a = list_entry(a, struct thread, elem);
@@ -78,7 +78,7 @@ sema_down (struct semaphore *sema)
   old_level = intr_disable ();
   while (sema->value == 0) 
     {
-      list_insert_ordered (&sema->waiters, &thread_current ()->elem, comparator_priority, NULL);
+      list_insert_ordered (&sema->waiters, &thread_current ()->elem, comparator_waiting, NULL);
       thread_block ();
     }
   sema->value--;
