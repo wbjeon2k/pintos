@@ -669,7 +669,7 @@ init_thread (struct thread *t, const char *name, int priority)
   t->wakeup_tick = -1;
   /****change as priority list_insert_ordered****/
   t->ready_tick = cur_ticks;
-  list_insert(&ready_list, &t->elem);
+  list_push_back(&ready_list, &t->elem);
 }
 
 /* Allocates a SIZE-byte frame at the top of thread T's stack and
