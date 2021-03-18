@@ -385,7 +385,7 @@ thread_block (void)
 
   struct thread* t = thread_current();
   t->status = THREAD_BLOCKED;
-  t->waiting_tick = cur_ticks;
+  //t->waiting_tick = cur_ticks;
   t->ready_tick = -1;
   schedule ();
 }
@@ -411,7 +411,6 @@ thread_unblock (struct thread *t)
   t->waiting_tick = -1;
   t->ready_tick = cur_ticks;
   list_insert_ordered(&ready_list, &t->elem, comparator_priority_ready_time, NULL);
-  //sort at next_thread
 
   t->status = THREAD_READY;
 
@@ -539,6 +538,16 @@ thread_set_priority (int new_priority)
         ///if (t->priority >= thread_current()->priority) thread_yield();
         if (t->priority > thread_current()->priority) thread_yield();
     }
+
+    /*test code*/
+    for (e = list_begin(&ready_list); e != list_end(&ready_list);
+        e = list_next(e))
+    {
+        struct thread* t = list_entry(e, struct thread, allelem);
+        printf("thread %d's priority %d\n", t->tid, t->priority);
+    }
+
+    printf("current %d's priority %d\n", thead_current()->tid, thread_current()->priority);
 
     intr_set_level(old_level);
     return;
@@ -701,7 +710,7 @@ next_thread_to_run (void)
     else {
         /****change as pop back. ascending order****/
         //return list_entry (list_pop_front (&ready_list), struct thread, elem);
-        //list_sort(&ready_list, comparator_priority_ready_time, NULL);
+        list_sort(&ready_list, comparator_priority_ready_time, NULL);
         struct thread* ret = list_entry(list_pop_back(&ready_list), struct thread, elem);
         ret->ready_tick = -1;
         return ret;
