@@ -178,8 +178,8 @@ thread_sleep(int64_t ticks) {
 //wakeup call. seem to work fine.
 void
 thread_wakeup(int64_t now) {
-    enum intr_level old_level;
-    old_level = intr_disable();
+    //enum intr_level old_level;
+    //old_level = intr_disable();
 
     struct list_elem* e;
     for (e = list_begin(&sleeping_list); e != list_end(&sleeping_list); e = list_next(e)) {
@@ -193,7 +193,7 @@ thread_wakeup(int64_t now) {
         else break;
     }
 
-    intr_set_level(old_level);
+    //intr_set_level(old_level);
 }
 
 /* Called by the timer interrupt handler at each timer tick.
@@ -214,12 +214,13 @@ thread_tick (int64_t now)
     kernel_ticks++;
 
   current_tick = now;
+  thread_wakeup(now);
 
   /* Enforce preemption. */
   if (++thread_ticks >= TIME_SLICE)
     intr_yield_on_return ();
 
-  thread_wakeup(now);
+  
 }
 
 /* Prints thread statistics. */
