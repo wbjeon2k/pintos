@@ -277,11 +277,9 @@ thread_wakeup(int64_t now) {
         //interrupt off. atomically executed
         if (f->wakeup_tick <= now) {
             
-
             f->wakeup_tick = -1;
             list_remove(&f->sleep_elem);
             thread_unblock(f);
-
             
         }
         else break;
@@ -511,10 +509,36 @@ thread_foreach (thread_action_func *func, void *aux)
 }
 
 /* Sets the current thread's priority to NEW_PRIORITY. */
+/*
+if thread is ready:change priority, reset ready_tick, schedule  ->schdule 에서 어짜피 sort 되기때문
+if thread is waiting: just change priority, reset waiting_tick, order at sema_up
+if thread is running: change priority, yield
+*/
 void
 thread_set_priority (int new_priority) 
 {
-  thread_current ()->priority = new_priority;
+    enum intr_level old_level;
+    old_level = intr_disable();
+    enum thread_status now_status = thread_current()->status;
+
+    if (now_status == THREAD_READY) {
+        thread_current()->priority = new_priority;
+        thread_current()->ready_tick = cur_ticks;
+        schedule();
+    }
+
+    if (now_status == THREAD_BLOCKED) {
+        thread_current()->priority = new_priority;
+        thread_current()->waiting_tick = cur_ticks;
+    }
+
+    if (now_status == THREAD_RUNNING) {
+        thread_current()->priority = new_priority;
+        thread_yield();
+    }
+
+    intr_set_level(old_level);
+    return;
 }
 
 /* Returns the current thread's priority. */

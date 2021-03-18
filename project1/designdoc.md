@@ -105,6 +105,6 @@ wait->ready 일 때 schedule() 안되어 있음.
 
 if thread is ready:  
 erase thread from ready list, change priority, reorder, schedule  // 할 필요 없다
-change priority, schedule->schdule 에서 어짜피 sort 되기때문
-if thread is waiting: just change priority, order at sema_up  
+change priority, reset ready_tick, schedule    ->schdule 에서 어짜피 sort 되기때문
+if thread is waiting: just change priority, reset waiting_tick, order at sema_up  
 if thread is running: change priority, yield  
