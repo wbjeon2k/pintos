@@ -127,6 +127,23 @@ thread_start (void)
 
 //return true if wakeup time of a is earlier than b, vice versa 
 
+
+
+/*
+comparator for priority.
+if priority is same, the thread resided longer in the  ready queue has higher priority.
+ascending order. lower -> higher priority 
+*/
+bool comparator_sleep_time(const struct list_elem* a, const struct list_elem* b, void* aux UNUSED) {
+    ASSERT(a != NULL && b != NULL);
+    //elem is for ready list
+    struct thread* thread_a = list_entry(a, struct thread, elem);
+    struct thread* thread_b = list_entry(b, struct thread, elem);
+
+    if (thread_a->wakeup_tick < thread_b->wakeup_tick) return true;
+    else return false;
+}
+
 /*
 
  The list_entry macro allows conversion from a
@@ -163,12 +180,17 @@ struct list_elem *e;
           ...do something with f...
         }
 */
-bool comparator_sleep_time(const struct list_elem* a, const struct list_elem* b, void* aux UNUSED) {
+bool comparator_ready_time(const struct list_elem* a, const struct list_elem* b, void* aux UNUSED) {
     ASSERT(a != NULL && b != NULL);
     struct thread* thread_a = list_entry(a, struct thread, sleep_elem);
     struct thread* thread_b = list_entry(b, struct thread, sleep_elem);
 
-    if (thread_a->wakeup_tick < thread_b->wakeup_tick) return true;
+    if (thread_a->priority < thread_b->priority) return true;
+    if (thread_a->priority > thread_b->priority) return false;
+
+    ASSERT(thread_a->priority == thread_b->priority);
+
+    if (thread_a->ready_tick > thread_b->ready_tick) return true;
     else return false;
 }
 
@@ -196,6 +218,7 @@ thread_tick (int64_t now)
   else
     kernel_ticks++;
 
+  cur_ticks = now;
   thread_wakeup(now);
 
   /* Enforce preemption. */
@@ -371,6 +394,7 @@ thread_unblock (struct thread *t)
 
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
+  /****change as priority list_insert_ordered****/
   list_push_back (&ready_list, &t->elem);
   t->status = THREAD_READY;
   intr_set_level (old_level);
@@ -442,6 +466,7 @@ thread_yield (void)
 
   old_level = intr_disable ();
   if (cur != idle_thread) 
+      /****change as priority list_insert_ordered****/
     list_push_back (&ready_list, &cur->elem);
   cur->status = THREAD_READY;
   schedule ();
@@ -595,6 +620,7 @@ init_thread (struct thread *t, const char *name, int priority)
   t->stack = (uint8_t *) t + PGSIZE;
   t->priority = priority;
   t->magic = THREAD_MAGIC;
+  /****change as priority list_insert_ordered****/
   list_push_back (&all_list, &t->allelem);
 }
 
@@ -622,6 +648,7 @@ next_thread_to_run (void)
   if (list_empty (&ready_list))
     return idle_thread;
   else
+      /****change as pop back. ascending order****/
     return list_entry (list_pop_front (&ready_list), struct thread, elem);
 }
 

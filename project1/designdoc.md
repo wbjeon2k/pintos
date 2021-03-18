@@ -47,7 +47,10 @@ schedule checks if cur is blocked, change with next
 
 each semaphores have their own waiter list
 semadown push thread into waiter, block it, sema--
-semaup 
+semaup  
+
+thread_lock is implemented via sema struct.  
+no need to implement waiting list for thread lock.  
 
 ### How to improve:
 
