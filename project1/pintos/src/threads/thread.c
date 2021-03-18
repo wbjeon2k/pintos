@@ -545,10 +545,10 @@ thread_set_priority (int new_priority)
         e = list_next(e))
     {
         struct thread* t = list_entry(e, struct thread, elem);
-        printf("thread %d priority %d\n", t->thread_tid(), t->priority);
+        printf("thread %d priority %d\n", t->tid, t->priority);
     }
 
-    printf("current %d priority %d\n", thread_current()->thread_tid(), thread_current()->priority);
+    printf("current %d priority %d\n", thread_tid(), thread_current()->priority);
 
     /*test code*/
 
