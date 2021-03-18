@@ -356,8 +356,8 @@ thread_unblock (struct thread *t)
 
   t->status = THREAD_READY;
 
-  struct thread* t = list_entry(list_back(&ready_list), struct thread, elem);
-  if (t->priority > thread_current()->priority) thread_yield();
+  struct thread* maxi = list_entry(list_back(&ready_list), struct thread, elem);
+  if (maxi->priority > thread_current()->priority) thread_yield();
 
   intr_set_level(old_level);
   
