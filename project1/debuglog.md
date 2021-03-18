@@ -6,3 +6,8 @@
  thread wakeup 을 할때도 priority 고려?  
  고려 할 필요 없다.  
  unblock 에서 ready list 넣을 때 아직 priority 구현 하지 않아서 생기는 오류.  
+
+### 2. priority
+
+thread current 는 애초에 running thread 만 return.
+waiting, exiting, ready 고려할 필요 없음.

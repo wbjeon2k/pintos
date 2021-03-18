@@ -520,22 +520,10 @@ if thread is running: change priority, yield
 void
 thread_set_priority (int new_priority) 
 {
-    thread_current()->priority = new_priority;
-    /*
+    // thread_current()->priority = new_priority;
+    ///*
     enum intr_level old_level;
     old_level = intr_disable();
-    enum thread_status now_status = thread_current()->status;
-
-    if (now_status == THREAD_READY) {
-        thread_current()->priority = new_priority;
-        thread_current()->ready_tick = cur_ticks;
-        schedule();
-    }
-
-    if (now_status == THREAD_BLOCKED) {
-        thread_current()->priority = new_priority;
-        thread_current()->waiting_tick = cur_ticks;
-    }
 
     if (now_status == THREAD_RUNNING) {
         thread_current()->priority = new_priority;
@@ -544,7 +532,7 @@ thread_set_priority (int new_priority)
 
     intr_set_level(old_level);
     return;
-    */
+    //*/
 }
 
 /* Returns the current thread's priority. */
