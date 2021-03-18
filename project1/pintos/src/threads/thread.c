@@ -185,12 +185,12 @@ thread_wakeup(int64_t now) {
     for (e = list_begin(&sleeping_list); e != list_end(&sleeping_list); e = list_next(e)) {
         struct thread* tmp = list_entry(e, struct thread, sleep_elem);
         if (tmp->wakeup_tick <= now) {
-            
-            int t;
+
             list_remove(&tmp->sleep_elem);
             thread_unblock(tmp);
-         
+
         }
+        else break;
     }
 
     intr_set_level(old_level);
@@ -214,11 +214,12 @@ thread_tick (int64_t now)
     kernel_ticks++;
 
   current_tick = now;
-  thread_wakeup(now);
 
   /* Enforce preemption. */
   if (++thread_ticks >= TIME_SLICE)
     intr_yield_on_return ();
+
+  thread_wakeup(now);
 }
 
 /* Prints thread statistics. */
