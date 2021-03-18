@@ -89,13 +89,15 @@ timer_elapsed (int64_t then)
 void
 timer_sleep (int64_t ticks) 
 {
-    enum intr_level old_level;
-    old_level = intr_disable();
+    
 
     int64_t start = timer_ticks ();
 
     ASSERT (intr_get_level () == INTR_ON);
     //if (ticks <= 0) return;
+
+    enum intr_level old_level;
+    old_level = intr_disable();
 
     /* original busy waiting
     while (timer_elapsed (start) < ticks) 
