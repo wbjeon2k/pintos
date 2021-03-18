@@ -270,7 +270,7 @@ void
 thread_wakeup(int64_t now) {
     struct list_elem* e;
     enum intr_level old_level;
-    old_level = intr_disable();
+    
 
     for (e = list_begin(&sleeping_list); e != list_end(&sleeping_list);
         e = list_next(e))
@@ -278,18 +278,20 @@ thread_wakeup(int64_t now) {
         struct thread* f = list_entry(e, struct thread, sleep_elem);
         //interrupt off. atomically executed
         if (f->wakeup_tick <= now) {
-            
+            old_level = intr_disable();
+
             f->wakeup_tick = -1;
             list_remove(&f->sleep_elem);
             thread_unblock(f);
-            
+
+            intr_set_level(old_level);
         }
-        //else break;
+        else break;
     }
 
     // schedule(); // no need
 
-    intr_set_level(old_level);
+    
 }
 
 /* Prints thread statistics. */
