@@ -1,0 +1,1 @@
+pintos -v -k --gdb --bochs -- -q run 
