@@ -434,11 +434,10 @@ void
 thread_set_priority (int new_priority) 
 {
     struct thread* cur = thread_current();
-
     cur->priority = new_priority;
 
     if (!list_empty(&ready_list)) {
-        maxi = list_entry(list_back(&ready_list), struct thread, elem);
+        struct thread* maxi = list_entry(list_back(&ready_list), struct thread, elem);
         if (maxi != NULL && maxi->priority > cur->priority) {
             thread_yield();
         }
