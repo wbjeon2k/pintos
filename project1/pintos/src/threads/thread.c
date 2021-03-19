@@ -212,7 +212,6 @@ thread_tick (int64_t now)
   else
     kernel_ticks++;
 
-  current_tick = now;
   thread_wakeup(now);
 
   /* Enforce preemption. */
