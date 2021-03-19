@@ -410,6 +410,7 @@ thread_yield (void)
   */
   //experimental
   if (cur != idle_thread) {
+      cur->status = THREAD_BLOCKED;
       thread_sleep(timer_ticks() + 1);
   }
   schedule ();
