@@ -128,7 +128,7 @@ bool comparator_sleep(const struct list_elem* a, const struct list_elem* b, void
     struct thread* thread_a = list_entry(a, struct thread, sleep_elem);
     struct thread* thread_b = list_entry(b, struct thread, sleep_elem);
 
-    if (thread_a->priority > thread_b->priority) return true;
+    if (thread_a->priority < thread_b->priority) return true;
     else return false;
 }
 
