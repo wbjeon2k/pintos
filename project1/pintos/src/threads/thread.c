@@ -139,10 +139,8 @@ bool comparator_sleep(const struct list_elem* a, const struct list_elem* b, void
     else return false;
     */
     if (thread_a->wakeup_tick < thread_b->wakeup_tick) return true;
-    else if (thread_a->wakeup_tick > thread_b->wakeup_tick) return false;
+    else return false;
 
-    if (thread_a->priority > thread_b->priority) return true;
-    else if (thread_a->priority < thread_b->priority) return false;
 
 }
 
@@ -187,6 +185,7 @@ thread_wakeup(int64_t now) {
         struct thread* tmp = list_entry(e, struct thread, sleep_elem);
         if (tmp->wakeup_tick <= now) {
 
+            tmp->wakeup_tick = -1;
             list_remove(&tmp->sleep_elem);
             thread_unblock(tmp);
 
@@ -332,6 +331,10 @@ thread_unblock (struct thread *t)
   list_insert_ordered (&ready_list, &t->elem, comparator_priority, NULL);
   t->status = THREAD_READY;
 
+  if (t->priority > thread_current()->priority) {
+      thread_yield();
+  }
+
   intr_set_level (old_level);
 }
 
@@ -430,7 +433,16 @@ thread_foreach (thread_action_func *func, void *aux)
 void
 thread_set_priority (int new_priority) 
 {
-  thread_current ()->priority = new_priority;
+    struct thread* cur = thread_current();
+
+    cur->priority = new_priority;
+
+    if (!list_empty(&ready_list)) {
+        maxi = list_entry(list_back(&ready_list), struct thread, elem);
+        if (maxi != NULL && maxi->priority > cur->priority) {
+            thread_yield();
+        }
+    }
 }
 
 /* Returns the current thread's priority. */
@@ -583,7 +595,7 @@ next_thread_to_run (void)
   if (list_empty (&ready_list))
     return idle_thread;
   else {
-      list_sort(&ready_list, comparator_priority, NULL);
+      //list_sort(&ready_list, comparator_priority, NULL);
       //매번 sorting 하는게 느려서 tick 이 밀리는건가?
       struct thread* ret = list_entry(list_pop_back(&ready_list), struct thread, elem);
       return ret;
