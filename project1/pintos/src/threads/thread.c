@@ -173,11 +173,13 @@ bool comparator_priority(const struct list_elem* a, const struct list_elem* b, v
 void
 thread_sleep(int64_t ticks) {
 
+    enum intr_level old_level;
+    old_level = intr_disable();
+
     if (ticks < cur_tick) return;
 
     //disable 을 if 문 앞에 놔두면 disable 된 채로 작동한다. 사소한것에도 신경 써야한다.
-    enum intr_level old_level;
-    old_level = intr_disable();
+    
 
     struct thread* t = thread_current();
     if (t == idle_thread) return;
@@ -306,10 +308,12 @@ thread_create (const char *name, int priority,
   sf->eip = switch_entry;
   sf->ebp = 0;
 
-  intr_set_level(old_level);
+  
 
   /* Add to run queue. */
   thread_unblock (t);
+
+  intr_set_level(old_level);
 
   if (t->priority > thread_current()->priority) {
       // no crash with thread_yield;? why?
