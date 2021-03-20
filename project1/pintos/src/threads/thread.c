@@ -344,6 +344,7 @@ thread_block (void)
 
    This function does not preempt the running thread.  This can
    be important: if the caller had disabled interrupts itself,
+
    it may expect that it can atomically unblock a thread and
    update other data. */
 void
@@ -360,6 +361,9 @@ thread_unblock (struct thread *t)
 
   //t->wait_start_tick = -1;
   t->ready_start_tick = cur_tick;
+
+  //unblock schedule test
+  schedule();
 
   if (thread_current() != idle_thread && t->priority > thread_current()->priority) {
       thread_yield();
