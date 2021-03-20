@@ -629,7 +629,7 @@ next_thread_to_run (void)
   if (list_empty (&ready_list))
     return idle_thread;
   else {
-      list_sort(&ready_list, comparator_priority, NULL);
+      //list_sort(&ready_list, comparator_priority, NULL);
       //매번 sorting 하는게 느려서 tick 이 밀리는건가?
       struct thread* ret = list_entry(list_pop_back(&ready_list), struct thread, elem);
       return ret;

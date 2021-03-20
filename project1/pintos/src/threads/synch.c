@@ -89,7 +89,7 @@ sema_down (struct semaphore *sema)
   old_level = intr_disable ();
   while (sema->value == 0) 
     {
-      list_push_back(&sema->waiters, &thread_current ()->elem);
+      list_insert_ordered(&sema->waiters, &thread_current ()->elem, comparator_waiting, NULL);
       //thread_current()->wait_start_tick = timer_ticks();
       thread_block ();
     }
@@ -137,7 +137,7 @@ sema_up (struct semaphore *sema)
   old_level = intr_disable ();
 
   if (!list_empty(&sema->waiters)) {
-      list_sort(&sema->waiters, comparator_waiting, NULL);
+      //list_sort(&sema->waiters, comparator_waiting, NULL);
       thread_unblock(list_entry(list_pop_back(&sema->waiters), struct thread, elem));
   }
 
