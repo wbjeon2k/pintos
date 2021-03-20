@@ -170,7 +170,8 @@ static void
 timer_interrupt (struct intr_frame *args UNUSED)
 {
   ticks++;
-  thread_tick (tiemr_ticks());
+  //debug tiemr_ticks();
+  thread_tick (timer_ticks());
 }
 
 /* Returns true if LOOPS iterations waits for more than one timer
