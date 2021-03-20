@@ -641,6 +641,8 @@ next_thread_to_run (void)
       list_sort(&ready_list, comparator_priority, NULL);
       //매번 sorting 하는게 느려서 tick 이 밀리는건가?
       struct thread* ret = list_entry(list_pop_back(&ready_list), struct thread, elem);
+      //ready tick 초기화.
+      ret->ready_tick = -1;
       return ret;
   }
     
