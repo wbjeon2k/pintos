@@ -173,10 +173,10 @@ bool comparator_priority(const struct list_elem* a, const struct list_elem* b, v
 void
 thread_sleep(int64_t ticks) {
 
+    if (ticks < cur_tick) return;
+
     enum intr_level old_level;
     old_level = intr_disable();
-
-    if (ticks < cur_tick) return;
 
     //disable 을 if 문 앞에 놔두면 disable 된 채로 작동한다. 사소한것에도 신경 써야한다.
     
