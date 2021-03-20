@@ -330,7 +330,7 @@ thread_block (void)
 
   thread_current ()->status = THREAD_BLOCKED;
 
-  thread_current()->wait_start_tick = timer_ticks();
+  //thread_current()->wait_start_tick = timer_ticks();
 
   schedule ();
 }
