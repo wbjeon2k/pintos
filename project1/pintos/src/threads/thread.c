@@ -139,7 +139,7 @@ bool comparator_sleep(const struct list_elem* a, const struct list_elem* b, void
 
     if (thread_a->priority < thread_b->priority) return true;
     else if (thread_a->priority > thread_b->priority) return false;
-
+    
     ASSERT(thread_a->priority == thread_b->priority);
 
     if (thread_a->wait_start_tick > thread_b->wait_start_tick) return true;
@@ -330,7 +330,7 @@ thread_block (void)
 
   thread_current ()->status = THREAD_BLOCKED;
 
-  //thread_current()->wait_start_tick = timer_ticks();
+  thread_current()->wait_start_tick = timer_ticks();
 
   schedule ();
 }
@@ -438,7 +438,7 @@ thread_yield (void)
   cur->status = THREAD_READY;
 
   cur->ready_start_tick = cur_tick;
-  //cur->wait_start_tick = -1;
+  cur->wait_start_tick = -1;
 
   schedule ();
   intr_set_level (old_level);

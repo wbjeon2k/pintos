@@ -60,7 +60,7 @@ bool comparator_waiting(const struct list_elem* a, const struct list_elem* b, vo
     thread_b = list_entry(b, struct thread, elem);
 
     if (thread_a->priority < thread_b->priority) return true;
-    else return false;
+    else if (thread_a->priority > thread_b->priority) return true;
 
     ASSERT(thread_a->priority == thread_b->priority);
 
@@ -87,7 +87,7 @@ sema_down (struct semaphore *sema)
   while (sema->value == 0) 
     {
       list_push_back(&sema->waiters, &thread_current ()->elem);
-      //thread_current()->wait_start_tick = timer_ticks();
+      thread_current()->wait_start_tick = timer_ticks();
       thread_block ();
     }
   sema->value--;
