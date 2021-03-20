@@ -138,12 +138,15 @@ bool comparator_sleep(const struct list_elem* a, const struct list_elem* b, void
     struct thread* thread_b = list_entry(b, struct thread, sleep_elem);
 
     if (thread_a->priority < thread_b->priority) return true;
-    else if (thread_a->priority > thread_b->priority) return false;
+    else return false;
+    //else if (thread_a->priority > thread_b->priority) return false;
     
+    /*
     ASSERT(thread_a->priority == thread_b->priority);
 
     if (thread_a->wait_start_tick > thread_b->wait_start_tick) return true;
     else return false;
+    */
 }
 
 //ascending order. priority increases.
@@ -180,7 +183,7 @@ thread_sleep(int64_t ticks) {
     if (t == idle_thread) return;
     t->wakeup_tick = ticks;
     //t->wait_start_tick = cur_tick // ? 안될것 같다. cur tick 과 실제 timer_tick 같다는 보장 없음.
-    t->wait_start_tick = timer_ticks();
+    //t->wait_start_tick = timer_ticks();
     t->ready_start_tick = -1;
     list_insert_ordered(&sleeping_list, &t->sleep_elem, comparator_sleep, NULL);
     thread_block();
@@ -201,7 +204,7 @@ thread_wakeup(int64_t now) {
         if (tmp->wakeup_tick <= now) {
 
             tmp->wakeup_tick = -1;
-            tmp->wait_start_tick = -1;
+            //tmp->wait_start_tick = -1;
             tmp->ready_start_tick = cur_tick;
             list_remove(&tmp->sleep_elem);
             thread_unblock(tmp);
@@ -355,7 +358,7 @@ thread_unblock (struct thread *t)
   list_insert_ordered (&ready_list, &t->elem, comparator_priority, NULL);
   t->status = THREAD_READY;
 
-  t->wait_start_tick = -1;
+  //t->wait_start_tick = -1;
   t->ready_start_tick = cur_tick;
 
   if (thread_current() != idle_thread && t->priority > thread_current()->priority) {
@@ -438,7 +441,7 @@ thread_yield (void)
   cur->status = THREAD_READY;
 
   cur->ready_start_tick = cur_tick;
-  cur->wait_start_tick = -1;
+  //cur->wait_start_tick = -1;
 
   schedule ();
   intr_set_level (old_level);
