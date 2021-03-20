@@ -95,6 +95,7 @@ struct thread
 
     int64_t wakeup_tick;
     int64_t ready_start_tick; //hope this is not faulty
+    int64_t wait_start_tick; // also wake in priority
     struct list_elem sleep_elem;
     
 
