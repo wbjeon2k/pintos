@@ -153,7 +153,7 @@ bool comparator_priority(const struct list_elem* a, const struct list_elem* b, v
     thread_b = list_entry(b, struct thread, elem);
 
     if (thread_a->priority < thread_b->priority) return true;
-    else (thread_a->priority > thread_b->priority) return false;
+    else if (thread_a->priority > thread_b->priority) return false;
     //else return false;
     //add ready time -> to ensure round robin. FCFS
 

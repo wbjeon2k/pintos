@@ -94,7 +94,7 @@ struct thread
     struct list_elem elem;              /* List element. */
 
     int64_t wakeup_tick;
-    int64_t ready_tick;
+    int64_t ready_start_tick; //hope this is not faulty
     struct list_elem sleep_elem;
     
 
