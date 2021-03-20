@@ -195,8 +195,8 @@ thread_sleep(int64_t ticks) {
 //wakeup call. seem to work fine.
 void
 thread_wakeup(int64_t now) {
-    //enum intr_level old_level;
-    //old_level = intr_disable();
+    enum intr_level old_level;
+    old_level = intr_disable();
 
     struct list_elem* e;
     for (e = list_begin(&sleeping_list); e != list_end(&sleeping_list); e = list_next(e)) {
@@ -212,7 +212,7 @@ thread_wakeup(int64_t now) {
         }
     }
 
-    //intr_set_level(old_level);
+    intr_set_level(old_level);
 }
 
 /* Called by the timer interrupt handler at each timer tick.
@@ -306,7 +306,7 @@ thread_create (const char *name, int priority,
   sf->eip = switch_entry;
   sf->ebp = 0;
 
-  intr_set_level (old_level);
+  intr_set_level(old_level);
 
   /* Add to run queue. */
   thread_unblock (t);
@@ -350,11 +350,11 @@ thread_block (void)
 void
 thread_unblock (struct thread *t) 
 {
-  enum intr_level old_level;
+  //enum intr_level old_level;
 
   ASSERT (is_thread (t));
 
-  old_level = intr_disable ();
+  //old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
   list_insert_ordered (&ready_list, &t->elem, comparator_priority, NULL);
   t->status = THREAD_READY;
@@ -363,13 +363,13 @@ thread_unblock (struct thread *t)
   t->ready_start_tick = cur_tick;
 
   //unblock schedule test
-  schedule();
+  //schedule();
 
   if (thread_current() != idle_thread && t->priority > thread_current()->priority) {
       thread_yield();
   }
 
-  intr_set_level (old_level);
+  //intr_set_level (old_level);
 }
 
 /* Returns the name of the running thread. */
@@ -432,11 +432,10 @@ void
 thread_yield (void) 
 {
   struct thread *cur = thread_current ();
-  enum intr_level old_level;
   
   ASSERT (!intr_context ());
 
-  old_level = intr_disable ();
+  //
   
   if (cur != idle_thread) {
       list_insert_ordered(&ready_list, &cur->elem, comparator_priority, NULL);
@@ -447,6 +446,8 @@ thread_yield (void)
   cur->ready_start_tick = cur_tick;
   //cur->wait_start_tick = -1;
 
+  enum intr_level old_level;
+  old_level = intr_disable();
   schedule ();
   intr_set_level (old_level);
 }
