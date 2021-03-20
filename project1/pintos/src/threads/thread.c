@@ -37,6 +37,7 @@ static struct list ready_list;
    when they are first scheduled and removed when they exit. */
 static struct list all_list;
 
+//list for sleeping threads
 static struct list sleeping_list;
 
 /* Idle thread. */
@@ -60,6 +61,8 @@ struct kernel_thread_frame
 static long long idle_ticks;    /* # of timer ticks spent idle. */
 static long long kernel_ticks;  /* # of timer ticks in kernel threads. */
 static long long user_ticks;    /* # of timer ticks in user programs. */
+
+static int64_t cur_tick;
 
 /* Scheduling. */
 #define TIME_SLICE 4            /* # of timer ticks to give each thread. */
@@ -150,13 +153,21 @@ bool comparator_priority(const struct list_elem* a, const struct list_elem* b, v
     thread_b = list_entry(b, struct thread, elem);
 
     if (thread_a->priority < thread_b->priority) return true;
+    else (thread_a->priority > thread_b->priority) return false;
+    //else return false;
+    //add ready time -> to ensure round robin. FCFS
+
+    ASSERT(thread_a->priority == thread_b->priority);
+
+    if (thread_a->ready_start_tick > thread_b->ready_start_tick) return true;
     else return false;
+
 }
 
 void
 thread_sleep(int64_t ticks) {
 
-    if (ticks < timer_ticks()) return;
+    if (ticks < cur_tick) return;
 
     //disable 을 if 문 앞에 놔두면 disable 된 채로 작동한다. 사소한것에도 신경 써야한다.
     enum intr_level old_level;
@@ -165,6 +176,7 @@ thread_sleep(int64_t ticks) {
     struct thread* t = thread_current();
     if (t == idle_thread) return;
     t->wakeup_tick = ticks;
+    t->ready_start_tick = -1;
     list_insert_ordered(&sleeping_list, &t->sleep_elem, comparator_sleep, NULL);
     thread_block();
 
@@ -184,6 +196,7 @@ thread_wakeup(int64_t now) {
         if (tmp->wakeup_tick <= now) {
 
             tmp->wakeup_tick = -1;
+            tmp->ready_start_tick = cur_tick;
             list_remove(&tmp->sleep_elem);
             thread_unblock(tmp);
 
@@ -210,6 +223,7 @@ thread_tick (int64_t now)
   else
     kernel_ticks++;
 
+  cur_tick = now;
   thread_wakeup(now);
 
   /* Enforce preemption. */
@@ -289,7 +303,8 @@ thread_create (const char *name, int priority,
   thread_unblock (t);
 
   if (t->priority > thread_current()->priority) {
-      thread_yield;
+      // no crash with thread_yield;? why?
+      thread_yield();
   }
 
   return tid;
@@ -330,6 +345,8 @@ thread_unblock (struct thread *t)
   ASSERT (t->status == THREAD_BLOCKED);
   list_insert_ordered (&ready_list, &t->elem, comparator_priority, NULL);
   t->status = THREAD_READY;
+
+  t->ready_start_tick = cur_tick;
 
   if (thread_current() != idle_thread && t->priority > thread_current()->priority) {
       thread_yield();
@@ -409,6 +426,8 @@ thread_yield (void)
   }
   
   cur->status = THREAD_READY;
+
+  cur->ready_start_tick = cur_tick;
 
   schedule ();
   intr_set_level (old_level);
