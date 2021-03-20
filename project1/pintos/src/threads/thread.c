@@ -330,7 +330,7 @@ thread_block (void)
 
   thread_current ()->status = THREAD_BLOCKED;
 
-  thread_current()->wait_start_tick = timer_ticks();
+  //thread_current()->wait_start_tick = timer_ticks();
 
   schedule ();
 }
@@ -438,7 +438,7 @@ thread_yield (void)
   cur->status = THREAD_READY;
 
   cur->ready_start_tick = cur_tick;
-  cur->wait_start_tick = -1;
+  //cur->wait_start_tick = -1;
 
   schedule ();
   intr_set_level (old_level);
