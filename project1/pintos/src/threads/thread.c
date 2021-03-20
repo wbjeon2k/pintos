@@ -145,6 +145,7 @@ bool comparator_priority(const struct list_elem* a, const struct list_elem* b, v
     struct thread* thread_a;
     struct thread* thread_b;
     //bug fix. sleep_elem -> elem.
+    //passed priority-change by this!!!
     thread_a = list_entry(a, struct thread, elem);
     thread_b = list_entry(b, struct thread, elem);
 
