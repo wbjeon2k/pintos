@@ -207,7 +207,7 @@ thread_wakeup(int64_t now) {
 
             tmp->wakeup_tick = -1;
             //tmp->wait_start_tick = -1;
-            tmp->ready_start_tick = cur_tick;
+            //tmp->ready_start_tick = cur_tick;
             list_remove(&tmp->sleep_elem);
             thread_unblock(tmp);
 
@@ -315,13 +315,14 @@ thread_create (const char *name, int priority,
 
   //intr_set_level(old_level);
 
-  /*
+  
   if (t->priority > thread_current()->priority) {
       // no crash with thread_yield;? why?
       thread_yield();
   }
-  */
+  
   //preempt priority including ready time
+  /*
   int64_t tmp_tick = thread_current()->ready_start_tick;
   thread_current()->ready_start_tick = cur_tick;
   bool chk = true;
@@ -332,6 +333,7 @@ thread_create (const char *name, int priority,
   if (chk) {
       thread_current()->ready_start_tick = tmp_tick;
   }
+  */
 
   intr_set_level(old_level);
 
@@ -384,12 +386,13 @@ thread_unblock (struct thread *t)
   //unblock schedule test
   //schedule();
 
-  /*
+  
   if (thread_current() != idle_thread && t->priority > thread_current()->priority) {
       thread_yield();
   }
-  */
+  
 
+  /*
   int64_t tmp_tick = thread_current()->ready_start_tick;
   thread_current()->ready_start_tick = cur_tick;
   bool chk = true;
@@ -401,6 +404,7 @@ thread_unblock (struct thread *t)
   if (chk) {
       thread_current()->ready_start_tick = tmp_tick;
   }
+  */
 
   intr_set_level (old_level);
 }
@@ -506,22 +510,23 @@ thread_foreach (thread_action_func *func, void *aux)
 void
 thread_set_priority (int new_priority) 
 {
-    struct thread* cur = thread_current();
-    cur->priority = new_priority;
-
     enum intr_level old_level;
     old_level = intr_disable();
+
+    struct thread* cur = thread_current();
+    cur->priority = new_priority;
 
     if (!list_empty(&ready_list)) {
         
 
         struct thread* maxi = list_entry(list_back(&ready_list), struct thread, elem);
-        /*
+        
         if (maxi != NULL && maxi->priority > cur->priority) {
             thread_yield();
         }
-        */
+        
 
+        /*
         int64_t tmp_tick = thread_current()->ready_start_tick;
         thread_current()->ready_start_tick = cur_tick;
         
@@ -533,6 +538,7 @@ thread_set_priority (int new_priority)
         if (chk) {
             thread_current()->ready_start_tick = tmp_tick;
         }
+        */
     }
 
     intr_set_level(old_level);
