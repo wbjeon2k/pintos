@@ -459,6 +459,9 @@ void
 thread_yield (void) 
 {
   struct thread *cur = thread_current ();
+
+  enum intr_level old_level;
+  old_level = intr_disable();
   
   ASSERT (!intr_context ());
 
@@ -473,8 +476,7 @@ thread_yield (void)
   cur->ready_start_tick = cur_tick;
   //cur->wait_start_tick = -1;
 
-  enum intr_level old_level;
-  old_level = intr_disable();
+  
   schedule ();
   intr_set_level (old_level);
 }
