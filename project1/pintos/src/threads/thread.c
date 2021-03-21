@@ -149,14 +149,24 @@ bool comparator_sleep(const struct list_elem* a, const struct list_elem* b, void
     */
 }
 
+
+/*
+Comparator!!!!!!
+(thread_a->priority <= thread_b->priority)
+instead of (thread_a->priority < thread_b->priority)
+
+-> if priority of a and b are same, keep the relative order.
+-> a should come earlier than b only if a's priority is strictly smaller than b's.
+
+this little fix passed alarm-simul and priority-fifo!!!!
+*/
+
 //ascending order. priority increases.
 bool comparator_priority(const struct list_elem* a, const struct list_elem* b, void* aux) {
-    struct thread* thread_a;
-    struct thread* thread_b;
+    struct thread* thread_a = list_entry(a, struct thread, elem);
+    struct thread* thread_b = list_entry(b, struct thread, elem);
     //bug fix. sleep_elem -> elem.
     //passed priority-change by this!!!
-    thread_a = list_entry(a, struct thread, elem);
-    thread_b = list_entry(b, struct thread, elem);
 
     if (thread_a->priority <= thread_b->priority) return true;
     //else if (thread_a->priority > thread_b->priority) return false;
@@ -181,7 +191,6 @@ thread_sleep(int64_t ticks) {
     old_level = intr_disable();
 
     //disable 을 if 문 앞에 놔두면 disable 된 채로 작동한다. 사소한것에도 신경 써야한다.
-    
 
     struct thread* t = thread_current();
     if (t == idle_thread) return;
@@ -237,7 +246,6 @@ thread_tick (int64_t now)
   else
     kernel_ticks++;
 
-  
   thread_wakeup(now);
 
   /* Enforce preemption. */
@@ -310,8 +318,6 @@ thread_create (const char *name, int priority,
   sf = alloc_frame (t, sizeof *sf);
   sf->eip = switch_entry;
   sf->ebp = 0;
-
-  
 
   /* Add to run queue. */
   thread_unblock (t);

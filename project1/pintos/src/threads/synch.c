@@ -52,6 +52,19 @@ sema_init (struct semaphore *sema, unsigned value)
 }
 
 
+/*
+Comparator!!!!!!
+(thread_a->priority <= thread_b->priority)
+instead of (thread_a->priority < thread_b->priority)
+
+-> if priority of a and b are same, keep the relative order.
+-> a should come earlier than b only if a's priority is strictly smaller than b's.
+
+this little fix passed alarm-simul and priority-fifo!!!!
+
+also same for synch.c
+*/
+
 //same with comp_sleep in thread.c
 bool comparator_waiting(const struct list_elem* a, const struct list_elem* b, void* aux) {
     struct thread* thread_a;
