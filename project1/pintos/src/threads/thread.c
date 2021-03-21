@@ -315,8 +315,14 @@ thread_create (const char *name, int priority,
 
   intr_set_level(old_level);
 
+  /*
   if (t->priority > thread_current()->priority) {
       // no crash with thread_yield;? why?
+      thread_yield();
+  }
+  */
+  //preempt priority including ready time
+  if (comparator_priority(thread_current(), t)) {
       thread_yield();
   }
 
@@ -369,7 +375,12 @@ thread_unblock (struct thread *t)
   //unblock schedule test
   //schedule();
 
+  /*
   if (thread_current() != idle_thread && t->priority > thread_current()->priority) {
+      thread_yield();
+  }
+  */
+  if (thread_current() != idle_thread && comparator_priority(thread_current(), t)) {
       thread_yield();
   }
 
@@ -482,7 +493,12 @@ thread_set_priority (int new_priority)
 
     if (!list_empty(&ready_list)) {
         struct thread* maxi = list_entry(list_back(&ready_list), struct thread, elem);
+        /*
         if (maxi != NULL && maxi->priority > cur->priority) {
+            thread_yield();
+        }
+        */
+        if (maxi != NULL && comparator_priority(cur,maxi)) {
             thread_yield();
         }
     }
