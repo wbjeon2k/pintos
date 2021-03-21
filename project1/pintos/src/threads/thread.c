@@ -207,7 +207,7 @@ thread_wakeup(int64_t now) {
 
             tmp->wakeup_tick = -1;
             //tmp->wait_start_tick = -1;
-            tmp->ready_start_tick = __tick;
+            tmp->ready_start_tick = cur_tick;
             list_remove(&tmp->sleep_elem);
             thread_unblock(tmp);
 
