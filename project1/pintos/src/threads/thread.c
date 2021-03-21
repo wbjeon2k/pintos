@@ -207,7 +207,7 @@ thread_wakeup(int64_t now) {
 
             tmp->wakeup_tick = -1;
             //tmp->wait_start_tick = -1;
-            tmp->ready_start_tick = cur_tick;
+            tmp->ready_start_tick = __tick;
             list_remove(&tmp->sleep_elem);
             thread_unblock(tmp);
 
@@ -323,7 +323,7 @@ thread_create (const char *name, int priority,
   */
   //preempt priority including ready time
   int64_t tmp_tick = thread_current()->ready_start_tick;
-  thread_current()->ready_start_tick = cur_ticks;
+  thread_current()->ready_start_tick = cur_tick;
   if (comparator_priority(thread_current(), t, NULL)) {
       thread_yield();
   }
@@ -387,7 +387,7 @@ thread_unblock (struct thread *t)
   */
 
   int64_t tmp_tick = thread_current()->ready_start_tick;
-  thread_current()->ready_start_tick = cur_ticks;
+  thread_current()->ready_start_tick = cur_tick;
   
   if (thread_current() != idle_thread && comparator_priority(thread_current(), t, NULL)) {
       thread_yield();
@@ -512,7 +512,7 @@ thread_set_priority (int new_priority)
         */
 
         int64_t tmp_tick = thread_current()->ready_start_tick;
-        thread_current()->ready_start_tick = cur_ticks;
+        thread_current()->ready_start_tick = cur_tick;
 
         if (maxi != NULL && comparator_priority(cur,maxi, NULL)) {
             thread_yield();
