@@ -377,11 +377,13 @@ thread_unblock (struct thread *t)
 
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
+
+  t->ready_start_tick = cur_tick;
   list_insert_ordered (&ready_list, &t->elem, comparator_priority, NULL);
   t->status = THREAD_READY;
 
   //t->wait_start_tick = -1;
-  t->ready_start_tick = cur_tick;
+  
 
   //unblock schedule test
   //schedule();
@@ -475,13 +477,15 @@ thread_yield (void)
 
   old_level = intr_disable();
   
+  cur->ready_start_tick = cur_tick;
+
   if (cur != idle_thread) {
       list_insert_ordered(&ready_list, &cur->elem, comparator_priority, NULL);
   }
   
   cur->status = THREAD_READY;
 
-  cur->ready_start_tick = cur_tick;
+  
   //cur->wait_start_tick = -1;
 
   
