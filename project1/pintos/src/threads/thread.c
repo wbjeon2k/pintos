@@ -137,7 +137,7 @@ bool comparator_sleep(const struct list_elem* a, const struct list_elem* b, void
     struct thread* thread_a = list_entry(a, struct thread, sleep_elem);
     struct thread* thread_b = list_entry(b, struct thread, sleep_elem);
 
-    if (thread_a->priority < thread_b->priority) return true;
+    if (thread_a->priority <= thread_b->priority) return true;
     else return false;
     //else if (thread_a->priority > thread_b->priority) return false;
     
@@ -158,15 +158,17 @@ bool comparator_priority(const struct list_elem* a, const struct list_elem* b, v
     thread_a = list_entry(a, struct thread, elem);
     thread_b = list_entry(b, struct thread, elem);
 
-    if (thread_a->priority < thread_b->priority) return true;
-    else if (thread_a->priority > thread_b->priority) return false;
-    //else return false;
+    if (thread_a->priority <= thread_b->priority) return true;
+    //else if (thread_a->priority > thread_b->priority) return false;
+    else return false;
     //add ready time -> to ensure round robin. FCFS
 
+    /*
     ASSERT(thread_a->priority == thread_b->priority);
 
     if (thread_a->ready_start_tick > thread_b->ready_start_tick) return true;
     else return false;
+    */
 
 }
 
@@ -186,7 +188,7 @@ thread_sleep(int64_t ticks) {
     t->wakeup_tick = ticks;
     //t->wait_start_tick = cur_tick // ? 안될것 같다. cur tick 과 실제 timer_tick 같다는 보장 없음.
     //t->wait_start_tick = timer_ticks();
-    t->ready_start_tick = -1;
+    //t->ready_start_tick = -1;
     list_insert_ordered(&sleeping_list, &t->sleep_elem, comparator_sleep, NULL);
     thread_block();
 
@@ -207,7 +209,7 @@ thread_wakeup(int64_t now) {
 
             tmp->wakeup_tick = -1;
             //tmp->wait_start_tick = -1;
-            tmp->ready_start_tick = cur_tick;
+            //tmp->ready_start_tick = cur_tick;
             list_remove(&tmp->sleep_elem);
             thread_unblock(tmp);
 
@@ -354,7 +356,7 @@ thread_block (void)
   ASSERT (intr_get_level () == INTR_OFF);
 
   thread_current ()->status = THREAD_BLOCKED;
-  thread_current()->ready_start_tick = -1;
+  //thread_current()->ready_start_tick = -1;
 
   //thread_current()->wait_start_tick = timer_ticks();
 
@@ -380,7 +382,7 @@ thread_unblock (struct thread *t)
   old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
 
-  t->ready_start_tick = cur_tick;
+  //t->ready_start_tick = cur_tick;
   list_insert_ordered (&ready_list, &t->elem, comparator_priority, NULL);
   t->status = THREAD_READY;
 
@@ -479,7 +481,7 @@ thread_yield (void)
 
   old_level = intr_disable();
   
-  cur->ready_start_tick = cur_tick;
+  //cur->ready_start_tick = cur_tick;
 
   if (cur != idle_thread) {
       list_insert_ordered(&ready_list, &cur->elem, comparator_priority, NULL);
@@ -704,7 +706,7 @@ next_thread_to_run (void)
       //매번 sorting 하는게 느려서 tick 이 밀리는건가?
       struct thread* ret = list_entry(list_pop_back(&ready_list), struct thread, elem);
       //ready tick 초기화.
-      ret->ready_start_tick = -1;
+      //ret->ready_start_tick = -1;
       return ret;
   }
     
