@@ -324,10 +324,12 @@ thread_create (const char *name, int priority,
   //preempt priority including ready time
   int64_t tmp_tick = thread_current()->ready_start_tick;
   thread_current()->ready_start_tick = cur_tick;
+  bool chk = true;
   if (comparator_priority(thread_current(), t, NULL)) {
+      chk = false;
       thread_yield();
   }
-  else {
+  if (chk) {
       thread_current()->ready_start_tick = tmp_tick;
   }
 
@@ -390,11 +392,13 @@ thread_unblock (struct thread *t)
 
   int64_t tmp_tick = thread_current()->ready_start_tick;
   thread_current()->ready_start_tick = cur_tick;
-  
+  bool chk = true;
   if (thread_current() != idle_thread && comparator_priority(thread_current(), t, NULL)) {
+      chk = false;
       thread_yield();
   }
-  else {
+
+  if (chk) {
       thread_current()->ready_start_tick = tmp_tick;
   }
 
@@ -520,11 +524,13 @@ thread_set_priority (int new_priority)
 
         int64_t tmp_tick = thread_current()->ready_start_tick;
         thread_current()->ready_start_tick = cur_tick;
-
+        
+        bool chk = true;
         if (maxi != NULL && comparator_priority(cur,maxi, NULL)) {
+            chk = false;
             thread_yield();
         }
-        else {
+        if (chk) {
             thread_current()->ready_start_tick = tmp_tick;
         }
     }
