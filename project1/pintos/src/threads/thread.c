@@ -322,7 +322,7 @@ thread_create (const char *name, int priority,
   }
   */
   //preempt priority including ready time
-  if (comparator_priority(thread_current(), t)) {
+  if (comparator_priority(thread_current(), t, NULL)) {
       thread_yield();
   }
 
@@ -380,7 +380,7 @@ thread_unblock (struct thread *t)
       thread_yield();
   }
   */
-  if (thread_current() != idle_thread && comparator_priority(thread_current(), t)) {
+  if (thread_current() != idle_thread && comparator_priority(thread_current(), t, NULL)) {
       thread_yield();
   }
 
@@ -498,7 +498,7 @@ thread_set_priority (int new_priority)
             thread_yield();
         }
         */
-        if (maxi != NULL && comparator_priority(cur,maxi)) {
+        if (maxi != NULL && comparator_priority(cur,maxi, NULL)) {
             thread_yield();
         }
     }
