@@ -313,7 +313,7 @@ thread_create (const char *name, int priority,
   /* Add to run queue. */
   thread_unblock (t);
 
-  intr_set_level(old_level);
+  //intr_set_level(old_level);
 
   /*
   if (t->priority > thread_current()->priority) {
@@ -330,6 +330,8 @@ thread_create (const char *name, int priority,
   else {
       thread_current()->ready_start_tick = tmp_tick;
   }
+
+  intr_set_level(old_level);
 
   return tid;
 }
@@ -365,11 +367,11 @@ thread_block (void)
 void
 thread_unblock (struct thread *t) 
 {
-  //enum intr_level old_level;
+  enum intr_level old_level;
 
   ASSERT (is_thread (t));
 
-  //old_level = intr_disable ();
+  old_level = intr_disable ();
   ASSERT (t->status == THREAD_BLOCKED);
   list_insert_ordered (&ready_list, &t->elem, comparator_priority, NULL);
   t->status = THREAD_READY;
@@ -396,7 +398,7 @@ thread_unblock (struct thread *t)
       thread_current()->ready_start_tick = tmp_tick;
   }
 
-  //intr_set_level (old_level);
+  intr_set_level (old_level);
 }
 
 /* Returns the name of the running thread. */
@@ -459,13 +461,11 @@ void
 thread_yield (void) 
 {
   struct thread *cur = thread_current ();
-
   enum intr_level old_level;
-  old_level = intr_disable();
   
   ASSERT (!intr_context ());
 
-  //
+  old_level = intr_disable();
   
   if (cur != idle_thread) {
       list_insert_ordered(&ready_list, &cur->elem, comparator_priority, NULL);
@@ -505,7 +505,12 @@ thread_set_priority (int new_priority)
     struct thread* cur = thread_current();
     cur->priority = new_priority;
 
+    enum intr_level old_level;
+    old_level = intr_disable();
+
     if (!list_empty(&ready_list)) {
+        
+
         struct thread* maxi = list_entry(list_back(&ready_list), struct thread, elem);
         /*
         if (maxi != NULL && maxi->priority > cur->priority) {
@@ -523,6 +528,8 @@ thread_set_priority (int new_priority)
             thread_current()->ready_start_tick = tmp_tick;
         }
     }
+
+    intr_set_level(old_level);
 }
 
 /* Returns the current thread's priority. */
