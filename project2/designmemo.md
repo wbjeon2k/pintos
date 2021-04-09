@@ -1,6 +1,94 @@
 # Project 2
 
+### Todo
+
+threads/thread.c:  
+child list initialize 하기
+
+threads/thread.h:
+child thread list 만들기
+
+userprog/exception.c:
+???
+userprog/process.c:
+filename --> command 로 바꾸기
+command tokenize with strtok_r  
+stack 에 argument push  
+
+process_execute: command 에서 맨 앞 filename 추출
+start_process: 나머지 arguements 들 stack push.
+
+
+userprog/syscall.c:
+argument 개수 별로 위치 다름.
+
+For # of arguments is
+1 : argument is located in esp+1
+2 : arguments are located in esp+4(arg0), esp+5(arg1)
+3 : arguments are located in esp+5(arg0), esp+6(arg1), esp+7(arg2)
+You don’t need to consider other cases for this project
+
+Set return value (if any) to f eax
+
+userprog/syscall.h:
+???
+6 files changed, 725 insertions(+), 38 deletions(-)
+
+vaddr.h:
+is_user_vaddr, is_kernel_vaddr
+
+pagedir.c:
+pagedir_get_page 는 mapping 되었는지 확인 하는 기능 내장.  
+
 ### Memo
+
+strtok_r:  
+
+```
+char *
+strtok_r (char *s, const char *delimiters, char **save_ptr) 
+
+Example usage:
+
+   char s[] = "  String to  tokenize. ";
+   char *token, *save_ptr;
+
+   for (token = strtok_r (s, " ", &save_ptr); token != NULL;
+        token = strtok_r (NULL, " ", &save_ptr))
+     printf ("'%s'\n", token);
+
+   outputs:
+
+     'String'
+     'to'
+     'tokenize.'
+```
+
+thread.h:
+struct child_info 만들기  
+child_info: list_elem/ tid/ bool isWaiting, hasExited 등. syscall 작업할 때 더 생각.
+struct list child_list 만들기  
+
+```
+   For example, suppose there is a needed for a list of `struct
+   foo'.  `struct foo' should contain a `struct list_elem'
+   member, like so:
+
+      struct foo
+        {
+          struct list_elem elem;
+          int bar;
+          ...other members...
+        };
+
+   Then a list of `struct foo' can be be declared and initialized
+   like so:
+
+      struct list foo_list;
+
+      list_init (&foo_list);
+```
+
 
 
 ### Manual summary
@@ -83,6 +171,7 @@ wait: parent thread have to wait until exec returns ---> sync. wait.
 
 rest: about files
 file descriptor 가 대체 어딨는거?  
+fd는 신경쓰지 않아도 된다. fd=1 로 고정. (for userprog test) "All of our test programs write to the console (the user process version of printf() is implemented this way),"  
 --> 3.4.2  
 " 3.4.2 System Calls FAQ
 
