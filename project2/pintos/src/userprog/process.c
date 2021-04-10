@@ -54,6 +54,8 @@ process_execute (const char *command)
 
   //first token == file name. only extract file name
   file_name = palloc_get_page(0);
+  if (file_name == NULL) return TID_ERROR;
+
   file_name = strtok_r(command, " ", &tmp_ptr);
 
   /* Create a new thread to execute FILE_NAME. */
@@ -70,12 +72,43 @@ process_execute (const char *command)
 
 /* A thread function that loads a user process and starts it
    running. */
+/*
+get first token, make it into file name.
+if load successful, push arguments.
+if load successful, make a child, push into child list
+*/
 static void
-start_process (void *file_name_)
+start_process (void *cmd_)
 {
-  char *file_name = file_name_;
+  char *command = cmd_;
   struct intr_frame if_;
   bool success;
+
+  char* file_name, token;
+  char** argv_list;
+  unsigned int argc, cnt;
+
+  file_name = palloc_get_page(0);
+  argv_list = palloc_get_page(0);
+  cnt = 0;
+
+  if (file_name == NULL || argv_list == NULL) {
+      palloc_free_page(command);
+      thread_exit();
+      return;
+  }
+
+  for (token = strtok_r(command, " ", &save_ptr); token != NULL;
+      token = strtok_r(NULL, " ", &save_ptr)) {
+      if (cnt = 0) {
+          file_name = token;
+      }
+      else {
+          argv_list[cnt - 1] = token;
+      }
+      ++cnt;
+  }
+  argc = cnt - 1;
 
   /* Initialize interrupt frame and load executable. */
   memset (&if_, 0, sizeof if_);
@@ -85,9 +118,14 @@ start_process (void *file_name_)
   success = load (file_name, &if_.eip, &if_.esp);
 
   /* If load failed, quit. */
-  palloc_free_page (file_name);
-  if (!success) 
-    thread_exit ();
+  palloc_free_page (command);
+  if (!success) {
+      thread_exit();
+      return;
+  }
+
+  struct child_info* new_child;
+
 
   /* Start the user process by simulating a return from an
      interrupt, implemented by intr_exit (in
