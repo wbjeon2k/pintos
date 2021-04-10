@@ -25,23 +25,46 @@ static bool load (const char *cmdline, void (**eip) (void), void **esp);
    FILENAME.  The new thread may be scheduled (and may even exit)
    before process_execute() returns.  Returns the new process's
    thread id, or TID_ERROR if the thread cannot be created. */
+
+/*
+   Example usage:
+
+   char s[] = "  String to  tokenize. ";
+   char *token, *save_ptr;
+
+   for (token = strtok_r (s, " ", &save_ptr); token != NULL;
+        token = strtok_r (NULL, " ", &save_ptr))
+     printf ("'%s'\n", token);
+
+*/
+
 tid_t
-process_execute (const char *file_name) 
+process_execute (const char *command) 
 {
-  char *fn_copy;
+  char* cmd_copy;
+  char* file_name, tmp_ptr;
   tid_t tid;
 
   /* Make a copy of FILE_NAME.
      Otherwise there's a race between the caller and load(). */
-  fn_copy = palloc_get_page (0);
-  if (fn_copy == NULL)
+  cmd_copy = palloc_get_page (0);
+  if (cmd_copy == NULL)
     return TID_ERROR;
-  strlcpy (fn_copy, file_name, PGSIZE);
+  strlcpy (cmd_copy, command, PGSIZE);
+
+  //first token == file name. only extract file name
+  file_name = palloc_get_page(0);
+  file_name = strtok_r(command, " ", &tmp_ptr);
 
   /* Create a new thread to execute FILE_NAME. */
-  tid = thread_create (file_name, PRI_DEFAULT, start_process, fn_copy);
-  if (tid == TID_ERROR)
-    palloc_free_page (fn_copy); 
+  //pass full command with cmd_copy
+  tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_copy);
+  if (tid == TID_ERROR) {
+      palloc_free_page(cmd_copy);
+  }
+
+  //free resource
+  palloc_free_page(file_name);
   return tid;
 }
 
