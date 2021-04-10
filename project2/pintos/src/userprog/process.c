@@ -125,6 +125,13 @@ start_process (void *cmd_)
   }
 
   struct child_info* new_child;
+  new_child = palloc_get_page(0);
+  if (new_child == NULL) {
+      thread_exit();
+      return;
+  }
+
+  
 
 
   /* Start the user process by simulating a return from an
