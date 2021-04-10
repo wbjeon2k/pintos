@@ -8,6 +8,8 @@ child list initialize 하기
 threads/thread.h:
 child thread list 만들기
 
+struct child_info: child_list_elem, tid, exitcode, isWaiting, hasExited, cmd_line, parent_thread, syncs: exec, wait
+
 userprog/exception.c:
 ???
 userprog/process.c:
@@ -15,20 +17,46 @@ filename --> command 로 바꾸기
 command tokenize with strtok_r  
 stack 에 argument push  
 
+```
+pushstack{
+  tokenize string.
+  string: filename + argv0 + argv1 + ... argvi
+
+  'foo\0' --> foo 3 + zero 1.
+  push argvs from i ~ 0
+  alignment
+  argc + 1 = null
+  argvs[i] ~ arvs[0]
+  argv
+  argc
+  eax = 0 <-- final stack pointer
+}
+```
+
 process_execute: command 에서 맨 앞 filename 추출
 start_process: 나머지 arguements 들 stack push.
 
 
 userprog/syscall.c:
+
+piazza question: https://piazza.com/class/klysdx0ofg129?cid=47
+--> intr_frame is in kernel, different from user stack!!!
+--> user stack 에 넣는 순서랑 intr_frame 에서 제공되는 argument 들 순서는 완전히 다르다!
+
+syscall 에 제공되는 포인터들은 다 userprog 에서 제공 --> check 해야함.
+
 argument 개수 별로 위치 다름.
 
+```
 For # of arguments is
 1 : argument is located in esp+1
 2 : arguments are located in esp+4(arg0), esp+5(arg1)
 3 : arguments are located in esp+5(arg0), esp+6(arg1), esp+7(arg2)
 You don’t need to consider other cases for this project
 
+
 Set return value (if any) to f eax
+```
 
 userprog/syscall.h:
 ???
@@ -41,6 +69,12 @@ pagedir.c:
 pagedir_get_page 는 mapping 되었는지 확인 하는 기능 내장.  
 
 ### Memo
+
+syncs:  
+total 3 syncs: filesys, exec, wait  
+filesys: before/after load.  
+exec: down at syscall exec, up at process_exec.  
+wait: down at syscall wait, up at syscall exit.  
 
 strtok_r:  
 
