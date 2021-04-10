@@ -1,4 +1,4 @@
-#include "userprog/process.h"
+﻿#include "userprog/process.h"
 #include <debug.h>
 #include <inttypes.h>
 #include <round.h>
@@ -20,6 +20,7 @@
 
 static thread_func start_process NO_RETURN;
 static bool load (const char *cmdline, void (**eip) (void), void **esp);
+static void argument_push(void** esp, int argc, const char** argvs);
 
 /* Starts a new thread running a user program loaded from
    FILENAME.  The new thread may be scheduled (and may even exit)
@@ -86,7 +87,7 @@ start_process (void *cmd_)
 
   char* file_name, token;
   char** argv_list;
-  unsigned int argc, cnt;
+  int argc, cnt;
 
   file_name = palloc_get_page(0);
   argv_list = palloc_get_page(0);
@@ -124,14 +125,9 @@ start_process (void *cmd_)
       return;
   }
 
-  struct child_info* new_child;
-  new_child = palloc_get_page(0);
-  if (new_child == NULL) {
-      thread_exit();
-      return;
-  }
-
-  
+  argument_push(&if_.esp, argc, argv_list);
+  //hex_dump test
+  hex_dump(if_.esp, if_.esp, PHYS_BASE – if_.esp, true);
 
 
   /* Start the user process by simulating a return from an
@@ -142,6 +138,57 @@ start_process (void *cmd_)
      and jump to it. */
   asm volatile ("movl %0, %%esp; jmp intr_exit" : : "g" (&if_) : "memory");
   NOT_REACHED ();
+}
+
+/*
+push arguments into stack.
+decrement enough esp,
+then use memcpy to copy actual data
+
+pushstack{
+  push argvs from 0 ~ i
+  alignment
+  argc + 1 = null
+  argvs[i] ~ arvs[0]
+  argv
+  argc
+  eax = 0 <-- final stack pointer
+}
+
+*/
+static void argument_push(void** esp, int argc, const char** argvs) {
+
+    uint32_t* argv_loc[argc];
+
+
+    for (int i = 0; i < argc; ++i) {
+        //foo + \0
+        int len = strnlen(argvs[i]) + 1;
+        *esp -= len;
+        memcpy(*esp, argvs[i], len);
+        argv_loc[i] = *esp;
+    }
+    
+    //alignment
+    *esp -= (*esp % 4);
+    //last null
+    *esp -= 4;
+    *((uint32_t*)*esp) = 0;
+
+    for (int i = argc - 1; i >= 0; --i) {
+        *esp -= 4;
+        *((uint32_t*)*esp) = argv_loc[i];
+    }
+
+    *esp -= 4;
+    *((uint32_t*)*esp) = (*esp + 4);
+
+    *esp -= 4;
+    *((int*)*esp) = argc;
+
+    *esp -= 4;
+    *((uint32_t*)*esp) = 0;
+
 }
 
 /* Waits for thread TID to die and returns its exit status.  If
