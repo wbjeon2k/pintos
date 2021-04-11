@@ -20,7 +20,7 @@
 
 static thread_func start_process NO_RETURN;
 static bool load (const char *cmdline, void (**eip) (void), void **esp);
-static void argument_push(void** esp, int argc, const char** argvs);
+static void argument_push(void** esp, int argc, char** argvs);
 
 /* Starts a new thread running a user program loaded from
    FILENAME.  The new thread may be scheduled (and may even exit)
@@ -99,6 +99,7 @@ start_process (void *cmd_)
       return;
   }
 
+  char* save_ptr;
   for (token = strtok_r(command, " ", &save_ptr); token != NULL;
       token = strtok_r(NULL, " ", &save_ptr)) {
       if (cnt = 0) {
@@ -127,7 +128,8 @@ start_process (void *cmd_)
 
   argument_push(&if_.esp, argc, argv_list);
   //hex_dump test
-  hex_dump(if_.esp, if_.esp, PHYS_BASE – if_.esp, true);
+  //
+  hex_dump(if_.esp, if_.esp, PHYS_BASE - if_.esp, true);
 
 
   /* Start the user process by simulating a return from an
@@ -156,14 +158,14 @@ pushstack{
 }
 
 */
-static void argument_push(void** esp, int argc, const char** argvs) {
+static void argument_push(void** esp, int argc, char** argvs) {
 
     uint32_t* argv_loc[argc];
+    int i = 0;
 
-
-    for (int i = 0; i < argc; ++i) {
+    for (i = 0; i < argc; ++i) {
         //foo + \0
-        int len = strnlen(argvs[i]) + 1;
+        int len = strnlen(argvs[i], 100) + 1;
         *esp -= len;
         memcpy(*esp, argvs[i], len);
         argv_loc[i] = *esp;
@@ -175,7 +177,7 @@ static void argument_push(void** esp, int argc, const char** argvs) {
     *esp -= 4;
     *((uint32_t*)*esp) = 0;
 
-    for (int i = argc - 1; i >= 0; --i) {
+    for (i = argc - 1; i >= 0; --i) {
         *esp -= 4;
         *((uint32_t*)*esp) = argv_loc[i];
     }
