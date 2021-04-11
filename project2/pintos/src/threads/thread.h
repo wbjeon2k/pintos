@@ -96,7 +96,8 @@ struct child_info {
     bool isWaiting; // true if wait(tid) has called
     bool hasExited; // true if exit() has called
     bool load_success; // true if load at start_process successed.
-    thread* parent_thread; // parent thread. defined at syscall exec
+    /*****/
+    struct thread* parent_thread; // parent thread. defined at syscall exec
     char* cmd_line; // original command line
 
     struct list_elem child_list_elem; // for thread's child list

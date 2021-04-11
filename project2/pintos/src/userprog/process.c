@@ -188,7 +188,6 @@ static void argument_push(void** esp, int argc, const char** argvs) {
 
     *esp -= 4;
     *((uint32_t*)*esp) = 0;
-
 }
 
 /* Waits for thread TID to die and returns its exit status.  If
