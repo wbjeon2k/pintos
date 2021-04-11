@@ -160,6 +160,7 @@ pushstack{
 */
 static void argument_push(void** esp, int argc, char** argvs) {
 
+    void** original_esp = esp;
     uint32_t* argv_loc[argc];
     int i = 0;
 
@@ -172,7 +173,7 @@ static void argument_push(void** esp, int argc, char** argvs) {
     }
     
     //alignment
-    *esp -= ((uint32_t*)*esp % 4);
+    *esp -= ((int*)original_esp - (int*)*esp) % 4;
     //last null
     *esp -= 4;
     *((uint32_t*)*esp) = 0;
