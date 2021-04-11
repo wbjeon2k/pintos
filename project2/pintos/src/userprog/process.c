@@ -49,8 +49,8 @@ process_execute (const char *command)
   /* Make a copy of FILE_NAME.
      Otherwise there's a race between the caller and load(). */
   cmd_copy = palloc_get_page (0);
-  if (cmd_copy == NULL)
-    return TID_ERROR;
+  if (cmd_copy == NULL) return TID_ERROR;
+
   strlcpy (cmd_copy, command, PGSIZE);
 
   //first token == file name. only extract file name
@@ -63,7 +63,8 @@ process_execute (const char *command)
   //pass full command with cmd_copy
   tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_copy);
   if (tid == TID_ERROR) {
-      palloc_free_page(cmd_copy);
+      palloc_free_page(file_name);
+      return tid;
   }
 
   //free resource
