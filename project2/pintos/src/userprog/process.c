@@ -172,7 +172,7 @@ static void argument_push(void** esp, int argc, char** argvs) {
     }
     
     //alignment
-    *esp -= (*esp % 4);
+    *esp -= ((uint32_t*)*esp % 4);
     //last null
     *esp -= 4;
     *((uint32_t*)*esp) = 0;
