@@ -58,6 +58,8 @@ You don’t need to consider other cases for this project
 Set return value (if any) to f eax
 ```
 
+wait 만들기 전까지 infinite loop 이유: 지금 thread 에서 다른 thread 넘어갈때 wait 해야하는데 바로 return함.
+
 userprog/syscall.h:
 ???
 6 files changed, 725 insertions(+), 38 deletions(-)
@@ -122,6 +124,24 @@ struct list child_list 만들기
 
       list_init (&foo_list);
 ```
+
+lib/user/syscall:  
+argument 0개,1개,2개,3개 별로 들어가는 esp+x 위치 있음. guide 에 그림으로 나온것과 동일?  
+syscall-nr 의 SYSCALL_NUMBER, arg0, ...  
+
+lib/user/entry.c:  
+char *argv[] 형태. char** argv --> char*[] argv 가 맞는것 같다.
+
+lib/kernel/console:  
+console lock 도 있음
+puts, putbuf, putc 등 사용 가능
+
+src/test/lib.c:  
+syscall wait,exec 등 직접 호출함.  
+
+
+
+
 
 
 
