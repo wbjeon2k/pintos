@@ -203,6 +203,11 @@ static void argument_push(void** esp, int argc, char** argvs) {
 
    This function will be implemented in problem 2-2.  For now, it
    does nothing. */
+
+/*
+pintos/src/test/lib.c 에서 wait, exit, exec 등 모두 사용.
+process wait 구현 전까지 매뉴얼대로 infinite loop 사용해야함.
+*/
 int
 process_wait (tid_t child_tid UNUSED) 
 {
