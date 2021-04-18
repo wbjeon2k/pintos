@@ -79,6 +79,7 @@ syscall_handler (struct intr_frame *f)
 
     if (syscall_nr == SYS_WAIT) {
         //get tid
+        tid_t tid = 0;
         process_wait(tid);
     }
 }
