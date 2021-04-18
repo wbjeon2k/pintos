@@ -64,11 +64,13 @@ process_execute (const char *command)
   tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_copy);
   if (tid == TID_ERROR) {
       palloc_free_page(file_name);
+      palloc_free_page(cmd_copy);
       return tid;
   }
 
   //free resource
   palloc_free_page(file_name);
+  palloc_free_page(cmd_copy);
   return tid;
 }
 
@@ -209,9 +211,15 @@ pintos/src/test/lib.c 에서 wait, exit, exec 등 모두 사용.
 process wait 구현 전까지 매뉴얼대로 infinite loop 사용해야함.
 */
 int
-process_wait (tid_t child_tid UNUSED) 
+process_wait (tid_t child_tid) 
 {
-  return -1;
+    //temp infinite loop
+    for (;;) {}
+
+    /*
+    todo: iterate through child list -> find tid child -> check if already waiting -> wait until child exit
+    */
+    return -1;
 }
 
 /* Free the current process's resources. */
