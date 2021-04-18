@@ -63,14 +63,14 @@ process_execute (const char *command)
   //pass full command with cmd_copy
   tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_copy);
   if (tid == TID_ERROR) {
-      palloc_free_page(file_name);
-      palloc_free_page(cmd_copy);
+      //palloc_free_page(file_name);
+      //palloc_free_page(cmd_copy);
       return tid;
   }
 
   //free resource
-  palloc_free_page(file_name);
-  palloc_free_page(cmd_copy);
+  //palloc_free_page(file_name);
+  //palloc_free_page(cmd_copy);
   return tid;
 }
 
@@ -97,7 +97,7 @@ start_process (void *cmd_)
   cnt = 0;
 
   if (file_name == NULL || argv_list == NULL) {
-      palloc_free_page(command);
+      //palloc_free_page(command);
       thread_exit();
       return;
   }
@@ -123,7 +123,7 @@ start_process (void *cmd_)
   success = load (file_name, &if_.eip, &if_.esp);
 
   /* If load failed, quit. */
-  palloc_free_page (command);
+  //palloc_free_page (command);
   if (!success) {
       thread_exit();
       return;
