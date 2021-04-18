@@ -2,6 +2,9 @@
 
 ### Todo
 
+그냥 다른 파트들을 완벽하게 만들었다 가정하고 syscall 전부 만든 뒤에 테스트 하는게 나아보인다.  
+일단 exec 부터.:
+
 threads/thread.c:  
 child list initialize 하기
 
