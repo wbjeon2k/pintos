@@ -39,6 +39,10 @@ static void argument_push(void** esp, int argc, char** argvs);
 
 */
 
+void checkpoint() {
+    return;
+}
+
 tid_t
 process_execute (const char *command) 
 {
@@ -64,13 +68,13 @@ process_execute (const char *command)
   tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_copy);
   if (tid == TID_ERROR) {
       palloc_free_page(file_name);
-      palloc_free_page(cmd_copy);
+      //palloc_free_page(cmd_copy);
       return tid;
   }
 
   //free resource
   palloc_free_page(file_name);
-  palloc_free_page(cmd_copy);
+  //palloc_free_page(cmd_copy);
   return tid;
 }
 
@@ -89,18 +93,20 @@ start_process (void *cmd_)
   bool success;
 
   char* file_name, token;
-  char** argv_list;
+  char* argv_list[];
   int argc, cnt;
 
   file_name = palloc_get_page(0);
   argv_list = palloc_get_page(0);
-  cnt = 0;
 
   if (file_name == NULL || argv_list == NULL) {
-      palloc_free_page(command);
+      if(file_name != null) palloc_free_page(file_name);
+      if(argv_list != null) palloc_free_page(argv_list);
       thread_exit();
       return;
   }
+
+  cnt = 0;
 
   char* save_ptr;
   for (token = strtok_r(command, " ", &save_ptr); token != NULL;
