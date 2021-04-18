@@ -93,15 +93,16 @@ start_process (void *cmd_)
   bool success;
 
   char* file_name, token;
-  char* argv_list[];
+  char** argv_list;
   int argc, cnt;
 
   file_name = palloc_get_page(0);
   argv_list = palloc_get_page(0);
 
   if (file_name == NULL || argv_list == NULL) {
-      if(file_name != null) palloc_free_page(file_name);
-      if(argv_list != null) palloc_free_page(argv_list);
+      //
+      if(file_name != NULL) palloc_free_page(file_name);
+      if(argv_list != NULL) palloc_free_page(argv_list);
       thread_exit();
       return;
   }
