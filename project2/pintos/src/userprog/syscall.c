@@ -69,7 +69,8 @@ syscall_handler (struct intr_frame *f)
     uint32_t syscall_nr = *esp_copy;
 
     if (syscall_nr == SYS_EXIT) {
-        process_exit();
+        //process_exit();
+        thread_exit();
     }
 
     if (syscall_nr == SYS_WRITE) {

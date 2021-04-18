@@ -46,7 +46,7 @@ void checkpoint() {
 tid_t
 process_execute (const char *command) 
 {
-  char* cmd_copy;
+  char* cmd_copy, cmd_pass;
   char* file_name, tmp_ptr;
   tid_t tid;
 
@@ -55,17 +55,22 @@ process_execute (const char *command)
   cmd_copy = palloc_get_page (0);
   if (cmd_copy == NULL) return TID_ERROR;
 
+  cmd_pass = palloc_get_page(0);
+  if (cmd_pass == NULL) return TID_ERROR;
+
   strlcpy (cmd_copy, command, PGSIZE);
 
-  //first token == file name. only extract file name
-  file_name = palloc_get_page(0);
-  if (file_name == NULL) return TID_ERROR;
+  strlcpy(cmd_pass, command, PGSIZE);
 
-  file_name = strtok_r(command, " ", &tmp_ptr);
+  //first token == file name. only extract file name
+  //file_name = palloc_get_page(0);
+  //if (file_name == NULL) return TID_ERROR;
+
+  file_name = strtok_r(cmd_copy, " ", &tmp_ptr);
 
   /* Create a new thread to execute FILE_NAME. */
   //pass full command with cmd_copy
-  tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_copy);
+  tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_pass);
   if (tid == TID_ERROR) {
       //palloc_free_page(file_name);
       //palloc_free_page(cmd_copy);
@@ -96,6 +101,7 @@ start_process (void *cmd_)
   char** argv_list;
   int argc, cnt;
 
+  /*
   file_name = palloc_get_page(0);
   argv_list = palloc_get_page(0);
 
@@ -106,6 +112,7 @@ start_process (void *cmd_)
       thread_exit();
       return;
   }
+  */
 
   cnt = 0;
 
