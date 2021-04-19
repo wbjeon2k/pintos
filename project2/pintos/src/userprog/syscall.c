@@ -165,7 +165,7 @@ void exit_impl(int status) {
     printf("%s: exit(%d)\n", thread_name(), exit_code);
     thread_exit();
 }
-
+/*
 pid_t exec_impl(const char* file) {
 
 }
@@ -189,6 +189,7 @@ int open(const char* file) {
 int filesize(int fd) {
 
 }
+*/
 
 int read_impl(int fd, void* buffer, unsigned length) {
     if (fd == 0) {
@@ -213,6 +214,7 @@ int write_impl(int fd, const void* buffer, unsigned length) {
     }
 }
 
+/*
 void seek(int fd, unsigned position) {
 
 }
@@ -224,3 +226,4 @@ unsigned int tell(int fd) {
 void close(int fd) {
 
 }
+*/
