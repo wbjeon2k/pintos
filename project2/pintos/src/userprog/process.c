@@ -42,7 +42,7 @@ static void argument_push(void** esp, int argc, char** argvs);
 */
 
 void checkpoint() {
-    return;
+    printf("checkpoint\n");
 }
 
 tid_t
