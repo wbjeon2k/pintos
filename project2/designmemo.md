@@ -75,6 +75,8 @@ pagedir_get_page 는 mapping 되었는지 확인 하는 기능 내장.
 
 ### Memo
 
+ System calls that return a value can do so by modifying the "eax" member of struct intr_frame. 
+
 syncs:  
 total 3 syncs: filesys, exec, wait  
 filesys: before/after load.  
