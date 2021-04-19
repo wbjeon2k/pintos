@@ -52,6 +52,8 @@ process_execute (const char *command)
   char* file_name, tmp_ptr;
   tid_t tid;
 
+  printf("command %s\n", command);
+
   checkpoint();
 
   /* Make a copy of FILE_NAME.
@@ -237,8 +239,10 @@ process wait 구현 전까지 매뉴얼대로 infinite loop 사용해야함.
 int
 process_wait (tid_t child_tid) 
 {
+    printf("wait start\n");
     //temp infinite loop
-    for (;;) {}
+    //for (;;) {}
+    for (;;);
 
     /*
     todo: iterate through child list -> find tid child -> check if already waiting -> wait until child exit
