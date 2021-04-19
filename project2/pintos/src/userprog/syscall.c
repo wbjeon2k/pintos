@@ -161,7 +161,7 @@ void halt_impl(void) {
     shutdown_power_off();
 }
 
-void exit_impl(int status) {
+void exit_impl(int exit_code) {
     printf("%s: exit(%d)\n", thread_name(), exit_code);
     thread_exit();
 }
