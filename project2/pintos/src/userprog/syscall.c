@@ -4,6 +4,7 @@
 #include "threads/interrupt.h"
 #include "threads/thread.h"
 #include <stdint.h>
+#include <inttypes.h>
 
 static void syscall_handler (struct intr_frame *);
 
@@ -22,6 +23,18 @@ argument 개수 1,2,3 개 각각 extractor
 VA checker
 syscall handler
 */
+
+/*
+For # of arguments is
+1 : argument is located in esp + 1
+2 : arguments are located in esp + 4(arg0), esp + 5(arg1)
+3 : arguments are located in esp + 5(arg0), esp + 6(arg1), esp + 7(arg2)
+*/
+
+uint32_t* esp_offset(const struct intr_frame* f, int i) {
+
+}
+
 
 /*
     SYS_HALT,                   /* Halt the operating system. 
@@ -58,8 +71,9 @@ void close(int fd);
 
 */
 
+
 static void
-syscall_handler (struct intr_frame *f) 
+syscall_handler (struct intr_frame *f UNUSED) 
 {
   //printf ("system call!\n");
   //thread_exit ();
@@ -85,6 +99,54 @@ syscall_handler (struct intr_frame *f)
     }
 }
 
-int write_implement(int fd, const void* buffer, unsigned length) {
+void halt_impl(void) {
+
+}
+
+void exit_impl(int status) {
+
+}
+
+pid_t exec_impl(const char* file) {
+
+}
+
+int wait(pid_t wait_pid) {
+
+}
+
+bool create(const char* file, unsigned initial_size) {
+
+}
+
+bool remove(const char* file) {
+
+}
+
+int open(const char* file) {
+
+}
+
+int filesize(int fd) {
+
+}
+
+int read(int fd, void* buffer, unsigned length) {
+
+}
+
+int write_impl(int fd, const void* buffer, unsigned length) {
+
+}
+
+void seek(int fd, unsigned position) {
+
+}
+
+unsigned int tell(int fd) {
+
+}
+
+void close(int fd) {
 
 }

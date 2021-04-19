@@ -27,6 +27,8 @@ static void argument_push(void** esp, int argc, char** argvs);
    before process_execute() returns.  Returns the new process's
    thread id, or TID_ERROR if the thread cannot be created. */
 
+//https://stackoverflow.com/questions/9040818/how-to-use-void-pointer-correctly
+
 /*
    Example usage:
 
@@ -52,7 +54,7 @@ process_execute (const char *command)
 
   /* Make a copy of FILE_NAME.
      Otherwise there's a race between the caller and load(). */
-  cmd_copy = palloc_get_page (0);
+  cmd_copy = palloc_get_page(0);
   if (cmd_copy == NULL) return TID_ERROR;
 
   cmd_pass = palloc_get_page(0);
@@ -101,7 +103,7 @@ start_process (void *cmd_)
   char** argv_list;
   int argc, cnt;
 
-  /*
+  
   file_name = palloc_get_page(0);
   argv_list = palloc_get_page(0);
 
@@ -112,7 +114,7 @@ start_process (void *cmd_)
       thread_exit();
       return;
   }
-  */
+  
 
   cnt = 0;
 
@@ -164,6 +166,9 @@ push arguments into stack.
 decrement enough esp,
 then use memcpy to copy actual data
 
+//https://stackoverflow.com/questions/9040818/how-to-use-void-pointer-correctly
+//http://soen.kr/lecture/ccpp/cpp1/10-4-4.htm
+//**(int **)vp
 pushstack{
   push argvs from 0 ~ i
   alignment
