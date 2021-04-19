@@ -66,12 +66,16 @@ process_execute (const char *command)
   cmd_pass = palloc_get_page(0);
   if (cmd_pass == NULL) return TID_ERROR;
 
+  checkpoint();
+
   strlcpy(cmd_copy, command, PGSIZE);
   strlcpy(cmd_pass, cmd_copy, PGSIZE);
 
   //first token == file name. only extract file name
   file_name = palloc_get_page(0);
   if (file_name == NULL) return TID_ERROR;
+
+  checkpoint();
 
   file_name = strtok_r(cmd_copy, " ", &tmp_ptr);
 
