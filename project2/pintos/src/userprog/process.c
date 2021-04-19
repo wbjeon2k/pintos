@@ -52,10 +52,14 @@ process_execute (const char *command)
   char* file_name, tmp_ptr;
   tid_t tid;
 
+  checkpoint();
+
   /* Make a copy of FILE_NAME.
      Otherwise there's a race between the caller and load(). */
   cmd_copy = palloc_get_page(0);
   if (cmd_copy == NULL) return TID_ERROR;
+
+  checkpoint();
 
   cmd_pass = palloc_get_page(0);
   if (cmd_pass == NULL) return TID_ERROR;
