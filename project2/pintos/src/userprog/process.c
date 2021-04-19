@@ -69,6 +69,8 @@ process_execute (const char *command)
 
   file_name = strtok_r(cmd_copy, " ", &tmp_ptr);
 
+  checkpoint();
+
   /* Create a new thread to execute FILE_NAME. */
   //pass full command with cmd_copy
   tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_pass);
