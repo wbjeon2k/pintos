@@ -81,7 +81,7 @@ process_execute (const char *command)
 
   checkpoint(3);
 
-  file_name = strtok_r(cmd_copy, " ", &tmp_ptr);
+  filename = strtok_r(cmd_copy, " ", &tmp_ptr);
 
   checkpoint(4);
 
