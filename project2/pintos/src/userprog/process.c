@@ -128,6 +128,8 @@ start_process (void *cmd_)
   char** argv_list;
   int argc;
   int cnt;
+
+  printf("passed command %s\n", command);
   
   //file_name = malloc(30);
   argv_list = palloc_get_page(0);
@@ -153,6 +155,8 @@ start_process (void *cmd_)
       ++cnt;
   }
   argc = cnt - 1;
+
+  printf("cnt %d\n", cnt);
 
   checkpoint(5);
 
