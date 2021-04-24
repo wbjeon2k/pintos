@@ -63,6 +63,7 @@ process_execute (const char *command)
   //pallocs are too large. use malloc
   int cmd_len;
   cmd_len = strlen(command);
+  printf("cmd_len %d\n", cmd_len);
   cmd_copy = malloc(cmd_len);
   if (cmd_copy == NULL) return TID_ERROR;
 
