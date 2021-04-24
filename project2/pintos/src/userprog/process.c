@@ -84,16 +84,16 @@ process_execute (const char *command)
   //pass full command with cmd_pass
   tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_pass);
   if (tid == TID_ERROR) {
-      free(cmd_copy);
-      free(cmd_pass);
+      //free(cmd_copy);
+      //free(cmd_pass);
       return tid;
   }
 
   //free resource
   //palloc_free_page(file_name);
   //palloc_free_page(cmd_copy);
-  free(cmd_copy);
-  free(cmd_pass);
+  //free(cmd_copy);
+  //free(cmd_pass);
   return tid;
 }
 
@@ -129,7 +129,7 @@ start_process (void* cmd_)
   int argc;
   int cnt;
 
-  command = cmd_;
+  command = (char *)cmd_;
   printf("passed command %s\n", command);
   
   //file_name = malloc(30);
