@@ -118,9 +118,11 @@ start_process (void *cmd_)
   struct intr_frame if_;
   bool success;
 
-  char* file_name, token;
+  char* file_name;
+  char* token;
   char** argv_list;
-  int argc, cnt;
+  int argc;
+  int cnt;
   
   file_name = malloc(30);
   argv_list = palloc_get_page(0);
@@ -149,6 +151,8 @@ start_process (void *cmd_)
   argc = cnt - 1;
 
   checkpoint(5);
+
+  printf("fliename %s", file_name);
 
   /* Initialize interrupt frame and load executable. */
   memset (&if_, 0, sizeof if_);
