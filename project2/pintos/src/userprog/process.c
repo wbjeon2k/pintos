@@ -51,34 +51,30 @@ process_execute (const char *command)
   //pallocs are too large. use malloc
   int cmd_len;
   cmd_len = strlen(command) + 1;
-  printf("cmd_len %d\n", cmd_len);
+  //printf("cmd_len %d\n", cmd_len);
   cmd_copy = malloc(cmd_len);
   if (cmd_copy == NULL) return TID_ERROR;
 
-  checkpoint(1);
-
+  //checkpoint(1);
   cmd_pass = malloc(cmd_len);
   if (cmd_pass == NULL) return TID_ERROR;
 
-  checkpoint(2);
-
+  //checkpoint(2);
   strlcpy(cmd_copy, command, cmd_len);
-  checkpoint(2);
+  //checkpoint(2);
   strlcpy(cmd_pass, command, cmd_len);
 
-  printf("cmd_copy %s\n", cmd_copy);
-  printf("cmd_pass %s\n", cmd_pass);
+  //printf("cmd_copy %s\n", cmd_copy);
+  //printf("cmd_pass %s\n", cmd_pass);
 
   //first token == file name. only extract file name
   //file_name = palloc_get_page(0);
   //if (file_name == NULL) return TID_ERROR;
-
-  checkpoint(3);
+  //checkpoint(3);
 
   file_name = strtok_r(cmd_copy, " ", &tmp_ptr);
-  printf("fliename %s\n", file_name);
-
-  checkpoint(4);
+  //printf("fliename %s\n", file_name);
+  //checkpoint(4);
 
   /* Create a new thread to execute FILE_NAME. */
   //pass full command with cmd_pass
@@ -130,7 +126,7 @@ start_process (void* cmd_)
   int cnt;
 
   command = (char *)cmd_;
-  printf("passed command %s\n", command);
+  //printf("passed command %s\n", command);
   
   //file_name = malloc(30);
   argv_list = palloc_get_page(0);
@@ -146,8 +142,8 @@ start_process (void* cmd_)
   int token_len;
   for (token = strtok_r(command, " ", &save_ptr); token != NULL;
       token = strtok_r(NULL, " ", &save_ptr)) {
-      printf("token %d %s\n", cnt, token);
-      token_len = strlen(token);
+      //printf("token %d %s\n", cnt, token);
+      //token_len = strlen(token);
       //cnt = 0 !!!!!!!!!!!!
       if (cnt == 0) {
           file_name = token;
@@ -159,11 +155,11 @@ start_process (void* cmd_)
   }
   argc = cnt - 1;
 
-  printf("cnt %d\n", cnt);
+  free(command);
 
-  checkpoint(5);
-
-  printf("fliename %s\n", file_name);
+  //printf("cnt %d\n", cnt);
+  //checkpoint(5);
+  //printf("fliename %s\n", file_name);
 
   /* Initialize interrupt frame and load executable. */
   memset (&if_, 0, sizeof if_);
@@ -172,7 +168,7 @@ start_process (void* cmd_)
   if_.eflags = FLAG_IF | FLAG_MBS;
   success = load (file_name, &if_.eip, &if_.esp);
 
-  checkpoint(6);
+  //checkpoint(6);
 
   /* If load failed, quit. */
   //palloc_free_page (command);
@@ -181,12 +177,11 @@ start_process (void* cmd_)
       return;
   }
 
-  checkpoint(7);
+  //checkpoint(7);
 
   argument_push(&if_.esp, argc, argv_list);
   //hex_dump test
-  //
-  hex_dump(if_.esp, if_.esp, PHYS_BASE - if_.esp, true);
+  //hex_dump(if_.esp, if_.esp, PHYS_BASE - if_.esp, true);
 
 
   /* Start the user process by simulating a return from an
