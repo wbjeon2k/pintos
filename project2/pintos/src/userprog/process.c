@@ -146,6 +146,7 @@ start_process (void* cmd_)
   int token_len;
   for (token = strtok_r(command, " ", &save_ptr); token != NULL;
       token = strtok_r(NULL, " ", &save_ptr)) {
+      printf("token %d %s\n", cnt, token);
       token_len = strlen(token);
       if (cnt = 0) {
           file_name = token;
