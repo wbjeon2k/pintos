@@ -117,9 +117,9 @@ if load successful, push arguments.
 if load successful, make a child, push into child list
 */
 static void
-start_process (void *cmd_)
+start_process (void* cmd_)
 {
-  char *command = cmd_;
+  char *command = (char*) cmd_;
   struct intr_frame if_;
   bool success;
 
