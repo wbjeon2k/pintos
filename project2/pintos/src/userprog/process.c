@@ -219,21 +219,21 @@ static void argument_push(void** esp, int argc, char** argvs) {
     *esp -= ((int*)original_esp - (int*)*esp) % 4;
     //last null
     *esp -= 4;
-    **((uint32_t*)*esp) = 0;
+    **(uint32_t** esp) = 0;
 
     for (i = argc - 1; i >= 0; --i) {
         *esp -= 4;
-        **((uint32_t*)*esp) = argv_loc[i];
+        **(uint32_t** esp) = argv_loc[i];
     }
 
     *esp -= 4;
-    **((uint32_t*)*esp) = (*esp + 4);
+    **(uint32_t** esp) = (*esp + 4);
 
     *esp -= 4;
-    **((int*)*esp) = argc;
+    **(int** esp) = argc;
 
     *esp -= 4;
-    **((uint32_t*)*esp) = 0;
+    **(uint32_t** esp) = 0;
 }
 
 /* Waits for thread TID to die and returns its exit status.  If
