@@ -143,10 +143,12 @@ start_process (void *cmd_)
   cnt = 0;
 
   char* save_ptr;
+  int token_len;
   for (token = strtok_r(command, " ", &save_ptr); token != NULL;
       token = strtok_r(NULL, " ", &save_ptr)) {
+      token_len = strlen(token);
       if (cnt = 0) {
-          file_name = token;
+          strlcpy(filename, token, token_len + 1);
       }
       else {
           argv_list[cnt - 1] = token;
@@ -157,7 +159,7 @@ start_process (void *cmd_)
 
   checkpoint(5);
 
-  printf("fliename %s", file_name);
+  printf("fliename %s\n", file_name);
 
   /* Initialize interrupt frame and load executable. */
   memset (&if_, 0, sizeof if_);
