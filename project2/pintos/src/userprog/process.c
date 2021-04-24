@@ -29,18 +29,6 @@ static void argument_push(void** esp, int argc, char** argvs);
 
 //https://stackoverflow.com/questions/9040818/how-to-use-void-pointer-correctly
 
-/*
-   Example usage:
-
-   char s[] = "  String to  tokenize. ";
-   char *token, *save_ptr;
-
-   for (token = strtok_r (s, " ", &save_ptr); token != NULL;
-        token = strtok_r (NULL, " ", &save_ptr))
-     printf ("'%s'\n", token);
-
-*/
-
 void checkpoint(int i) {
     printf("checkpoint %d\n", i);
 }
@@ -109,6 +97,18 @@ process_execute (const char *command)
   return tid;
 }
 
+/*
+   Example usage:
+
+   char s[] = "  String to  tokenize. ";
+   char *token, *save_ptr;
+
+   for (token = strtok_r (s, " ", &save_ptr); token != NULL;
+        token = strtok_r (NULL, " ", &save_ptr))
+     printf ("'%s'\n", token);
+
+*/
+
 /* A thread function that loads a user process and starts it
    running. */
 /*
@@ -129,13 +129,10 @@ start_process (void *cmd_)
   int argc;
   int cnt;
   
-  file_name = malloc(30);
+  //file_name = malloc(30);
   argv_list = palloc_get_page(0);
 
-  if (file_name == NULL || argv_list == NULL) {
-      //
-      if(file_name != NULL) free(file_name);
-      if(argv_list != NULL) palloc_free_page(argv_list);
+  if (argv_list == NULL) {
       thread_exit();
       return;
   }
@@ -148,7 +145,7 @@ start_process (void *cmd_)
       token = strtok_r(NULL, " ", &save_ptr)) {
       token_len = strlen(token);
       if (cnt = 0) {
-          strlcpy(file_name, token, token_len + 1);
+          file_name = token;
       }
       else {
           argv_list[cnt - 1] = token;
