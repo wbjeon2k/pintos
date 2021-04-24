@@ -50,7 +50,7 @@ process_execute (const char *command)
 {
   char* cmd_copy, cmd_pass;
   char* tmp_ptr;
-  char file_name[15]; //file name limited to 14 chars
+  char* file_name; //file name limited to 14 chars
   tid_t tid;
 
   printf("command %s\n", command);
@@ -81,13 +81,13 @@ process_execute (const char *command)
 
   checkpoint(3);
 
-  &file_name = strtok_r(cmd_copy, " ", &tmp_ptr);
+  file_name = strtok_r(cmd_copy, " ", &tmp_ptr);
 
   checkpoint(4);
 
   /* Create a new thread to execute FILE_NAME. */
   //pass full command with cmd_pass
-  tid = thread_create (&file_name, PRI_DEFAULT, start_process, cmd_pass);
+  tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_pass);
   if (tid == TID_ERROR) {
       free(cmd_copy);
       free(cmd_pass);
