@@ -41,58 +41,64 @@ static void argument_push(void** esp, int argc, char** argvs);
 
 */
 
-void checkpoint() {
-    printf("checkpoint\n");
+void checkpoint(int i) {
+    printf("checkpoint %d\n", i);
 }
 
 tid_t
 process_execute (const char *command) 
 {
   char* cmd_copy, cmd_pass;
-  char* file_name, tmp_ptr;
+  char* tmp_ptr;
+  char filename[15]; //file name limited to 14 chars
   tid_t tid;
 
   printf("command %s\n", command);
 
-  checkpoint();
+  checkpoint(0);
 
   /* Make a copy of FILE_NAME.
      Otherwise there's a race between the caller and load(). */
-  cmd_copy = palloc_get_page(0);
+  //pallocs are too large. use malloc
+  int cmd_len;
+  cmd_len = strlen(command);
+  cmd_copy = malloc(cmd_len);
   if (cmd_copy == NULL) return TID_ERROR;
 
-  checkpoint();
+  checkpoint(1);
 
-  cmd_pass = palloc_get_page(0);
+  cmd_pass = malloc(cmd_len);
   if (cmd_pass == NULL) return TID_ERROR;
 
-  checkpoint();
+  checkpoint(2);
 
-  strlcpy(cmd_copy, command, PGSIZE);
-  strlcpy(cmd_pass, cmd_copy, PGSIZE);
+  strlcpy(cmd_copy, command, cmd_len);
+  strlcpy(cmd_pass, cmd_copy, cmd_len);
 
   //first token == file name. only extract file name
-  file_name = palloc_get_page(0);
-  if (file_name == NULL) return TID_ERROR;
+  //file_name = palloc_get_page(0);
+  //if (file_name == NULL) return TID_ERROR;
 
-  checkpoint();
+  checkpoint(3);
 
   file_name = strtok_r(cmd_copy, " ", &tmp_ptr);
 
-  checkpoint();
+  checkpoint(4);
 
   /* Create a new thread to execute FILE_NAME. */
-  //pass full command with cmd_copy
+  //pass full command with cmd_pass
   tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_pass);
   if (tid == TID_ERROR) {
-      //palloc_free_page(file_name);
-      //palloc_free_page(cmd_copy);
+      free(cmd_copy);
+      free(cmd_pass);
       return tid;
   }
 
   //free resource
   //palloc_free_page(file_name);
   //palloc_free_page(cmd_copy);
+  free(cmd_copy);
+  free(cmd_pass);
   return tid;
 }
 
@@ -113,19 +119,17 @@ start_process (void *cmd_)
   char* file_name, token;
   char** argv_list;
   int argc, cnt;
-
   
-  file_name = palloc_get_page(0);
+  file_name = malloc(30);
   argv_list = palloc_get_page(0);
 
   if (file_name == NULL || argv_list == NULL) {
       //
-      if(file_name != NULL) palloc_free_page(file_name);
+      if(file_name != NULL) free(file_name);
       if(argv_list != NULL) palloc_free_page(argv_list);
       thread_exit();
       return;
   }
-  
 
   cnt = 0;
 
@@ -142,6 +146,8 @@ start_process (void *cmd_)
   }
   argc = cnt - 1;
 
+  checkpoint(5);
+
   /* Initialize interrupt frame and load executable. */
   memset (&if_, 0, sizeof if_);
   if_.gs = if_.fs = if_.es = if_.ds = if_.ss = SEL_UDSEG;
@@ -149,12 +155,16 @@ start_process (void *cmd_)
   if_.eflags = FLAG_IF | FLAG_MBS;
   success = load (file_name, &if_.eip, &if_.esp);
 
+  checkpoint(6);
+
   /* If load failed, quit. */
-  palloc_free_page (command);
+  //palloc_free_page (command);
   if (!success) {
       thread_exit();
       return;
   }
+
+  checkpoint(7);
 
   argument_push(&if_.esp, argc, argv_list);
   //hex_dump test
@@ -209,21 +219,21 @@ static void argument_push(void** esp, int argc, char** argvs) {
     *esp -= ((int*)original_esp - (int*)*esp) % 4;
     //last null
     *esp -= 4;
-    *((uint32_t*)*esp) = 0;
+    **((uint32_t*)*esp) = 0;
 
     for (i = argc - 1; i >= 0; --i) {
         *esp -= 4;
-        *((uint32_t*)*esp) = argv_loc[i];
+        **((uint32_t*)*esp) = argv_loc[i];
     }
 
     *esp -= 4;
-    *((uint32_t*)*esp) = (*esp + 4);
+    **((uint32_t*)*esp) = (*esp + 4);
 
     *esp -= 4;
-    *((int*)*esp) = argc;
+    **((int*)*esp) = argc;
 
     *esp -= 4;
-    *((uint32_t*)*esp) = 0;
+    **((uint32_t*)*esp) = 0;
 }
 
 /* Waits for thread TID to die and returns its exit status.  If

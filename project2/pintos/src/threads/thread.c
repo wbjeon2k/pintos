@@ -93,6 +93,28 @@ thread_init (void)
   list_init (&ready_list);
   list_init (&all_list);
 
+#ifdef USER
+  exit_code = -1000; // if exited, exit code.
+  isWaiting = false; // true if wait(tid) has called
+  hasExited = false; // true if exit() has called
+  load_success = false; // true if load at start_process successed.
+
+  //struct thread* parent_thread; // parent thread. defined at syscall exec
+  //char* cmd_line; // original command line
+
+  list_init(&child_list);
+  //struct list_elem child_list_elem; // for thread's child list
+  //list of child threads.
+  //struct list child_list;
+
+  //sync: for exec, wait
+  //struct semaphore sema_exec;
+  //struct semaphore sema_wait;
+  sema_init(sema_exec, 1);
+  sema_init(sema_wait, 1);
+#endif // USER
+
+
   /* Set up a thread structure for the running thread. */
   initial_thread = running_thread ();
   init_thread (initial_thread, "main", PRI_DEFAULT);
