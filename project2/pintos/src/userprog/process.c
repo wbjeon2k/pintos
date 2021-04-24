@@ -62,7 +62,7 @@ process_execute (const char *command)
      Otherwise there's a race between the caller and load(). */
   //pallocs are too large. use malloc
   int cmd_len;
-  cmd_len = strlen(command);
+  cmd_len = strlen(command) + 1;
   printf("cmd_len %d\n", cmd_len);
   cmd_copy = malloc(cmd_len);
   if (cmd_copy == NULL) return TID_ERROR;
