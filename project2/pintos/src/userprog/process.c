@@ -87,7 +87,7 @@ process_execute (const char *command)
 
   checkpoint(3);
 
-  file_name = strtok_r(&cmd_copy, " ", &tmp_ptr);
+  file_name = strtok_r(cmd_copy, " ", &tmp_ptr);
   printf("fliename %s\n", file_name);
 
   checkpoint(4);
