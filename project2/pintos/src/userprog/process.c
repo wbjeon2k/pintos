@@ -73,7 +73,8 @@ process_execute (const char *command)
   checkpoint(2);
 
   strlcpy(cmd_copy, command, cmd_len);
-  strlcpy(cmd_pass, cmd_copy, cmd_len);
+  checkpoint(2);
+  strlcpy(cmd_pass, command, cmd_len);
 
   //first token == file name. only extract file name
   //file_name = palloc_get_page(0);
