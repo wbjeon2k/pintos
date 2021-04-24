@@ -148,7 +148,7 @@ start_process (void *cmd_)
       token = strtok_r(NULL, " ", &save_ptr)) {
       token_len = strlen(token);
       if (cnt = 0) {
-          strlcpy(filename, token, token_len + 1);
+          strlcpy(file_name, token, token_len + 1);
       }
       else {
           argv_list[cnt - 1] = token;
