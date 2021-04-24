@@ -48,7 +48,8 @@ void checkpoint(int i) {
 tid_t
 process_execute (const char *command) 
 {
-  char* cmd_copy, cmd_pass;
+  char* cmd_copy;
+  char* cmd_pass;
   char* tmp_ptr;
   char* file_name; //file name limited to 14 chars
   tid_t tid;
