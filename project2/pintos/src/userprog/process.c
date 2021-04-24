@@ -226,7 +226,7 @@ static void argument_push(void** esp, int argc, char** argvs) {
 
     for (i = 0; i < argc; ++i) {
         //foo + \0
-        int len = strnlen(argvs[i], 100) + 1;
+        int len = strlen(argvs[i]) + 1;
         *esp -= len;
         memcpy(*esp, argvs[i], len);
         argv_loc[i] = *esp;
