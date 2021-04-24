@@ -179,7 +179,7 @@ start_process (void* cmd_)
 
   //checkpoint(7);
 
-  free(command);
+  //free(command);
   argument_push(&if_.esp, argc, argv_list);
   //hex_dump test
   //hex_dump(if_.esp, if_.esp, PHYS_BASE - if_.esp, true);

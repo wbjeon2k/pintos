@@ -119,17 +119,23 @@ syscall_handler (struct intr_frame *f UNUSED)
         exit_impl(exit_code);
     }
 
-    if (syscall_nr == SYS_WRITE) {
-        //get 3 arguments int fd, const void* buffer, unsigned length
-        //call write_implement
-        if (!check_VA(esp_offset(f, 5))) exit_impl(-1);
-        if (!check_VA(esp_offset(f, 6))) exit_impl(-1);
-        if (!check_VA(esp_offset(f, 7))) exit_impl(-1);
+    if (syscall_nr == SYS_EXEC) {
+        //1 parameter
+        if (!check_VA(esp_offset(f, 1))) exit_impl(-1);
 
-        int fd = *esp_offset(f, 5);
-        void* buffer = *esp_offset(f, 6);
-        unsigned length = *esp_offset(f, 7);
-        f->eax = write_impl(fd, buffer, length);
+        char* cmd = *esp_offset(f, 1);
+        f->eax = exec_impl(cmd);
+    }
+
+    if (syscall_nr == SYS_WAIT) {
+        //get tid
+
+        if (!check_VA(esp_offset(f, 1))) exit_impl(-1);
+
+        tid_t tid = *esp_offset(f, 1);
+
+        //f->eax = process_wait(tid);
+        f->eax = wait_impl(tid);
     }
 
     if (syscall_nr == SYS_READ) {
@@ -145,15 +151,22 @@ syscall_handler (struct intr_frame *f UNUSED)
         f->eax = read_impl(fd, buffer, length);
     }
 
-    if (syscall_nr == SYS_WAIT) {
-        //get tid
+    if (syscall_nr == SYS_WRITE) {
+        //get 3 arguments int fd, const void* buffer, unsigned length
+        //call write_implement
+        if (!check_VA(esp_offset(f, 5))) exit_impl(-1);
+        if (!check_VA(esp_offset(f, 6))) exit_impl(-1);
+        if (!check_VA(esp_offset(f, 7))) exit_impl(-1);
 
-        if (!check_VA(esp_offset(f, 1))) exit_impl(-1);
-
-        tid_t tid = *esp_offset(f, 1);
-        
-        f->eax = process_wait(tid);
+        int fd = *esp_offset(f, 5);
+        void* buffer = *esp_offset(f, 6);
+        unsigned length = *esp_offset(f, 7);
+        f->eax = write_impl(fd, buffer, length);
     }
+
+    
+
+ 
 }
 
 void halt_impl(void) {
@@ -165,14 +178,22 @@ void exit_impl(int exit_code) {
     printf("%s: exit(%d)\n", thread_name(), exit_code);
     thread_exit();
 }
+
+//where to use sema exec?
+pid_t exec_impl(const char* cmd_) {
+    char* cmd = cmd_;
+    tid_t child_tid;
+
+    child_tid = process_execute(cmd);
+
+    return child_tid;
+}
+
+int wait_impl(pid_t wait_pid) {
+
+}
+
 /*
-pid_t exec_impl(const char* file) {
-
-}
-
-int wait(pid_t wait_pid) {
-
-}
 
 bool create(const char* file, unsigned initial_size) {
 
