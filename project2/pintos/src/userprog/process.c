@@ -155,7 +155,7 @@ start_process (void* cmd_)
   }
   argc = cnt - 1;
 
-  free(command);
+  //free(command);
 
   //printf("cnt %d\n", cnt);
   //checkpoint(5);
