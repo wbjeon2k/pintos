@@ -119,7 +119,7 @@ if load successful, make a child, push into child list
 static void
 start_process (void* cmd_)
 {
-  char *command = (char*) cmd_;
+  char* command;
   struct intr_frame if_;
   bool success;
 
@@ -129,6 +129,7 @@ start_process (void* cmd_)
   int argc;
   int cnt;
 
+  command = cmd_;
   printf("passed command %s\n", command);
   
   //file_name = malloc(30);
