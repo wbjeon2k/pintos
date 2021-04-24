@@ -77,6 +77,9 @@ process_execute (const char *command)
   checkpoint(2);
   strlcpy(cmd_pass, command, cmd_len);
 
+  printf("cmd_copy %s\n", cmd_copy);
+  printf("cmd_pass %s\n", cmd_pass);
+
   //first token == file name. only extract file name
   //file_name = palloc_get_page(0);
   //if (file_name == NULL) return TID_ERROR;
@@ -84,7 +87,7 @@ process_execute (const char *command)
   checkpoint(3);
 
   file_name = strtok_r(&cmd_copy, " ", &tmp_ptr);
-  printf("fliename %s", file_name);
+  printf("fliename %s\n", file_name);
 
   checkpoint(4);
 
