@@ -232,8 +232,15 @@ static void argument_push(void** esp, int argc, char** argvs) {
         argv_loc[i] = *esp;
     }
     
-    //alignment
-    *esp -= ((int*)original_esp - (int*)*esp) % 4;
+    //alignment fault
+    //*esp -= ((int*)original_esp - (int*)*esp) % 4;
+
+    uint32_t esp_now = *esp;
+    uint32_t esp_mod = esp_now % 4;
+    *esp -= esp_mod;
+    //*esp -= (4 - esp_mod);
+
+
     //last null
     *esp -= 4;
     **(uint32_t**)esp = 0;
