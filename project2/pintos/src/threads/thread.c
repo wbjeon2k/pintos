@@ -94,6 +94,13 @@ thread_init (void)
   list_init (&all_list);
 
   list_init(&child_list);
+  sema_init(&sema_exec, 0);
+  sema_init(&sema_wait, 0);
+
+  exit_code = 1000000;
+  isWaiting = false;
+  hasExited = false;
+  load_success = false;
 
   /* Set up a thread structure for the running thread. */
   initial_thread = running_thread ();
@@ -205,6 +212,13 @@ thread_create (const char *name, int priority,
   sf = alloc_frame (t, sizeof *sf);
   sf->eip = switch_entry;
   sf->ebp = 0;
+
+  //child list push
+  struct thread* cur;
+  cur = thread_current();
+  t->parent_thread = cur;
+  list_push_back(&(cur->child_list), &(t->child_list_elem));
+
 
   intr_set_level (old_level);
 

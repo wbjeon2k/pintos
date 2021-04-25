@@ -56,14 +56,14 @@ process_execute (const char *command)
   //printf("cmd_len %d\n", cmd_len);
   cmd_copy = malloc(cmd_len);
   if (cmd_copy == NULL) {
-      sema_up(cur->sema_exec);
+      //sema_up(cur->sema_exec);
       return TID_ERROR;
   }
 
   //checkpoint(1);
   cmd_pass = malloc(cmd_len);
   if (cmd_pass == NULL) {
-      sema_up(cur->sema_exec);
+      //sema_up(cur->sema_exec);
       return TID_ERROR;
   }
 
@@ -88,12 +88,13 @@ process_execute (const char *command)
   //pass full command with cmd_pass
   tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_pass);
   if (tid == TID_ERROR) {
-      sema_up(cur->sema_exec);
+      //sema_up(cur->sema_exec);
       //free(cmd_copy);
       //free(cmd_pass);
       return tid;
   }
   //create child_info, push into child list, sema up, return
+  //이걸 load 해서 넘어가기 전에 해야한다.
 
   //free resource
   //palloc_free_page(file_name);
@@ -193,6 +194,13 @@ start_process (void* cmd_)
   argument_push(&if_.esp, argc, argv_list);
   //hex_dump test
   //hex_dump(if_.esp, if_.esp, PHYS_BASE - if_.esp, true);
+
+  //create child_info, push into child list, sema up, return
+
+
+  struct thread* cur;
+  cur = thread_current();
+  sema_up(cur->parent_thread->sema_exec);
 
 
   /* Start the user process by simulating a return from an

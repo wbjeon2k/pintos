@@ -21,6 +21,7 @@ process execution 에서 tid = thread_create() 형태로 받아오기 때문에
 현재 thread 에서 child list 에 thread 형태 그대로 넣을수가 없음...  
 분리 하는게 맞다.  
 잊고 있었던 list_entry 활용.  
+그냥 thread에 다 넣는게 낫겠다. child info 를 passing 하는게 더 번거로울것 같다.  
 
 userprog/exception.c:
 ???
@@ -83,6 +84,8 @@ pagedir.c:
 pagedir_get_page 는 mapping 되었는지 확인 하는 기능 내장.  
 
 ### Memo
+
+load 는 load만 하는게 아니라 새로 만든 user prog 실행하는걸 놓치고 있었다...
 
  System calls that return a value can do so by modifying the "eax" member of struct intr_frame. 
 
