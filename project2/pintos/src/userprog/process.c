@@ -305,7 +305,7 @@ process_wait (tid_t child_tid)
     printf("wait start\n");
     //temp infinite loop
     //for (;;) {}
-    for (;;);
+    //for (;;);
 
     struct thread* cur;
     cur = thread_current();
@@ -355,6 +355,18 @@ process_exit (void)
 {
   struct thread *cur = thread_current ();
   uint32_t *pd;
+
+  //wait for all childs to exit
+  struct list_elem* e;
+  for (e = list_begin(&(cur->child_list)); e != list_end(&(cur->child_list));
+      e = list_next(e))
+  {
+      process_wait(e->tid);
+  }
+
+  cur->hasExited = true;
+  //sema up parent process
+  sema_up(cur->parent_thread->sema_wait);
 
   /* Destroy the current process's page directory and switch back
      to the kernel-only page directory. */
