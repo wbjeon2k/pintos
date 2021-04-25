@@ -189,7 +189,9 @@ tid_t exec_impl(const char* cmd_) {
     struct thread* parent = thread_current();
     
     child_tid = process_execute(cmd);
+    printf("sema exec down\n");
     sema_down(&(parent->sema_exec)); //acquire sema_exec
+    printf("sema exec down finish\n");
     //sema_up(parent->sema_exec);
 
     return child_tid;
@@ -197,7 +199,9 @@ tid_t exec_impl(const char* cmd_) {
 
 int wait_impl(tid_t wait_pid) {
     printf("wait impl pid %d\n", wait_pid);
-    return process_wait(wait_pid);
+    int ret = process_wait(wait_pid);
+    printf("wait ret %d\n", ret);
+    return ret;
 }
 
 /*

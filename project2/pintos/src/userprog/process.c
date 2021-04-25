@@ -36,7 +36,7 @@ void checkpoint(int i) {
 tid_t
 process_execute (const char *command) 
 {
-    printf("process execute\n");
+    printf("process execute start\n");
   char* cmd_copy;
   char* cmd_pass;
   char* tmp_ptr;
@@ -102,6 +102,8 @@ process_execute (const char *command)
   //palloc_free_page(cmd_copy);
   //free(cmd_copy);
   //free(cmd_pass);
+
+  printf("process execute finish\n");
   return tid;
 }
 
@@ -127,6 +129,7 @@ if load successful, make a child, push into child list
 static void
 start_process (void* cmd_)
 {
+    printf("start_process start with cmd %s\n", cmd_);
   char* command;
   struct intr_frame if_;
   bool success;
@@ -196,7 +199,7 @@ start_process (void* cmd_)
   //free(command);
   argument_push(&if_.esp, argc, argv_list);
   //hex_dump test
-  //hex_dump(if_.esp, if_.esp, PHYS_BASE - if_.esp, true);
+  hex_dump(if_.esp, if_.esp, PHYS_BASE - if_.esp, true);
 
   //create child_info, push into child list, sema up, return
 
