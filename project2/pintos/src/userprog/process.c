@@ -36,7 +36,7 @@ void checkpoint(int i) {
 tid_t
 process_execute (const char *command) 
 {
-    printf("process execute start\n");
+  //printf("process execute start\n");
   char* cmd_copy;
   char* cmd_pass;
   char* tmp_ptr;
@@ -103,7 +103,7 @@ process_execute (const char *command)
   //free(cmd_copy);
   //free(cmd_pass);
 
-  printf("process execute finish\n");
+  //printf("process execute finish\n");
   return tid;
 }
 
@@ -129,7 +129,7 @@ if load successful, make a child, push into child list
 static void
 start_process (void* cmd_)
 {
-    printf("start_process start with cmd %s\n", cmd_);
+  //printf("start_process start with cmd %s\n", cmd_);
   char* command;
   struct intr_frame if_;
   bool success;
@@ -183,13 +183,16 @@ start_process (void* cmd_)
   if_.eflags = FLAG_IF | FLAG_MBS;
   success = load (file_name, &if_.eip, &if_.esp);
 
-  printf("load success\n");
+  //printf("load success\n");
 
   //checkpoint(6);
 
+  struct thread* cur;
+  cur = thread_current();
   /* If load failed, quit. */
   //palloc_free_page (command);
   if (!success) {
+      sema_up(&(cur->parent_thread->sema_exec));
       thread_exit();
       return;
   }
@@ -199,12 +202,11 @@ start_process (void* cmd_)
   //free(command);
   argument_push(&if_.esp, argc, argv_list);
   //hex_dump test
-  hex_dump(if_.esp, if_.esp, PHYS_BASE - if_.esp, true);
+  //hex_dump(if_.esp, if_.esp, PHYS_BASE - if_.esp, true);
 
   //create child_info, push into child list, sema up, return
 
-  struct thread* cur;
-  cur = thread_current();
+  
   cur->load_success = true;
   sema_up(&(cur->parent_thread->sema_exec));
 
@@ -308,7 +310,7 @@ struct list_elem *e;
 int
 process_wait (tid_t child_tid) 
 {
-    printf("wait start\n");
+    //printf("wait start\n");
     //temp infinite loop
     //for (;;) {}
     //for (;;);
@@ -317,7 +319,7 @@ process_wait (tid_t child_tid)
     cur = thread_current();
 
     if (list_empty(&(cur->child_list))) {
-        printf("child list empty\n");
+        //printf("child list empty\n");
         return -1;
     }
 
@@ -328,33 +330,33 @@ process_wait (tid_t child_tid)
     {
         struct thread* f = list_entry(e, struct thread, child_list_elem);
         if (f->tid == child_tid) {
-            printf("tid match\n");
+            //printf("tid match\n");
 
             if (f->isWaiting == false) {
-                printf("waiting for tid %d to finish\n", child_tid);
+                //printf("waiting for tid %d to finish\n", child_tid);
 
                 chk = true;
                 f->isWaiting = true;
                 sema_down(&(cur->sema_wait));
                 ASSERT(f->hasExited == true);
 
-                printf("finish waiting for tid %d\n", f->tid);
+                //printf("finish waiting for tid %d\n", f->tid);
                 int ret;
                 ret = f->exit_code;
 
-                list_remove(e);
+                list_remove(f->child_list_elem);
 
                 return ret;
             }
             else {
-                printf("already waiting\n");
+                //printf("already waiting\n");
                 return -1;
             }
         }
     }
 
     if (!chk) {
-        printf("no tid match\n");
+        //printf("no tid match\n");
         return -1;
     }
     /*
@@ -367,22 +369,12 @@ process_wait (tid_t child_tid)
 void
 process_exit (void)
 {
-    printf("process exit start\n");
+  //printf("process exit start\n");
   struct thread *cur = thread_current ();
   uint32_t *pd;
 
-  //wait for all childs to exit
-  struct list_elem* e;
-  for (e = list_begin(&(cur->child_list)); e != list_end(&(cur->child_list));
-      e = list_next(e))
-  {
-      struct thread* f = list_entry(e, struct thread, child_list_elem);
-      process_wait(f->tid);
-  }
-
   cur->hasExited = true;
-  //sema up parent process
-  sema_up(&(cur->parent_thread->sema_wait));
+  
 
   /* Destroy the current process's page directory and switch back
      to the kernel-only page directory. */
@@ -400,6 +392,9 @@ process_exit (void)
       pagedir_activate (NULL);
       pagedir_destroy (pd);
     }
+
+  //sema up parent process
+  sema_up(&(cur->parent_thread->sema_wait));
 }
 
 /* Sets up the CPU for running user code in the current
@@ -494,7 +489,7 @@ static bool load_segment (struct file *file, off_t ofs, uint8_t *upage,
 bool
 load (const char *file_name, void (**eip) (void), void **esp) 
 {
-    printf("load start\n");
+  //printf("load start\n");
   struct thread *t = thread_current ();
   struct Elf32_Ehdr ehdr;
   struct file *file = NULL;
@@ -602,10 +597,10 @@ load (const char *file_name, void (**eip) (void), void **esp)
   file_close (file);
 
   if (success) {
-      printf("load success\n");
+      //printf("load success\n");
   }
   else {
-      printf("load fail\n");
+      //printf("load fail\n");
   }
 
   return success;

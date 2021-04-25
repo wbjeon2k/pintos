@@ -97,110 +97,127 @@ syscall_handler (struct intr_frame *f)
     return;
     */
 
-    if (f == NULL) exit_impl(-1);
+    if (f == NULL) exit(-1);
+
+    hex_dump(f->esp, f->esp, 80, true);
 
     uint32_t* esp_copy = f->esp;
     //check esp
-    if (!check_VA(esp_copy)) exit_impl(-1);
+    if (!check_VA(esp_copy)) exit(-1);
 
     uint32_t syscall_nr = *esp_copy;
 
     if (syscall_nr == SYS_HALT) {
         //in src/devices/shutdown
-        halt_impl();
+        halt();
     }
 
     if (syscall_nr == SYS_EXIT) {
         //process_exit();
-        if (!check_VA(esp_offset(f, 1))) exit_impl(-1);
+        if (!check_VA(esp_offset(f, 1))) exit(-1);
 
         int exit_code = *esp_offset(f, 1);
         //const char *thread_name (void);
-        exit_impl(exit_code);
+        exit(exit_code);
     }
 
     if (syscall_nr == SYS_EXEC) {
         //1 parameter
-        if (!check_VA(esp_offset(f, 1))) exit_impl(-1);
+        if (!check_VA(esp_offset(f, 1))) exit(-1);
 
         char* cmd = *esp_offset(f, 1);
-        printf("exec cmd %s\n", cmd);
-        f->eax = exec_impl(cmd);
+        //printf("exec cmd %s\n", cmd);
+        f->eax = exec(cmd);
     }
 
     if (syscall_nr == SYS_WAIT) {
         //get tid
 
-        if (!check_VA(esp_offset(f, 1))) exit_impl(-1);
+        if (!check_VA(esp_offset(f, 1))) exit(-1);
 
         tid_t tid = *esp_offset(f, 1);
-        printf("wait tid %d\n", tid);
+        //printf("wait tid %d\n", tid);
 
         //f->eax = process_wait(tid);
-        f->eax = wait_impl(tid);
+        f->eax = wait(tid);
     }
 
     if (syscall_nr == SYS_READ) {
         //get 3 arguments int fd, const void* buffer, unsigned length
         //call write_implement
-        if (!check_VA(esp_offset(f, 5))) exit_impl(-1);
-        if (!check_VA(esp_offset(f, 6))) exit_impl(-1);
-        if (!check_VA(esp_offset(f, 7))) exit_impl(-1);
+        if (!check_VA(esp_offset(f, 5))) exit(-1);
+        if (!check_VA(esp_offset(f, 6))) exit(-1);
+        if (!check_VA(esp_offset(f, 7))) exit(-1);
 
         int fd = *esp_offset(f, 5);
         void* buffer = *esp_offset(f, 6);
         unsigned length = *esp_offset(f, 7);
-        f->eax = read_impl(fd, buffer, length);
+        f->eax = read(fd, buffer, length);
     }
 
     if (syscall_nr == SYS_WRITE) {
         //get 3 arguments int fd, const void* buffer, unsigned length
         //call write_implement
-        if (!check_VA(esp_offset(f, 5))) exit_impl(-1);
-        if (!check_VA(esp_offset(f, 6))) exit_impl(-1);
-        if (!check_VA(esp_offset(f, 7))) exit_impl(-1);
+        if (!check_VA(esp_offset(f, 5))) exit(-1);
+        if (!check_VA(esp_offset(f, 6))) exit(-1);
+        if (!check_VA(esp_offset(f, 7))) exit(-1);
 
         int fd = *esp_offset(f, 5);
         void* buffer = *esp_offset(f, 6);
         unsigned length = *esp_offset(f, 7);
-        f->eax = write_impl(fd, buffer, length);
+        f->eax = write(fd, buffer, length);
     }
  
 }
 
-void halt_impl(void) {
+void halt(void) {
     //in src/devices/shutdown
     shutdown_power_off();
 }
 
-void exit_impl(int exit_code) {
-    printf("exit impl\n");
-    printf("%s: exit(%d)\n", thread_name(), exit_code);
+void exit(int exitcode) {
+    //printf("exit impl\n");
+    printf("%s: exit(%d)\n", thread_name(), exitcode);
+
+    struct thread* cur;
+    cur = thread_current();
+    cur->exit_code = exitcode;
+    //wait for all childs to exit
+    /*
+    struct list_elem* e;
+    for (e = list_begin(&(cur->child_list)); e != list_end(&(cur->child_list));
+        e = list_next(e))
+    {
+        struct thread* f = list_entry(e, struct thread, child_list_elem);
+        process_wait(f->tid);
+    }
+    */
+
     thread_exit();
 }
 
 //where to use sema exec?
-tid_t exec_impl(const char* cmd_) {
-    printf("exec impl\n");
+tid_t exec(const char* cmd_) {
+    //printf("exec impl\n");
     char* cmd = cmd_;
-    printf("exec impl cmd %s\n", cmd);
+    //printf("exec impl cmd %s\n", cmd);
     tid_t child_tid;
 
     struct thread* parent = thread_current();
     
     child_tid = process_execute(cmd);
-    printf("sema exec down\n");
+    //printf("sema exec down\n");
     sema_down(&(parent->sema_exec)); //acquire sema_exec
-    printf("sema exec down finish\n");
+    //printf("sema exec down finish\n");
     //sema_up(parent->sema_exec);
 
     return child_tid;
 }
 
-int wait_impl(tid_t wait_pid) {
-    printf("wait impl pid %d\n", wait_pid);
+int wait(tid_t wait_pid) {
+    //printf("wait impl pid %d\n", wait_pid);
     int ret = process_wait(wait_pid);
-    printf("wait ret %d\n", ret);
+    //printf("wait ret %d\n", ret);
     return ret;
 }
 
@@ -223,7 +240,7 @@ int filesize(int fd) {
 }
 */
 
-int read_impl(int fd, void* buffer, unsigned length) {
+int read(int fd, void* buffer, unsigned length) {
     if (fd == 0) {
         int i = 0;
         int cnt = 0;
@@ -238,7 +255,7 @@ int read_impl(int fd, void* buffer, unsigned length) {
     }
 }
 
-int write_impl(int fd, const void* buffer, unsigned length) {
+int write(int fd, const void* buffer, unsigned length) {
     if (fd == 1) {
         //fd 1, the system console
         putbuf(buffer, length);
