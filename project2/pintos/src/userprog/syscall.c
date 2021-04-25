@@ -182,7 +182,7 @@ pid_t exec_impl(const char* cmd_) {
     tid_t child_tid;
 
     struct thread* parent = thread_current();
-    sema_down(parent->sema_exec); //acquire sema_exec
+    sema_down(&(parent->sema_exec)); //acquire sema_exec
     child_tid = process_execute(cmd);
     //sema_up(parent->sema_exec);
 

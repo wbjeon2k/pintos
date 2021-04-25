@@ -367,7 +367,7 @@ process_exit (void)
 
   cur->hasExited = true;
   //sema up parent process
-  sema_up(cur->parent_thread->sema_wait);
+  sema_up(&(cur->parent_thread->sema_wait));
 
   /* Destroy the current process's page directory and switch back
      to the kernel-only page directory. */
