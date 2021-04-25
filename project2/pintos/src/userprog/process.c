@@ -344,7 +344,7 @@ process_wait (tid_t child_tid)
                 int ret;
                 ret = f->exit_code;
 
-                list_remove(f->child_list_elem);
+                list_remove(&(f->child_list_elem));
                 sema_up(&(cur->parent_thread->sema_allow_thread_exit));
                 return ret;
             }
