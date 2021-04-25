@@ -314,6 +314,7 @@ process_wait (tid_t child_tid)
     cur = thread_current();
 
     if (list_empty(&(cur->child_list))) {
+        printf("child list empty\n");
         return -1;
     }
 
@@ -324,12 +325,17 @@ process_wait (tid_t child_tid)
     {
         struct thread* f = list_entry(e, struct thread, child_list_elem);
         if (f->tid == child_tid) {
+            printf("tid match\n");
+
             if (f->isWaiting == false) {
+                printf("waiting for tid %d to finish\n", child_tid);
+
                 chk = true;
                 f->isWaiting = true;
                 sema_down(&(cur->sema_wait));
-                //ASSERT(f->hasExited == true);
+                ASSERT(f->hasExited == true);
 
+                printf("finish waiting for tid %d\n", f->tid);
                 int ret;
                 ret = f->exit_code;
 
@@ -338,12 +344,14 @@ process_wait (tid_t child_tid)
                 return ret;
             }
             else {
+                printf("already waiting\n");
                 return -1;
             }
         }
     }
 
     if (!chk) {
+        printf("no tid match\n");
         return -1;
     }
     /*
@@ -589,6 +597,14 @@ load (const char *file_name, void (**eip) (void), void **esp)
  done:
   /* We arrive here whether the load is successful or not. */
   file_close (file);
+
+  if (success) {
+      printf("load success\n");
+  }
+  else {
+      printf("load fail\n");
+  }
+
   return success;
 }
 
