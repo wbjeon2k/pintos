@@ -200,7 +200,7 @@ start_process (void* cmd_)
   struct thread* cur;
   cur = thread_current();
   cur->load_success = true;
-  sema_up(cur->parent_thread->sema_exec);
+  sema_up(&(cur->parent_thread->sema_exec));
 
 
   /* Start the user process by simulating a return from an
