@@ -324,7 +324,7 @@ process_wait (tid_t child_tid)
             if (f->isWaiting == false) {
                 chk = true;
                 f->isWaiting = true;
-                sema_down(cur->sema_wait);
+                sema_down(&(cur->sema_wait));
                 ASSERT(f->hasExited == true);
 
                 int ret;
@@ -361,7 +361,8 @@ process_exit (void)
   for (e = list_begin(&(cur->child_list)); e != list_end(&(cur->child_list));
       e = list_next(e))
   {
-      process_wait(e->tid);
+      struct thread* f = list_entry(e, struct thread, child_list_elem);
+      process_wait(f->tid);
   }
 
   cur->hasExited = true;
