@@ -484,14 +484,14 @@ init_thread (struct thread *t, const char *name, int priority)
 
   /**user**/
   list_init(&(t->child_list));
-  sema_init(&(t->sema_exec), 0);
-  sema_init(&(t->sema_wait), 0);
+  sema_init(&(t->sema_exec), 1);
+  sema_init(&(t->sema_wait), 1);
 
   t->exit_code = 1000000;
   t->isWaiting = false;
   t->hasExited = false;
   t->load_success = false;
-
+  t->parent_thread = thread_current();
 }
 
 /* Allocates a SIZE-byte frame at the top of thread T's stack and

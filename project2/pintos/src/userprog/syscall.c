@@ -124,7 +124,7 @@ syscall_handler (struct intr_frame *f)
         if (!check_VA(esp_offset(f, 1))) exit_impl(-1);
 
         char* cmd = *esp_offset(f, 1);
-        printf("exec cmd %s", cmd);
+        printf("exec cmd %s\n", cmd);
         f->eax = exec_impl(cmd);
     }
 
