@@ -163,9 +163,6 @@ syscall_handler (struct intr_frame *f UNUSED)
         unsigned length = *esp_offset(f, 7);
         f->eax = write_impl(fd, buffer, length);
     }
-
-    
-
  
 }
 
@@ -184,7 +181,10 @@ pid_t exec_impl(const char* cmd_) {
     char* cmd = cmd_;
     tid_t child_tid;
 
+    struct thread* parent = thread_current();
+    sema_down(parent->sema_exec); //acquire sema_exec
     child_tid = process_execute(cmd);
+    sema_up(parent->sema_exec);
 
     return child_tid;
 }

@@ -90,7 +90,7 @@ typedef int tid_t;
 
 /** child info **/
 
-/*
+
 struct child_info {
     tid_t tid; //thread id
     int32_t exit_code; // if exited, exit code.
@@ -103,11 +103,9 @@ struct child_info {
 
     struct list_elem child_list_elem; // for thread's child list
 
-    //sync: for exec, wait
-    struct semaphore sema_exec;
-    struct semaphore sema_wait;
+    
 };
-*/
+
 
 /****/
 
@@ -125,15 +123,6 @@ struct thread
     /* Shared between thread.c and synch.c. */
     struct list_elem elem;              /* List element. */
 
-    int32_t exit_code; // if exited, exit code.
-    bool isWaiting; // true if wait(tid) has called
-    bool hasExited; // true if exit() has called
-    bool load_success; // true if load at start_process successed.
-
-    struct thread* parent_thread; // parent thread. defined at syscall exec
-    char* cmd_line; // original command line
-
-    struct list_elem child_list_elem; // for thread's child list
     //list of child threads.
     struct list child_list;
 
@@ -146,10 +135,7 @@ struct thread
     /* Owned by userprog/process.c. */
     uint32_t *pagedir;                  /* Page directory. */
 
-    
-
 #endif
-
     /* Owned by thread.c. */
     unsigned magic;                     /* Detects stack overflow. */
   };

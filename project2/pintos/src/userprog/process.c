@@ -42,9 +42,11 @@ process_execute (const char *command)
   char* file_name; //file name limited to 14 chars
   tid_t tid;
 
-  printf("command %s\n", command);
+  struct thread* cur = thread_current();
 
-  checkpoint(0);
+  //printf("command %s\n", command);
+
+  //checkpoint(0);
 
   /* Make a copy of FILE_NAME.
      Otherwise there's a race between the caller and load(). */
@@ -53,11 +55,17 @@ process_execute (const char *command)
   cmd_len = strlen(command) + 1;
   //printf("cmd_len %d\n", cmd_len);
   cmd_copy = malloc(cmd_len);
-  if (cmd_copy == NULL) return TID_ERROR;
+  if (cmd_copy == NULL) {
+      sema_up(cur->sema_exec);
+      return TID_ERROR;
+  }
 
   //checkpoint(1);
   cmd_pass = malloc(cmd_len);
-  if (cmd_pass == NULL) return TID_ERROR;
+  if (cmd_pass == NULL) {
+      sema_up(cur->sema_exec);
+      return TID_ERROR;
+  }
 
   //checkpoint(2);
   strlcpy(cmd_copy, command, cmd_len);
@@ -80,10 +88,12 @@ process_execute (const char *command)
   //pass full command with cmd_pass
   tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_pass);
   if (tid == TID_ERROR) {
+      sema_up(cur->sema_exec);
       //free(cmd_copy);
       //free(cmd_pass);
       return tid;
   }
+  //create child_info, push into child list, sema up, return
 
   //free resource
   //palloc_free_page(file_name);

@@ -16,6 +16,12 @@ child thread list 만들기
 
 struct child_info: child_list_elem, tid, exitcode, isWaiting, hasExited, cmd_line, parent_thread, syncs: exec, wait
 
+child info를 별도 struct 로 분리 안하고 struct thread 에 전부 넣으면  
+process execution 에서 tid = thread_create() 형태로 받아오기 때문에  
+현재 thread 에서 child list 에 thread 형태 그대로 넣을수가 없음...  
+분리 하는게 맞다.  
+잊고 있었던 list_entry 활용.  
+
 userprog/exception.c:
 ???
 userprog/process.c:
