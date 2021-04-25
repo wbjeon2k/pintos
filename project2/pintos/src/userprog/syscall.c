@@ -115,7 +115,7 @@ syscall_handler (struct intr_frame *f)
     if (syscall_nr == SYS_EXIT) {
         //process_exit();
         if (!check_VA(esp_offset(f, 1))) exit(-1);
-        printf("argument1 address %x\n", esp_offset(f, 1));
+        //printf("argument1 address %x\n", esp_offset(f, 1));
 
         int exit_code = *esp_offset(f, 1);
         //const char *thread_name (void);
@@ -125,7 +125,7 @@ syscall_handler (struct intr_frame *f)
     if (syscall_nr == SYS_EXEC) {
         //1 parameter
         if (!check_VA(esp_offset(f, 1))) exit(-1);
-        printf("argument1 address %x\n", esp_offset(f, 1));
+        //printf("argument1 address %x\n", esp_offset(f, 1));
 
         char* cmd = *esp_offset(f, 1);
         //printf("exec cmd %s\n", cmd);
@@ -136,7 +136,7 @@ syscall_handler (struct intr_frame *f)
         //get tid
 
         if (!check_VA(esp_offset(f, 1))) exit(-1);
-        printf("argument1 address %x\n", esp_offset(f, 1));
+        //printf("argument1 address %x\n", esp_offset(f, 1));
 
         tid_t tid = *esp_offset(f, 1);
         //printf("wait tid %d\n", tid);
@@ -152,9 +152,9 @@ syscall_handler (struct intr_frame *f)
         if (!check_VA(esp_offset(f, 6))) exit(-1);
         if (!check_VA(esp_offset(f, 7))) exit(-1);
 
-        printf("argument1 address %x\n", esp_offset(f, 5));
-        printf("argument2 address %x\n", esp_offset(f, 6));
-        printf("argument3 address %x\n", esp_offset(f, 7));
+        //printf("argument1 address %x\n", esp_offset(f, 5));
+        //printf("argument2 address %x\n", esp_offset(f, 6));
+        //printf("argument3 address %x\n", esp_offset(f, 7));
 
 
         int fd = *esp_offset(f, 5);
@@ -170,9 +170,9 @@ syscall_handler (struct intr_frame *f)
         if (!check_VA(esp_offset(f, 6))) exit(-1);
         if (!check_VA(esp_offset(f, 7))) exit(-1);
 
-        printf("argument1 address %x\n", esp_offset(f, 5));
-        printf("argument2 address %x\n", esp_offset(f, 6));
-        printf("argument3 address %x\n", esp_offset(f, 7));
+        //printf("argument1 address %x\n", esp_offset(f, 5));
+        //printf("argument2 address %x\n", esp_offset(f, 6));
+        //printf("argument3 address %x\n", esp_offset(f, 7));
 
         int fd = *esp_offset(f, 5);
         void* buffer = *esp_offset(f, 6);

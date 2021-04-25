@@ -202,7 +202,7 @@ start_process (void* cmd_)
   //free(command);
   argument_push(&if_.esp, argc, argv_list);
   //hex_dump test
-  //hex_dump(if_.esp, if_.esp, PHYS_BASE - if_.esp, true);
+  hex_dump(if_.esp, if_.esp, PHYS_BASE - if_.esp, true);
 
   //create child_info, push into child list, sema up, return
 
