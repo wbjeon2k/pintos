@@ -177,7 +177,7 @@ void exit_impl(int exit_code) {
 }
 
 //where to use sema exec?
-pid_t exec_impl(const char* cmd_) {
+tid_t exec_impl(const char* cmd_) {
     char* cmd = cmd_;
     tid_t child_tid;
 
