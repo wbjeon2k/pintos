@@ -38,6 +38,7 @@ uint32_t* esp_offset(const struct intr_frame* f, int i) {
     return ret;
 }
 
+//포인터 아닌 일반 변수들까지 체크할 필요 없음. 
 inline bool check_VA(void* ptr) {
     if(!is_user_vaddr(ptr)) return false;
     if (ptr == NULL) return false;
@@ -123,7 +124,7 @@ syscall_handler (struct intr_frame *f)
 
     if (syscall_nr == SYS_EXIT) {
         //process_exit();
-        if (!check_VA(esp_offset(f, 1))) exit(-1);
+        //if (!check_VA(esp_offset(f, 1))) exit(-1);
         //printf("argument1 address %x\n", esp_offset(f, 1));
 
         int exit_code = *esp_offset(f, 1);
@@ -144,7 +145,7 @@ syscall_handler (struct intr_frame *f)
     if (syscall_nr == SYS_WAIT) {
         //get tid
 
-        if (!check_VA(esp_offset(f, 1))) exit(-1);
+        //if (!check_VA(esp_offset(f, 1))) exit(-1);
         //printf("argument1 address %x\n", esp_offset(f, 1));
 
         tid_t tid = *esp_offset(f, 1);
@@ -157,9 +158,9 @@ syscall_handler (struct intr_frame *f)
     if (syscall_nr == SYS_READ) {
         //get 3 arguments int fd, const void* buffer, unsigned length
         //call write_implement
-        if (!check_VA(esp_offset(f, 5))) exit(-1);
+        //if (!check_VA(esp_offset(f, 5))) exit(-1);
         if (!check_VA(esp_offset(f, 6))) exit(-1);
-        if (!check_VA(esp_offset(f, 7))) exit(-1);
+        //if (!check_VA(esp_offset(f, 7))) exit(-1);
 
         //printf("argument1 address %x\n", esp_offset(f, 5));
         //printf("argument2 address %x\n", esp_offset(f, 6));
@@ -175,9 +176,9 @@ syscall_handler (struct intr_frame *f)
     if (syscall_nr == SYS_WRITE) {
         //get 3 arguments int fd, const void* buffer, unsigned length
         //call write_implement
-        if (!check_VA(esp_offset(f, 5))) exit(-1);
+        //if (!check_VA(esp_offset(f, 5))) exit(-1);
         if (!check_VA(esp_offset(f, 6))) exit(-1);
-        if (!check_VA(esp_offset(f, 7))) exit(-1);
+        //if (!check_VA(esp_offset(f, 7))) exit(-1);
 
         //printf("argument1 address %x\n", esp_offset(f, 5));
         //printf("argument2 address %x\n", esp_offset(f, 6));
@@ -273,7 +274,7 @@ int read(int fd, void* buffer, unsigned length) {
             ++cnt;
         }
         //last 0
-        return cnt + 1;
+        return cnt;
     }
 }
 
