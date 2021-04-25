@@ -93,15 +93,6 @@ thread_init (void)
   list_init (&ready_list);
   list_init (&all_list);
 
-  list_init(&child_list);
-  sema_init(&sema_exec, 0);
-  sema_init(&sema_wait, 0);
-
-  exit_code = 1000000;
-  isWaiting = false;
-  hasExited = false;
-  load_success = false;
-
   /* Set up a thread structure for the running thread. */
   initial_thread = running_thread ();
   init_thread (initial_thread, "main", PRI_DEFAULT);
@@ -486,6 +477,17 @@ init_thread (struct thread *t, const char *name, int priority)
   t->priority = priority;
   t->magic = THREAD_MAGIC;
   list_push_back (&all_list, &t->allelem);
+
+  /**user**/
+  list_init(&(t->child_list));
+  sema_init(&(t->sema_exec, 0));
+  sema_init(&(t->sema_wait, 0));
+
+  t->exit_code = 1000000;
+  t->isWaiting = false;
+  t->hasExited = false;
+  t->load_success = false;
+
 }
 
 /* Allocates a SIZE-byte frame at the top of thread T's stack and
