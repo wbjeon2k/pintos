@@ -189,7 +189,7 @@ tid_t exec_impl(const char* cmd_) {
     return child_tid;
 }
 
-int wait_impl(pid_t wait_pid) {
+int wait_impl(tid_t wait_pid) {
     return process_wait(wait_pid);
 }
 
