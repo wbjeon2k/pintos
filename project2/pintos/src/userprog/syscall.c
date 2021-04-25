@@ -5,6 +5,7 @@
 #include "threads/thread.h"
 #include <stdint.h>
 #include <inttypes.h>
+#include "pagedir.h"
 
 static void syscall_handler (struct intr_frame *);
 
@@ -38,7 +39,15 @@ uint32_t* esp_offset(const struct intr_frame* f, int i) {
 }
 
 inline bool check_VA(void* ptr) {
-    return is_user_vaddr(ptr);
+    if(!is_user_vaddr(ptr)) return false;
+    if (ptr == NULL) return false;
+
+    struct thread* cur = thread_current();
+
+    //lookup_page(cur->pagedir, ptr, false)
+    if (pagedir_get_page(cur->pagedir, ptr) == NULL) return false;
+
+    return true;
 }
 
 
@@ -263,8 +272,8 @@ int read(int fd, void* buffer, unsigned length) {
 
             ++cnt;
         }
-
-        return cnt;
+        //last 0
+        return cnt + 1;
     }
 }
 
