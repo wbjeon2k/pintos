@@ -57,14 +57,14 @@ process_execute (const char *command)
   //printf("cmd_len %d\n", cmd_len);
   cmd_copy = malloc(cmd_len);
   if (cmd_copy == NULL) {
-      sema_up(cur->sema_exec);
+      sema_up(&(cur->sema_exec));
       return TID_ERROR;
   }
 
   //checkpoint(1);
   cmd_pass = malloc(cmd_len);
   if (cmd_pass == NULL) {
-      sema_up(cur->sema_exec);
+      sema_up(&(cur->sema_exec));
       return TID_ERROR;
   }
 
