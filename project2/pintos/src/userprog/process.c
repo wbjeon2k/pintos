@@ -328,7 +328,7 @@ process_wait (tid_t child_tid)
                 chk = true;
                 f->isWaiting = true;
                 sema_down(&(cur->sema_wait));
-                ASSERT(f->hasExited == true);
+                //ASSERT(f->hasExited == true);
 
                 int ret;
                 ret = f->exit_code;
