@@ -153,6 +153,8 @@ start_process (void* cmd_)
 
   cnt = 0;
 
+  //!!!! echo x --> argc == 2, 지금까지 1... ㅅㅂ
+
   char* save_ptr;
   int token_len;
   for (token = strtok_r(command, " ", &save_ptr); token != NULL;
@@ -163,12 +165,10 @@ start_process (void* cmd_)
       if (cnt == 0) {
           file_name = token;
       }
-      else {
-          argv_list[cnt - 1] = token;
-      }
+      argv_list[cnt] = token;
       ++cnt;
   }
-  argc = cnt - 1;
+  argc = cnt;
 
   //free(command);
 
