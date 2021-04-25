@@ -491,7 +491,7 @@ init_thread (struct thread *t, const char *name, int priority)
   t->isWaiting = false;
   t->hasExited = false;
   t->load_success = false;
-  t->parent_thread = thread_current();
+  //t->parent_thread = thread_current();
 }
 
 /* Allocates a SIZE-byte frame at the top of thread T's stack and
