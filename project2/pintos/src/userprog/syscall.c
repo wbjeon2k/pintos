@@ -99,7 +99,7 @@ syscall_handler (struct intr_frame *f)
 
     if (f == NULL) exit(-1);
 
-    hex_dump(f->esp, f->esp, 80, true);
+    //hex_dump(f->esp, f->esp, 80, true);
 
     uint32_t* esp_copy = f->esp;
     //check esp
