@@ -128,7 +128,7 @@ struct thread
 
     struct list_elem child_list_elem; // for thread's child list
 
-    int32_t exit_code; // if exited, exit code.
+    int exit_code; // if exited, exit code.
     bool isWaiting; // true if wait(tid) has called
     bool hasExited; // true if exit() has called
     bool load_success; // true if load at start_process successed.

@@ -197,9 +197,9 @@ start_process (void* cmd_)
 
   //create child_info, push into child list, sema up, return
 
-
   struct thread* cur;
   cur = thread_current();
+  cur->load_success = true;
   sema_up(cur->parent_thread->sema_exec);
 
 
@@ -288,6 +288,17 @@ static void argument_push(void** esp, int argc, char** argvs) {
 pintos/src/test/lib.c 에서 wait, exit, exec 등 모두 사용.
 process wait 구현 전까지 매뉴얼대로 infinite loop 사용해야함.
 */
+
+/*
+struct list_elem *e;
+
+      for (e = list_begin (&foo_list); e != list_end (&foo_list);
+           e = list_next (e))
+        {
+          struct foo *f = list_entry (e, struct foo, elem);
+          ...do something with f...
+        }
+*/
 int
 process_wait (tid_t child_tid) 
 {
@@ -296,6 +307,42 @@ process_wait (tid_t child_tid)
     //for (;;) {}
     for (;;);
 
+    struct thread* cur;
+    cur = thread_current();
+
+    if (list_empty(&(cur->child_list))) {
+        return -1;
+    }
+
+    bool chk = false;
+    struct list_elem* e;
+    for (e = list_begin(&(cur->child_list)); e != list_end(&(cur->child_list));
+        e = list_next(e))
+    {
+        struct thread* f = list_entry(e, struct thread, child_list_elem);
+        if (f->tid == child_tid) {
+            if (f->isWaiting == false) {
+                chk = true;
+                f->isWaiting = true;
+                sema_down(cur->sema_wait);
+                ASSERT(f->hasExited == true);
+
+                int ret;
+                ret = f->exit_code;
+
+                list_remove(e);
+
+                return ret;
+            }
+            else {
+                return -1;
+            }
+        }
+    }
+
+    if (!chk) {
+        return -1;
+    }
     /*
     todo: iterate through child list -> find tid child -> check if already waiting -> wait until child exit
     */

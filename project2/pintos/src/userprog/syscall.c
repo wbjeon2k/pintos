@@ -190,7 +190,7 @@ pid_t exec_impl(const char* cmd_) {
 }
 
 int wait_impl(pid_t wait_pid) {
-
+    return process_wait(wait_pid);
 }
 
 /*
