@@ -166,6 +166,7 @@ tid_t
 thread_create (const char *name, int priority,
                thread_func *function, void *aux) 
 {
+    printf("thread create start\n");
   struct thread *t;
   struct kernel_thread_frame *kf;
   struct switch_entry_frame *ef;
@@ -207,6 +208,9 @@ thread_create (const char *name, int priority,
   //child list push
   struct thread* cur;
   cur = thread_current();
+
+  ASSERT(t != cur);
+
   t->parent_thread = cur;
   list_push_back(&(cur->child_list), &(t->child_list_elem));
 

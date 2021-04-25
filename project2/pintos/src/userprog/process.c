@@ -36,6 +36,7 @@ void checkpoint(int i) {
 tid_t
 process_execute (const char *command) 
 {
+    printf("process execute\n");
   char* cmd_copy;
   char* cmd_pass;
   char* tmp_ptr;
@@ -178,6 +179,8 @@ start_process (void* cmd_)
   if_.cs = SEL_UCSEG;
   if_.eflags = FLAG_IF | FLAG_MBS;
   success = load (file_name, &if_.eip, &if_.esp);
+
+  printf("load success\n");
 
   //checkpoint(6);
 
@@ -353,6 +356,7 @@ process_wait (tid_t child_tid)
 void
 process_exit (void)
 {
+    printf("process exit start\n");
   struct thread *cur = thread_current ();
   uint32_t *pd;
 
@@ -479,6 +483,7 @@ static bool load_segment (struct file *file, off_t ofs, uint8_t *upage,
 bool
 load (const char *file_name, void (**eip) (void), void **esp) 
 {
+    printf("load start\n");
   struct thread *t = thread_current ();
   struct Elf32_Ehdr ehdr;
   struct file *file = NULL;

@@ -88,7 +88,7 @@ For # of arguments is
 
 // System calls that return a value can do so by modifying the "eax" member of struct intr_frame. 
 static void
-syscall_handler (struct intr_frame *f UNUSED) 
+syscall_handler (struct intr_frame *f) 
 {
     //for test
     /*
@@ -124,6 +124,7 @@ syscall_handler (struct intr_frame *f UNUSED)
         if (!check_VA(esp_offset(f, 1))) exit_impl(-1);
 
         char* cmd = *esp_offset(f, 1);
+        printf("exec cmd %s", cmd);
         f->eax = exec_impl(cmd);
     }
 
@@ -133,6 +134,7 @@ syscall_handler (struct intr_frame *f UNUSED)
         if (!check_VA(esp_offset(f, 1))) exit_impl(-1);
 
         tid_t tid = *esp_offset(f, 1);
+        printf("wait tid %d\n", tid);
 
         //f->eax = process_wait(tid);
         f->eax = wait_impl(tid);
@@ -172,13 +174,16 @@ void halt_impl(void) {
 }
 
 void exit_impl(int exit_code) {
+    printf("exit impl\n");
     printf("%s: exit(%d)\n", thread_name(), exit_code);
     thread_exit();
 }
 
 //where to use sema exec?
 tid_t exec_impl(const char* cmd_) {
+    printf("exec impl\n");
     char* cmd = cmd_;
+    printf("exec impl cmd %s\n", cmd);
     tid_t child_tid;
 
     struct thread* parent = thread_current();
@@ -190,6 +195,7 @@ tid_t exec_impl(const char* cmd_) {
 }
 
 int wait_impl(tid_t wait_pid) {
+    printf("wait impl pid %d\n", wait_pid);
     return process_wait(wait_pid);
 }
 
