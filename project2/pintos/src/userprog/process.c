@@ -245,7 +245,7 @@ static void argument_push(void** esp, int argc, char** argvs) {
     uint32_t* argv_loc[argc];
     int i = 0;
 
-    for (i = 0; i < argc; ++i) {
+    for (i = argc-1; i >= 0; --i) {
         //foo + \0
         int len = strlen(argvs[i]) + 1;
         *esp -= len;
