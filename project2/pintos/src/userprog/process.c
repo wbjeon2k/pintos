@@ -196,7 +196,6 @@ start_process (void* cmd_)
       thread_exit();
       return;
   }
-
   //checkpoint(7);
 
   //free(command);
@@ -345,7 +344,7 @@ process_wait (tid_t child_tid)
                 ret = f->exit_code;
 
                 list_remove(&(f->child_list_elem));
-                sema_up(&(cur->parent_thread->sema_allow_thread_exit));
+                sema_up(&(cur->sema_allow_thread_exit));
                 return ret;
             }
             else {
