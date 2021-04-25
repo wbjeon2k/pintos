@@ -136,6 +136,7 @@ struct thread
     //sync: for exec, wait
     struct semaphore sema_exec;
     struct semaphore sema_wait;
+    struct semaphore sema_allow_thread_exit;
 
 #ifdef USERPROG
     //only for userprogs

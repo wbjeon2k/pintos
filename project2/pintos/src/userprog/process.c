@@ -57,14 +57,14 @@ process_execute (const char *command)
   //printf("cmd_len %d\n", cmd_len);
   cmd_copy = malloc(cmd_len);
   if (cmd_copy == NULL) {
-      //sema_up(cur->sema_exec);
+      sema_up(cur->sema_exec);
       return TID_ERROR;
   }
 
   //checkpoint(1);
   cmd_pass = malloc(cmd_len);
   if (cmd_pass == NULL) {
-      //sema_up(cur->sema_exec);
+      sema_up(cur->sema_exec);
       return TID_ERROR;
   }
 
@@ -345,7 +345,7 @@ process_wait (tid_t child_tid)
                 ret = f->exit_code;
 
                 list_remove(f->child_list_elem);
-
+                sema_up(&(cur->parent_thread->sema_allow_thread_exit));
                 return ret;
             }
             else {
@@ -375,7 +375,6 @@ process_exit (void)
 
   cur->hasExited = true;
   
-
   /* Destroy the current process's page directory and switch back
      to the kernel-only page directory. */
   pd = cur->pagedir;
@@ -395,6 +394,8 @@ process_exit (void)
 
   //sema up parent process
   sema_up(&(cur->parent_thread->sema_wait));
+  //stop before resume thread_exit.
+  sema_down(&(cur->parent_thread->sema_allow_thread_exit));
 }
 
 /* Sets up the CPU for running user code in the current

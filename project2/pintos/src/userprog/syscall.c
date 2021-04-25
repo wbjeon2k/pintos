@@ -115,6 +115,7 @@ syscall_handler (struct intr_frame *f)
     if (syscall_nr == SYS_EXIT) {
         //process_exit();
         if (!check_VA(esp_offset(f, 1))) exit(-1);
+        printf("argument1 address %x\n", esp_offset(f, 1));
 
         int exit_code = *esp_offset(f, 1);
         //const char *thread_name (void);
@@ -124,6 +125,7 @@ syscall_handler (struct intr_frame *f)
     if (syscall_nr == SYS_EXEC) {
         //1 parameter
         if (!check_VA(esp_offset(f, 1))) exit(-1);
+        printf("argument1 address %x\n", esp_offset(f, 1));
 
         char* cmd = *esp_offset(f, 1);
         //printf("exec cmd %s\n", cmd);
@@ -134,6 +136,7 @@ syscall_handler (struct intr_frame *f)
         //get tid
 
         if (!check_VA(esp_offset(f, 1))) exit(-1);
+        printf("argument1 address %x\n", esp_offset(f, 1));
 
         tid_t tid = *esp_offset(f, 1);
         //printf("wait tid %d\n", tid);
@@ -149,6 +152,11 @@ syscall_handler (struct intr_frame *f)
         if (!check_VA(esp_offset(f, 6))) exit(-1);
         if (!check_VA(esp_offset(f, 7))) exit(-1);
 
+        printf("argument1 address %x\n", esp_offset(f, 5));
+        printf("argument2 address %x\n", esp_offset(f, 6));
+        printf("argument3 address %x\n", esp_offset(f, 7));
+
+
         int fd = *esp_offset(f, 5);
         void* buffer = *esp_offset(f, 6);
         unsigned length = *esp_offset(f, 7);
@@ -161,6 +169,10 @@ syscall_handler (struct intr_frame *f)
         if (!check_VA(esp_offset(f, 5))) exit(-1);
         if (!check_VA(esp_offset(f, 6))) exit(-1);
         if (!check_VA(esp_offset(f, 7))) exit(-1);
+
+        printf("argument1 address %x\n", esp_offset(f, 5));
+        printf("argument2 address %x\n", esp_offset(f, 6));
+        printf("argument3 address %x\n", esp_offset(f, 7));
 
         int fd = *esp_offset(f, 5);
         void* buffer = *esp_offset(f, 6);
@@ -183,15 +195,16 @@ void exit(int exitcode) {
     cur = thread_current();
     cur->exit_code = exitcode;
     //wait for all childs to exit
-    /*
-    struct list_elem* e;
-    for (e = list_begin(&(cur->child_list)); e != list_end(&(cur->child_list));
-        e = list_next(e))
-    {
-        struct thread* f = list_entry(e, struct thread, child_list_elem);
-        process_wait(f->tid);
-    }
-    */
+    
+    if (list_empty(&(cur->child_list)) == false) {
+        struct list_elem* e;
+        for (e = list_begin(&(cur->child_list)); e != list_end(&(cur->child_list));
+            e = list_next(e))
+        {
+            struct thread* f = list_entry(e, struct thread, child_list_elem);
+            process_wait(f->tid);
+        }
+    } 
 
     thread_exit();
 }
