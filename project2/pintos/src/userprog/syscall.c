@@ -487,8 +487,6 @@ int read(int fd, void* buffer, unsigned length) {
         return -1;
     }
 
-    
-
     struct thread* cur;
     cur = thread_current();
     struct file* fptr;
@@ -530,6 +528,11 @@ int write(int fd, const void* buffer, unsigned length) {
     fptr = (cur->fd_table)[fd];
 
     if (fptr == NULL) {
+        lock_release(&file_lock);
+        return 0;
+    }
+
+    if (fptr->deny_write) {
         lock_release(&file_lock);
         return 0;
     }
