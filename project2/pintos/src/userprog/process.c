@@ -336,7 +336,7 @@ process_wait (tid_t child_tid)
                 f->isWaiting = true;
                 sema_down(&(cur->sema_wait));
                 //syn read test
-                ASSERT(f->hasExited == true);
+                //ASSERT(f->hasExited == true);
 
                 //printf("finish waiting for tid %d\n", f->tid);
                 int ret;
