@@ -241,7 +241,7 @@ tid_t exec(const char* cmd_) {
     for (e = list_begin(&(cur->child_list)); e != list_end(&(cur->child_list));
         e = list_next(e)) {
         struct thread* f = list_entry(e, struct thread, child_list_elem);
-        if (f->tid == tid) {
+        if (f->tid == child_tid) {
             if (f->load_success == false) {
                 return TID_ERROR;
             }
