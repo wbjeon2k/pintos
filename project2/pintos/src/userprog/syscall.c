@@ -75,7 +75,7 @@ inline bool check_VA(void* ptr) {
     struct thread* cur = thread_current();
 
     //lookup_page(cur->pagedir, ptr, false)
-    if (pagedir_get_page(cur->pagedir, ptr) == NULL) return false;
+    if (lookup_page(cur->pagedir, ptr,false) == NULL) return false;
 
     return true;
 }
@@ -167,6 +167,8 @@ syscall_handler (struct intr_frame *f)
     */
 
     if (f == NULL) exit(-1);
+    //test for bad read
+    if (*f == NULL) exit(-1);
 
     //hex_dump(f->esp, f->esp, 80, true);
 
