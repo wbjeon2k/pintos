@@ -495,7 +495,8 @@ init_thread (struct thread *t, const char *name, int priority)
   //fd 0,1,2 reserved for stdout,stdin, stderr
   t->fd_idx = 3;
 
-  t->exit_code = 1000000;
+  //t->exit_code = 1000000;
+  t->exit_code = 0;
   t->isWaiting = false;
   t->hasExited = false;
   t->load_success = false;
