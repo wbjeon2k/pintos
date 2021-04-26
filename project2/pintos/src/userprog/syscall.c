@@ -533,8 +533,8 @@ int write(int fd, const void* buffer, unsigned length) {
         return 0;
     }
 
-    struct file tmp = *fptr;
-    if (tmp->deny_write == true) {
+    //struct file tmp = *fptr;
+    if (fptr->deny_write == true) {
         lock_release(&file_lock);
         return 0;
     }
