@@ -406,6 +406,7 @@ bool remove(const char* file) {
 int open(const char* file) {
     //struct file *filesys_open (const char *name);
     //open file, get file*, allocate new fd, insert
+    //void file_deny_write(struct file* file)
     if (!check_VA(file)) {
         return -1;
     }
@@ -421,6 +422,9 @@ int open(const char* file) {
     struct thread* cur;
     cur = thread_current();
     
+    //don't allow write during a file is open
+    file_deny_write(fd_content);
+
     (cur->fd_table)[cur->fd_idx] = fd_content;
     //!!! open pass
     ret = cur->fd_idx;
