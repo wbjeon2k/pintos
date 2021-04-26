@@ -538,7 +538,7 @@ int write(int fd, const void* buffer, unsigned length) {
         return 0;
     }
 
-    if (&fptr->deny_write) {
+    if (cur->fd_table[fd]->deny_write) {
         lock_release(&file_lock);
         return 0;
     }
