@@ -497,9 +497,11 @@ int read(int fd, void* buffer, unsigned length) {
             ++cnt;
         }
         //last 0
+        lock_release(&file_lock);
         return cnt;
     }
     if (fd == 1 || fd == 2) {
+        lock_release(&file_lock);
         return -1;
     }
 
@@ -537,9 +539,11 @@ int write(int fd, const void* buffer, unsigned length) {
     if (fd == 1) {
         //fd 1, the system console
         putbuf(buffer, length);
+        lock_release(&file_lock);
         return length;
     }
     if (fd == 0 || fd == 2) {
+        lock_release(&file_lock);
         return 0;
     }
 
