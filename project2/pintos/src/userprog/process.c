@@ -598,7 +598,7 @@ load (const char *file_name, void (**eip) (void), void **esp)
 
  done:
   /* We arrive here whether the load is successful or not. */
-  //file_close (file);
+  file_close (file);
   //여기가 아니라 process exit 할때 닫는게 맞다. 어쩐지 두 번 닫더라니..
   //아닌가
 
