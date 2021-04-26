@@ -9,6 +9,7 @@
 #include "filesys/filesys.h"
 #include "filesys/file.h"
 #include "filesys/inode.h"
+#include "devices/input.h"
 
 //#include "filesys/file.c"
 
@@ -517,6 +518,7 @@ int read(int fd, void* buffer, unsigned length) {
     ret = file_read(fptr, buffer, length);
 
     lock_release(&file_lock);
+    //do not allow write --> row simple pass
     //file_allow_write(fptr);
     return ret;
 }
