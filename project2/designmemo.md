@@ -2,6 +2,10 @@
 
 ### Todo
 
+" 3.3.5 Denying Writes to Executables Add code to deny writes to files in use as executables. "
+--> 실행되고 있는 파일에 write 하는것 막기
+--> process execution 에서? file->deny_write 에 직접 접근은 filesys 부분 코드 수정 하지 않으면 불가능.
+
 https://en.wikipedia.org/wiki/File_descriptor  
 "per-process file descriptor table"  
 process 별로 fd table + fd 번호 달라도 같은 파일일 수 있음.  

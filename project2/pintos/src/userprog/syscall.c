@@ -424,7 +424,7 @@ int open(const char* file) {
     cur = thread_current();
     
     //don't allow write during a file is open
-    file_deny_write(fd_content);
+    //file_deny_write(fd_content);
 
     (cur->fd_table)[cur->fd_idx] = fd_content;
     //!!! open pass
@@ -529,12 +529,6 @@ int write(int fd, const void* buffer, unsigned length) {
     fptr = (cur->fd_table)[fd];
 
     if (fptr == NULL) {
-        lock_release(&file_lock);
-        return 0;
-    }
-
-    //struct file tmp = *fptr;
-    if (fptr->deny_write == true) {
         lock_release(&file_lock);
         return 0;
     }
