@@ -321,6 +321,8 @@ void exit(int exitcode) {
     cur = thread_current();
     cur->exit_code = exitcode;
     //wait for all childs to exit
+    cur->hasExited = true;
+    //exit test
     
     if (list_empty(&(cur->child_list)) == false) {
         struct list_elem* e;
