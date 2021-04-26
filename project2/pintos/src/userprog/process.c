@@ -95,6 +95,21 @@ process_execute (const char *command)
   //create child_info, push into child list, sema up, return
   //이걸 load 해서 넘어가기 전에 해야한다.
 
+  //load fail시 -1 return 처리
+  struct thread* cur;
+  cur = thread_current();
+  struct list_elem* e;
+  for (e = list_begin(&(cur->child_list)); e != list_end(&(cur->child_list));
+      e = list_next(e)) {
+      struct thread* f = list_entry(e, struct thread, child_list_elem);
+      if (f->tid == tid) {
+          if (f->load_success == false) {
+              sema_up(&(cur->sema_exec));
+              return TID_ERROR;
+          }
+      }
+  }
+
   //free resource
   //palloc_free_page(file_name);
   //palloc_free_page(cmd_copy);
@@ -102,6 +117,7 @@ process_execute (const char *command)
   //free(cmd_pass);
 
   //printf("process execute finish\n");
+  sema_up(&(cur->sema_exec));
   return tid;
 }
 
@@ -190,7 +206,7 @@ start_process (void* cmd_)
   /* If load failed, quit. */
   //palloc_free_page (command);
   if (!success) {
-      sema_up(&(cur->parent_thread->sema_exec));
+      //sema_up(&(cur->parent_thread->sema_exec));
       thread_exit();
       return;
   }
@@ -205,7 +221,7 @@ start_process (void* cmd_)
 
   
   cur->load_success = true;
-  sema_up(&(cur->parent_thread->sema_exec));
+  //sema_up(&(cur->parent_thread->sema_exec));
 
 
   /* Start the user process by simulating a return from an
