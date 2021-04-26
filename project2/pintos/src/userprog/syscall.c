@@ -467,7 +467,8 @@ int read(int fd, void* buffer, unsigned length) {
         int cnt = -1;
         for (i = 0; i < length; ++i) {
             //uint8_t input_getc(void)
-            if (input_getc() == 0) break;
+            //eof problem?
+            if (input_getc() == '\0') break;
 
             ++cnt;
         }
