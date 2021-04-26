@@ -397,7 +397,8 @@ int wait(tid_t wait_pid) {
 
 bool create(const char* file, unsigned initial_size) {
     if (!check_VA(file)) {
-        return false;
+        //return false;
+        exit(-1);
     }
     bool ret;
     lock_acquire(&file_lock);
@@ -425,7 +426,8 @@ int open(const char* file) {
     //open file, get file*, allocate new fd, insert
     //void file_deny_write(struct file* file)
     if (!check_VA(file)) {
-        return -1;
+        //return -1;
+        exit(-1);
     }
     int ret;
     lock_acquire(&file_lock);
@@ -479,9 +481,11 @@ int filesize(int fd) {
 
 int read(int fd, void* buffer, unsigned length) {
     if (fd < 0) return -1;
+    if (fd > 200) return -1;
 
     if (!check_VA(buffer)) {
-        return -1;
+        //return -1;
+        exit(-1);
     }
 
     if (fd == 0) {
@@ -529,12 +533,12 @@ int read(int fd, void* buffer, unsigned length) {
 
 int write(int fd, const void* buffer, unsigned length) {
     if (fd < 0) return 0;
+    if (fd > 200) return 0;
 
     if (!check_VA(buffer)) {
-        return 0;
+        //return 0;
+        exit(-1);
     }
-
-    
 
     if (fd == 1) {
         //fd 1, the system console
@@ -616,6 +620,7 @@ unsigned int tell(int fd) {
 //file_close (struct file *file) 
 void close(int fd) {
     if (fd < 0) return;
+    if (fd > 200) return;
     lock_acquire(&file_lock);
 
     struct thread* cur;
@@ -629,5 +634,7 @@ void close(int fd) {
     }
 
     file_close(fptr);
+    //for close twice
+    cur->fd_table[fd] = NULL;
     lock_release(&file_lock);
 }
