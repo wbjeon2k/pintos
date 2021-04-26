@@ -7,7 +7,7 @@
 #include <inttypes.h>
 #include "pagedir.h"
 #include "filesys/filesys.h"
-#include "filesys/file.h"
+//#include "filesys/file.h"
 #include "filesys/file.c"
 
 static void syscall_handler (struct intr_frame *);
