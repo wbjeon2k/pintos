@@ -235,6 +235,7 @@ tid_t exec(const char* cmd_) {
     //sema_up(parent->sema_exec);
 
     //load fail½Ã -1 return Ã³¸®
+    //pass exec missing
     struct thread* cur;
     cur = thread_current();
     struct list_elem* e;
