@@ -74,8 +74,7 @@ inline bool check_VA(void* ptr) {
 
     struct thread* cur = thread_current();
 
-    //lookup_page(cur->pagedir, ptr, false)
-    if (lookup_page(cur->pagedir, ptr,false) == NULL) return false;
+    if (pagedir_get_page(cur->pagedir, ptr) == NULL) return false;
 
     return true;
 }
