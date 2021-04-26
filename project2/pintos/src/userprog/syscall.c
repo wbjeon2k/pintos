@@ -515,7 +515,7 @@ int read(int fd, void* buffer, unsigned length) {
         return -1;
     }
 
-    file_deny_write(fptr);
+    //file_deny_write(fptr);
 
     //file_read(struct file*, void*, off_t)
     int ret;
