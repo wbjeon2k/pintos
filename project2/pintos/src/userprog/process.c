@@ -96,7 +96,7 @@ process_execute (const char *command)
   //이걸 load 해서 넘어가기 전에 해야한다.
 
   //load fail시 -1 return 처리
-  struct thread* cur;
+  //struct thread* cur;
   cur = thread_current();
   struct list_elem* e;
   for (e = list_begin(&(cur->child_list)); e != list_end(&(cur->child_list));
