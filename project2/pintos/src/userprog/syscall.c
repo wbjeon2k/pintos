@@ -223,6 +223,7 @@ void exit(int exitcode) {
 tid_t exec(const char* cmd_) {
     //printf("exec impl\n");
     char* cmd = cmd_;
+    if (!check_VA(cmd)) exit(-1);
     //printf("exec impl cmd %s\n", cmd);
     tid_t child_tid;
 
