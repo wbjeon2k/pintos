@@ -8,6 +8,8 @@
 #include "pagedir.h"
 #include "filesys/filesys.h"
 #include "filesys/file.h"
+#include "filesys/inode.h"
+
 //#include "filesys/file.c"
 
 static void syscall_handler (struct intr_frame *);
@@ -538,7 +540,7 @@ int write(int fd, const void* buffer, unsigned length) {
         return 0;
     }
 
-    if (cur->fd_table[fd]->deny_write) {
+    if (fptr->deny_write) {
         lock_release(&file_lock);
         return 0;
     }
