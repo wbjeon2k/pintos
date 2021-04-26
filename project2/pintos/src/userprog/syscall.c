@@ -318,6 +318,7 @@ void exit(int exitcode) {
         }
     }
 
+    /*
     //close all opening files before exit
     int i = 0;
     for (i = 0; i < 200; ++i) {
@@ -325,6 +326,7 @@ void exit(int exitcode) {
             close(i);
         }
     }
+    */
 
     thread_exit();
 }
@@ -414,6 +416,7 @@ int open(const char* file) {
     int ret;
     lock_acquire(&file_lock);
     struct file* fd_content = filesys_open(file);
+
 
     if (fd_content == NULL) {
         lock_release(&file_lock);
