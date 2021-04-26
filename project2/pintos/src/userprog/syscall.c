@@ -165,16 +165,17 @@ syscall_handler (struct intr_frame *f)
     return;
     */
 
-    if (!check_VA(f)) exit(-1);
-    //if (f == NULL) exit(-1);
+    //f ดย kernel area
+    //if (!check_VA(f)) exit(-1);
+    if (f == NULL) exit(-1);
     //test for bad read
-    //if (*f == NULL) exit(-1);
+    if (&f == NULL) exit(-1);
 
     //hex_dump(f->esp, f->esp, 80, true);
 
     uint32_t* esp_copy = f->esp;
     //check esp
-    if (!check_VA(esp_copy)) exit(-1);
+    if (!check_VA(esp_offset(f, 0))) exit(-1);
 
     uint32_t syscall_nr = *esp_copy;
 
