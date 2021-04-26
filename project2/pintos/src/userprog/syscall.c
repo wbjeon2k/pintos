@@ -238,7 +238,21 @@ syscall_handler (struct intr_frame *f)
         char* name = *esp_offset(f, 1);
         f->eax = remove(name);
     }
- 
+
+    //struct file *filesys_open (const char *name);
+    if (syscall_nr == SYS_OPEN) {
+        //bool filesys_remove (const char *name) 
+        if (!check_VA(esp_offset(f, 1))) exit(-1);
+        char* name = *esp_offset(f, 1);
+        f->eax = open(name);
+    }
+    
+    if (syscall_nr == SYS_FILESIZE) {
+        //int filesize (int fd) 
+        if (!check_VA(esp_offset(f, 1))) exit(-1);
+        int fd = *esp_offset(f, 1);
+        f->eax = filesize(fd);
+    }
 }
 
 void halt(void) {
@@ -343,20 +357,56 @@ bool remove(const char* file) {
     return ret;
 }
 
-/*
-int open(const char* file) {
 
+int open(const char* file) {
+    //struct file *filesys_open (const char *name);
+    //open file, get file*, allocate new fd, insert
+    if (!check_VA(file)) {
+        return false;
+    }
+    int ret;
+    lock_acquire(&file_lock);
+    struct file* fd_content = filesys_open(file);
+    struct thread* cur;
+    cur = thread_current();
+    
+    (cur->fd_table)[cur->fd_idx] = fd_content;
+    ++(cur->fd_idx);
+
+    lock_release(&file_lock);
+    return ret;
 }
+
 
 int filesize(int fd) {
+    lock_acquire(&file_lock);
 
+    int ret;
+    struct thread* cur;
+    cur = thread_current();
+
+    struct file* fptr;
+    fptr = (cur->fd_table)[fd];
+
+    if (fptr == NULL) {
+        return 0;
+    }
+    else {
+        ret = file_length(fptr);
+    }
+
+    lock_release(&file_lock);
+    return ret;
 }
-*/
+
 
 int read(int fd, void* buffer, unsigned length) {
+    if (!check_VA(buffer)) {
+        return -1;
+    }
     if (fd == 0) {
         int i = 0;
-        int cnt = 0;
+        int cnt = -1;
         for (i = 0; i < length; ++i) {
             //uint8_t input_getc(void)
             if (input_getc() == 0) break;
@@ -366,21 +416,67 @@ int read(int fd, void* buffer, unsigned length) {
         //last 0
         return cnt;
     }
+    if (fd == 1 || fd == 2) {
+        return -1;
+    }
+
+    lock_acquire(&file_lock);
+
+    struct thread* cur;
+    cur = thread_current();
+    struct file* fptr;
+    fptr = (cur->fd_table)[fd];
+
+    if (fptr == NULL) {
+        return -1;
+    }
+
+    //file_read(struct file*, void*, off_t)
+    int ret;
+    ret = file_read(fptr, buffer, length);
+
+    lock_release(&file_lock);
+    return ret;
 }
 
 int write(int fd, const void* buffer, unsigned length) {
+    if (!check_VA(buffer)) {
+        return 0;
+    }
     if (fd == 1) {
         //fd 1, the system console
         putbuf(buffer, length);
         return length;
     }
+    if (fd == 0 || fd == 2) {
+        return 0;
+    }
+
+    lock_acquire(&file_lock);
+
+    struct thread* cur;
+    cur = thread_current();
+    struct file* fptr;
+    fptr = (cur->fd_table)[fd];
+
+    if (fptr == NULL) {
+        return -1;
+    }
+
+    //off_t file_write(struct file* file, const void* buffer, off_t size)
+    int ret;
+    ret = file_write(fptr, buffer, length);
+
+    lock_release(&file_lock);
+    return ret;
 }
 
-/*
+//void file_seek(struct file* file, off_t new_pos)
 void seek(int fd, unsigned position) {
 
 }
 
+/*
 unsigned int tell(int fd) {
 
 }

@@ -488,6 +488,13 @@ init_thread (struct thread *t, const char *name, int priority)
   sema_init(&(t->sema_wait), 0);
   sema_init(&(t->sema_allow_thread_exit), 0);
 
+  int i = 0;
+  for (i = 0; i < 200; ++i) {
+      (t->fd_table)[i] = NULL;
+  }
+  //fd 0,1,2 reserved for stdout,stdin, stderr
+  t->fd_idx = 3;
+
   t->exit_code = 1000000;
   t->isWaiting = false;
   t->hasExited = false;

@@ -138,6 +138,9 @@ struct thread
     struct semaphore sema_wait;
     struct semaphore sema_allow_thread_exit;
 
+    struct file* fd_table[200];
+    int fd_idx; // for open. last index of fd
+
 #ifdef USERPROG
     //only for userprogs
     /* Owned by userprog/process.c. */

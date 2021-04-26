@@ -4,7 +4,10 @@
 
 https://en.wikipedia.org/wiki/File_descriptor  
 "per-process file descriptor table"  
-process 별로 fd table + fd 번호 달라도 같은 파일일 수 있음.   
+process 별로 fd table + fd 번호 달라도 같은 파일일 수 있음.  
+//Can I set a maximum number of open files per process?
+//It is better not to set an arbitrary limit.You may impose a limit of 128 open files per process, if necessary. --> 넉넉하게 200개
+fd number -> file* -> file -> inode* -> inode -> real file
 
 
 그냥 다른 파트들을 완벽하게 만들었다 가정하고 syscall 전부 만든 뒤에 테스트 하는게 나아보인다.  
