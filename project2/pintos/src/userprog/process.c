@@ -204,10 +204,8 @@ start_process (void* cmd_)
 
   //create child_info, push into child list, sema up, return
 
-  
   cur->load_success = true;
   sema_up(&(cur->parent_thread->sema_exec));
-
 
   /* Start the user process by simulating a return from an
      interrupt, implemented by intr_exit (in

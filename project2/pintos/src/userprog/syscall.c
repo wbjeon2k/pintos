@@ -234,6 +234,20 @@ tid_t exec(const char* cmd_) {
     //printf("sema exec down finish\n");
     //sema_up(parent->sema_exec);
 
+    //load fail½Ã -1 return Ã³¸®
+    struct thread* cur;
+    cur = thread_current();
+    struct list_elem* e;
+    for (e = list_begin(&(cur->child_list)); e != list_end(&(cur->child_list));
+        e = list_next(e)) {
+        struct thread* f = list_entry(e, struct thread, child_list_elem);
+        if (f->tid == tid) {
+            if (f->load_success == false) {
+                return TID_ERROR;
+            }
+        }
+    }
+
     return child_tid;
 }
 
