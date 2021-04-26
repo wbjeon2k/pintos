@@ -222,6 +222,7 @@ syscall_handler (struct intr_frame *f)
         f->eax = write(fd, buffer, length);
     }
 
+    //bool create(const char* file, unsigned initial_size);
     if (syscall_nr == SYS_CREATE) {
         //bool filesys_create(const char* name, off_t initial_size);
         if (!check_VA(esp_offset(f, 4))) exit(-1);
@@ -299,7 +300,15 @@ void exit(int exitcode) {
             struct thread* f = list_entry(e, struct thread, child_list_elem);
             process_wait(f->tid);
         }
-    } 
+    }
+
+    //close all opening files before exit
+    int i = 0;
+    for (i = 0; i < 200; ++i) {
+        if ((cur->fd_table)[i] != NULL) {
+            close(i);
+        }
+    }
 
     thread_exit();
 }
@@ -383,11 +392,14 @@ int open(const char* file) {
     //struct file *filesys_open (const char *name);
     //open file, get file*, allocate new fd, insert
     if (!check_VA(file)) {
-        return false;
+        return -1;
     }
     int ret;
     lock_acquire(&file_lock);
     struct file* fd_content = filesys_open(file);
+
+    if (fd_content == NULL) return -1;
+
     struct thread* cur;
     cur = thread_current();
     
@@ -400,6 +412,8 @@ int open(const char* file) {
 
 
 int filesize(int fd) {
+    if (fd < 0) return 0;
+
     lock_acquire(&file_lock);
 
     int ret;
@@ -422,6 +436,8 @@ int filesize(int fd) {
 
 
 int read(int fd, void* buffer, unsigned length) {
+    if (fd < 0) return -1;
+
     if (!check_VA(buffer)) {
         return -1;
     }
@@ -461,6 +477,8 @@ int read(int fd, void* buffer, unsigned length) {
 }
 
 int write(int fd, const void* buffer, unsigned length) {
+    if (fd < 0) return 0;
+
     if (!check_VA(buffer)) {
         return 0;
     }
@@ -481,7 +499,7 @@ int write(int fd, const void* buffer, unsigned length) {
     fptr = (cur->fd_table)[fd];
 
     if (fptr == NULL) {
-        return -1;
+        return 0;
     }
 
     //off_t file_write(struct file* file, const void* buffer, off_t size)
@@ -494,6 +512,8 @@ int write(int fd, const void* buffer, unsigned length) {
 
 //void file_seek(struct file* file, off_t new_pos)
 void seek(int fd, unsigned position) {
+    if (fd < 0) return;
+
     lock_acquire(&file_lock);
 
     struct thread* cur;
@@ -511,12 +531,18 @@ void seek(int fd, unsigned position) {
 
 //off_t file_tell(struct file* file)
 unsigned int tell(int fd) {
+    if (fd < 0) return 0;
+
     lock_acquire(&file_lock);
 
     struct thread* cur;
     cur = thread_current();
     struct file* fptr;
     fptr = (cur->fd_table)[fd];
+
+    if (fptr == NULL) {
+        return 0;
+    }
 
     unsigned int ret;
     ret = file_tell(fptr);
@@ -532,6 +558,10 @@ void close(int fd) {
     cur = thread_current();
     struct file* fptr;
     fptr = (cur->fd_table)[fd];
+
+    if (fptr == NULL) {
+        return;
+    }
 
     file_close(fptr);
     lock_release(&file_lock);
