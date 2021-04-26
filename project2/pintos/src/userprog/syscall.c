@@ -484,8 +484,6 @@ int read(int fd, void* buffer, unsigned length) {
         return -1;
     }
 
-    lock_acquire(&file_lock);
-
     if (fd == 0) {
         int i = 0;
         int cnt = 0;
@@ -497,13 +495,15 @@ int read(int fd, void* buffer, unsigned length) {
             ++cnt;
         }
         //last 0
-        lock_release(&file_lock);
+        //lock_release(&file_lock);
         return cnt;
     }
     if (fd == 1 || fd == 2) {
-        lock_release(&file_lock);
+        //lock_release(&file_lock);
         return -1;
     }
+
+    lock_acquire(&file_lock);
 
     struct thread* cur;
     cur = thread_current();
@@ -534,18 +534,20 @@ int write(int fd, const void* buffer, unsigned length) {
         return 0;
     }
 
-    lock_acquire(&file_lock);
+    
 
     if (fd == 1) {
         //fd 1, the system console
         putbuf(buffer, length);
-        lock_release(&file_lock);
+        //lock_release(&file_lock);
         return length;
     }
     if (fd == 0 || fd == 2) {
-        lock_release(&file_lock);
+        //lock_release(&file_lock);
         return 0;
     }
+
+    lock_acquire(&file_lock);
 
     struct thread* cur;
     cur = thread_current();
