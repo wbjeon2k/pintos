@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include "pagedir.h"
+#include "filesys/filesys.h"
+#include "filesys/file.h"
 
 static void syscall_handler (struct intr_frame *);
 
@@ -84,6 +86,36 @@ int write(int fd, const void* buffer, unsigned length);
 void seek(int fd, unsigned position);
 unsigned tell(int fd);
 void close(int fd);
+
+
+//filesys functions
+struct file *file_open (struct inode *);
+struct file *file_reopen (struct file *);
+void file_close (struct file *);
+struct inode *file_get_inode (struct file *);
+
+/ Reading and writing. /
+off_t file_read(struct file*, void*, off_t);
+off_t file_read_at(struct file*, void*, off_t size, off_t start);
+off_t file_write(struct file*, const void*, off_t);
+off_t file_write_at(struct file*, const void*, off_t size, off_t start);
+
+/ Preventing writes. /
+void file_deny_write(struct file*);
+void file_allow_write(struct file*);
+
+/ File position. /
+void file_seek(struct file*, off_t);
+off_t file_tell(struct file*);
+off_t file_length(struct file*);
+
+struct block *fs_device;
+
+void filesys_init (bool format);
+void filesys_done (void);
+bool filesys_create (const char *name, off_t initial_size);
+struct file *filesys_open (const char *name);
+bool filesys_remove (const char *name);
 
 */
 
@@ -189,6 +221,23 @@ syscall_handler (struct intr_frame *f)
         unsigned length = *esp_offset(f, 7);
         f->eax = write(fd, buffer, length);
     }
+
+    if (syscall_nr == SYS_CREATE) {
+        //bool filesys_create(const char* name, off_t initial_size);
+        if (!check_VA(esp_offset(f, 4))) exit(-1);
+        //if (!check_VA(esp_offset(f, 5))) exit(-1);
+        char* name = *esp_offset(f, 4);
+        off_t initial_size = *esp_offset(f, 5);
+        f->eax = create(name, initial_size);
+    }
+
+    //Unix-like semantics for filesys_remove() are implemented.
+    if (syscall_nr == SYS_REMOVE) {
+        //bool filesys_remove (const char *name) 
+        if (!check_VA(esp_offset(f, 1))) exit(-1);
+        char* name = *esp_offset(f, 1);
+        f->eax = remove(name);
+    }
  
 }
 
@@ -232,9 +281,13 @@ tid_t exec(const char* cmd_) {
 
     struct thread* parent = thread_current();
     
+    //file lock: load 도 file operation 이니까 sync 필요(?)
+    lock_acquire(&file_lock);
     child_tid = process_execute(cmd);
+    
     //printf("sema exec down\n");
     sema_down(&(parent->sema_exec)); //acquire sema_exec
+    lock_release(&file_lock);
     //printf("sema exec down finish\n");
     //sema_up(parent->sema_exec);
 
@@ -263,16 +316,34 @@ int wait(tid_t wait_pid) {
     return ret;
 }
 
-/*
+
 
 bool create(const char* file, unsigned initial_size) {
-
+    if (!check_VA(file)) {
+        return false;
+    }
+    bool ret;
+    lock_acquire(&file_lock);
+    ret = filesys_create(file, initial_size);
+    lock_release(&file_lock);
+    return ret;
 }
+
+
 
 bool remove(const char* file) {
-
+    //filesys_remove(const char* name)
+    if (!check_VA(file)) {
+        return false;
+    }
+    bool ret;
+    lock_acquire(&file_lock);
+    ret = filesys_remove(file);
+    lock_release(&file_lock);
+    return ret;
 }
 
+/*
 int open(const char* file) {
 
 }
