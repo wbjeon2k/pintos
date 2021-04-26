@@ -517,7 +517,7 @@ int read(int fd, void* buffer, unsigned length) {
     ret = file_read(fptr, buffer, length);
 
     lock_release(&file_lock);
-    file_allow_write(fptr);
+    //file_allow_write(fptr);
     return ret;
 }
 
