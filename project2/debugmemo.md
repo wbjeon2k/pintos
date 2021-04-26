@@ -12,4 +12,5 @@ pintos -v -k --gdb --bochs  --filesys-size=2 -p tests/userprog/read-bad-ptr -a r
 pintos -f -q
 pintos -v -k -T 60 --bochs  --filesys-size=2 -p tests/userprog/rox-simple -a rox-simple -- -q -f run rox-simple 
 pintos -v -k --gdb --bochs  --filesys-size=2 -p tests/userprog/rox-simple -a rox-simple -- -q -f run rox-simple 
+pintos -v -k --gdb --bochs  --filesys-size=2 -p tests/userprog/rox-child -a rox-child -p tests/userprog/child-rox -a child-rox -- -q -f run rox-child 
 
