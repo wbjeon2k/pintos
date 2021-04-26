@@ -510,14 +510,14 @@ int read(int fd, void* buffer, unsigned length) {
         return -1;
     }
 
-    file_deny_write(file);
+    file_deny_write(fptr);
 
     //file_read(struct file*, void*, off_t)
     int ret;
     ret = file_read(fptr, buffer, length);
 
     lock_release(&file_lock);
-    file_allow_write(file);
+    file_allow_write(fptr);
     return ret;
 }
 
