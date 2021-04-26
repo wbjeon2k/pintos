@@ -14,7 +14,7 @@ static void syscall_handler (struct intr_frame *);
 /*prototypes*/
 void halt(void) NO_RETURN;
 void exit(int) NO_RETURN;
-pid_t exec(const char*);
+tid_t exec(const char*);
 int wait(pid_t);
 bool create(const char*, unsigned);
 bool remove(const char*);
