@@ -166,9 +166,10 @@ syscall_handler (struct intr_frame *f)
     return;
     */
 
-    if (f == NULL) exit(-1);
+    if (!check_VA(f)) exit(-1);
+    //if (f == NULL) exit(-1);
     //test for bad read
-    if (*f == NULL) exit(-1);
+    //if (*f == NULL) exit(-1);
 
     //hex_dump(f->esp, f->esp, 80, true);
 
