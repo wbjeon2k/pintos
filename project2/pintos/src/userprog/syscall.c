@@ -500,11 +500,14 @@ int read(int fd, void* buffer, unsigned length) {
         return -1;
     }
 
+    file_deny_write(file);
+
     //file_read(struct file*, void*, off_t)
     int ret;
     ret = file_read(fptr, buffer, length);
 
     lock_release(&file_lock);
+    file_allow_write(file);
     return ret;
 }
 
@@ -528,9 +531,14 @@ int write(int fd, const void* buffer, unsigned length) {
     struct thread* cur;
     cur = thread_current();
     struct file* fptr;
-    fptr = (cur->fd_table)[fd];
+    fptr = cur->fd_table[fd];
 
     if (fptr == NULL) {
+        lock_release(&file_lock);
+        return 0;
+    }
+
+    if (fptr->deny_write) {
         lock_release(&file_lock);
         return 0;
     }
