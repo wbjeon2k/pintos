@@ -373,6 +373,12 @@ process_exit (void)
 
   cur->hasExited = true;
   
+  //test
+  //sema up parent process
+  sema_up(&(cur->parent_thread->sema_wait));
+  //stop before resume thread_exit.
+  sema_down(&(cur->parent_thread->sema_allow_thread_exit));
+
   /* Destroy the current process's page directory and switch back
      to the kernel-only page directory. */
   pd = cur->pagedir;
@@ -390,10 +396,12 @@ process_exit (void)
       pagedir_destroy (pd);
     }
 
+  /*
   //sema up parent process
   sema_up(&(cur->parent_thread->sema_wait));
   //stop before resume thread_exit.
   sema_down(&(cur->parent_thread->sema_allow_thread_exit));
+  */
 }
 
 /* Sets up the CPU for running user code in the current

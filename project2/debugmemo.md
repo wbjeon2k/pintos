@@ -16,4 +16,5 @@ pintos -v -k --gdb --bochs  --filesys-size=2 -p tests/userprog/rox-child -a rox-
 
 
 pintos -v -k -T 60 --bochs  --filesys-size=2 -p tests/userprog/bad-jump2 -a bad-jump2 -- -q -f run bad-jump2
+pintos -v -k --gdb --bochs  --filesys-size=2 -p tests/userprog/bad-jump2 -a bad-jump2 -- -q -f run bad-jump2
 
