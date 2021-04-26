@@ -413,7 +413,10 @@ int open(const char* file) {
     lock_acquire(&file_lock);
     struct file* fd_content = filesys_open(file);
 
-    if (fd_content == NULL) return -1;
+    if (fd_content == NULL) {
+        lock_release(&file_lock);
+        return -1;
+    }
 
     struct thread* cur;
     cur = thread_current();
@@ -439,11 +442,11 @@ int filesize(int fd) {
     fptr = (cur->fd_table)[fd];
 
     if (fptr == NULL) {
+        lock_release(&file_lock);
         return 0;
     }
-    else {
-        ret = file_length(fptr);
-    }
+    
+    ret = file_length(fptr);
 
     lock_release(&file_lock);
     return ret;
@@ -456,6 +459,7 @@ int read(int fd, void* buffer, unsigned length) {
     if (!check_VA(buffer)) {
         return -1;
     }
+
     if (fd == 0) {
         int i = 0;
         int cnt = -1;
@@ -480,6 +484,7 @@ int read(int fd, void* buffer, unsigned length) {
     fptr = (cur->fd_table)[fd];
 
     if (fptr == NULL) {
+        lock_release(&file_lock);
         return -1;
     }
 
@@ -514,6 +519,7 @@ int write(int fd, const void* buffer, unsigned length) {
     fptr = (cur->fd_table)[fd];
 
     if (fptr == NULL) {
+        lock_release(&file_lock);
         return 0;
     }
 
@@ -537,6 +543,7 @@ void seek(int fd, unsigned position) {
     fptr = (cur->fd_table)[fd];
 
     if (fptr == NULL) {
+        lock_release(&file_lock);
         return;
     }
 
@@ -556,6 +563,7 @@ unsigned int tell(int fd) {
     fptr = (cur->fd_table)[fd];
 
     if (fptr == NULL) {
+        lock_release(&file_lock);
         return 0;
     }
 
@@ -575,6 +583,7 @@ void close(int fd) {
     fptr = (cur->fd_table)[fd];
 
     if (fptr == NULL) {
+        lock_release(&file_lock);
         return;
     }
 
