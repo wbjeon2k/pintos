@@ -532,8 +532,7 @@ int write(int fd, const void* buffer, unsigned length) {
 
     struct thread* cur;
     cur = thread_current();
-    struct file* fptr;
-    fptr = cur->fd_table[fd];
+    struct file* fptr = cur->fd_table[fd];
 
     if (fptr == NULL) {
         lock_release(&file_lock);
