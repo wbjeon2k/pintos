@@ -223,6 +223,7 @@ void exit(int exitcode) {
 tid_t exec(const char* cmd_) {
     //printf("exec impl\n");
     char* cmd = cmd_;
+    //pass exec bad ptr
     if (!check_VA(cmd)) {
         return -1;
     }
