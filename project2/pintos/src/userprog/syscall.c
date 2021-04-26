@@ -331,14 +331,15 @@ void exit(int exitcode) {
 
     
     //여기서 중복해서 지우는게 문제였다.
-    //load 끝나자 마자 file close가 문제?
     //close all opening files before exit
+    /*
     int i = 0;
     for (i = 0; i < 200; ++i) {
         if ((cur->fd_table)[i] != NULL) {
             close(i);
         }
     }
+    */
     
 
     thread_exit();
