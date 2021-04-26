@@ -422,6 +422,7 @@ int open(const char* file) {
     cur = thread_current();
     
     (cur->fd_table)[cur->fd_idx] = fd_content;
+    ret = cur->fd_idx;
     ++(cur->fd_idx);
 
     lock_release(&file_lock);
