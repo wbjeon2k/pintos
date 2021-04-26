@@ -11,6 +11,21 @@
 
 static void syscall_handler (struct intr_frame *);
 
+/*prototypes*/
+void halt(void) NO_RETURN;
+void exit(int) NO_RETURN;
+pid_t exec(const char*);
+int wait(pid_t);
+bool create(const char*, unsigned);
+bool remove(const char*);
+int open(const char*);
+int filesize(int);
+int read(int, void*, unsigned);
+int write(int, const void* , unsigned);
+void seek(int, unsigned);
+unsigned tell(int);
+void close(int);
+
 struct lock file_lock;
 
 void
