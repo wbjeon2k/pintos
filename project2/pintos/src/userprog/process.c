@@ -346,10 +346,12 @@ process_wait (tid_t child_tid)
                     printf("current thread name %s\n", cur->name);
                     printf("f's thread name %s\n", f->name);
                     printf("f's isWaiting status %d\n", f->isWaiting);
+                    printf("f's exit code %d\n", f->exit_code);
+
                     printf("checkpoint\n");
 
 
-                    if (f->parent_thread != NULL) {
+                    if ((f->parent_thread) != NULL) {
                         printf("f's parent name %s\n", (f->parent_thread)->name);
                     }
                     else {
