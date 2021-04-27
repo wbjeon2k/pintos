@@ -58,14 +58,14 @@ process_execute (const char *command)
   //printf("cmd_len %d\n", cmd_len);
   cmd_copy = malloc(cmd_len);
   if (cmd_copy == NULL) {
-      //sema_up(&(cur->sema_exec));
+      sema_up(&(cur->sema_exec));
       return TID_ERROR;
   }
 
   //checkpoint(1);
   cmd_pass = malloc(cmd_len);
   if (cmd_pass == NULL) {
-      //sema_up(&(cur->sema_exec));
+      sema_up(&(cur->sema_exec));
       return TID_ERROR;
   }
 
@@ -90,7 +90,7 @@ process_execute (const char *command)
   //pass full command with cmd_pass
   tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_pass);
   if (tid == TID_ERROR) {
-      //sema_up(&(cur->sema_exec));
+      sema_up(&(cur->sema_exec));
       return tid;
   }
   //create child_info, push into child list, sema up, return
@@ -147,6 +147,7 @@ start_process (void* cmd_)
   argv_list = palloc_get_page(0);
 
   if (argv_list == NULL) {
+      sema_up(&(cur->parent_thread->sema_exec));
       thread_exit();
       return;
   }
