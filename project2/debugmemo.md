@@ -18,3 +18,5 @@ pintos -v -k --gdb --bochs  --filesys-size=2 -p tests/userprog/rox-child -a rox-
 pintos -v -k -T 60 --bochs  --filesys-size=2 -p tests/userprog/bad-jump2 -a bad-jump2 -- -q -f run bad-jump2
 pintos -v -k --gdb --bochs  --filesys-size=2 -p tests/userprog/bad-jump2 -a bad-jump2 -- -q -f run bad-jump2
 
+어쩌면 근본 원인은 hasExited = true 가 되지 않았는데 sema down 을 통과하는 경우??
+

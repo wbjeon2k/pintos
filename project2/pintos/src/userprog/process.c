@@ -58,14 +58,14 @@ process_execute (const char *command)
   //printf("cmd_len %d\n", cmd_len);
   cmd_copy = malloc(cmd_len);
   if (cmd_copy == NULL) {
-      sema_up(&(cur->sema_exec));
+      //sema_up(&(cur->sema_exec));
       return TID_ERROR;
   }
 
   //checkpoint(1);
   cmd_pass = malloc(cmd_len);
   if (cmd_pass == NULL) {
-      sema_up(&(cur->sema_exec));
+      //sema_up(&(cur->sema_exec));
       return TID_ERROR;
   }
 
@@ -90,7 +90,7 @@ process_execute (const char *command)
   //pass full command with cmd_pass
   tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_pass);
   if (tid == TID_ERROR) {
-      sema_up(&(cur->sema_exec));
+      //sema_up(&(cur->sema_exec));
       return tid;
   }
   //create child_info, push into child list, sema up, return
@@ -328,7 +328,9 @@ process_wait (tid_t child_tid)
         struct thread* f = list_entry(e, struct thread, child_list_elem);
         if (f->tid == child_tid) {
             //printf("tid match\n");
-
+            if (f->hasExited) {
+                return f->exit_code;
+            }
             if (f->isWaiting == false) {
                 //printf("waiting for tid %d to finish\n", child_tid);
 
@@ -336,7 +338,7 @@ process_wait (tid_t child_tid)
                 f->isWaiting = true;
                 sema_down(&(cur->sema_wait));
                 //syn read test
-                //ASSERT(f->hasExited == true);
+                ASSERT(f->hasExited == true);
 
                 //printf("finish waiting for tid %d\n", f->tid);
                 int ret;
