@@ -141,6 +141,9 @@ start_process (void* cmd_)
   int cnt;
 
   command = (char *)cmd_;
+
+  struct thread* cur;
+  cur = thread_current();
   //printf("passed command %s\n", command);
   
   //file_name = malloc(30);
@@ -188,8 +191,7 @@ start_process (void* cmd_)
 
   //checkpoint(6);
 
-  struct thread* cur;
-  cur = thread_current();
+  
   /* If load failed, quit. */
   //palloc_free_page (command);
   if (!success) {
