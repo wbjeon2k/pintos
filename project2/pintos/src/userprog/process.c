@@ -387,6 +387,20 @@ process_wait (tid_t child_tid)
     return -1;
 }
 
+void exitcodecheck() {
+    struct thread* cur;
+    cur = thread_current();
+    printf("exiting thread name %s\n", cur->name);
+    if (cur->parent_thread != NULL) {
+        printf("exiting thread's parent %s\n", cur->parent_thread->name);
+    }
+    else {
+        printf("exiting thread has no parent\n");
+    }
+
+    printf("exit code %d", cur->exit_code);
+}
+
 /* Free the current process's resources. */
 void
 process_exit (void)
@@ -396,6 +410,12 @@ process_exit (void)
   uint32_t *pd;
 
   cur->hasExited = true;
+
+  if (cur->exit_code == 1000000) {
+      exitcodecheck();
+  }
+
+  ASSERT(cur->exit_code != 1000000);
   
   //test
   //sema up parent process
