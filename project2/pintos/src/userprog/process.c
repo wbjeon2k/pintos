@@ -341,6 +341,15 @@ process_wait (tid_t child_tid)
                 f->isWaiting = true;
                 sema_down(&(cur->sema_wait));
                 //syn read test
+                if (f->hasExited == false) {
+                    printf("passed sema down without exit\n");
+                    printf("current thread name %s\n", cur->name);
+                    printf("f's thread name %s\n", f->name);
+                    if (f->parent != NULL) {
+                        printf("f's parent name %s\n", (f->parent)->name);
+                    }
+                    else printf("f has no parent\n");
+                }
                 ASSERT(f->hasExited == true);
 
                 //printf("finish waiting for tid %d\n", f->tid);
