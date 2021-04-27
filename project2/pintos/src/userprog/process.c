@@ -151,7 +151,8 @@ start_process (void* cmd_)
 
   if (argv_list == NULL) {
       sema_up(&(cur->parent_thread->sema_exec));
-      thread_exit();
+      exit(-1);
+      //thread_exit();
       return;
   }
 
@@ -196,7 +197,8 @@ start_process (void* cmd_)
   //palloc_free_page (command);
   if (!success) {
       sema_up(&(cur->parent_thread->sema_exec));
-      thread_exit();
+      //thread_exit();
+      exit(-1);
       return;
   }
   //checkpoint(7);

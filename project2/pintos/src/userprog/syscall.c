@@ -375,6 +375,7 @@ tid_t exec(const char* cmd_) {
 
     //load fail½Ã -1 return Ã³¸®
     //pass exec missing
+    //now fail again? why?
     struct thread* cur;
     cur = thread_current();
     struct list_elem* e;
