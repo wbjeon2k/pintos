@@ -345,10 +345,17 @@ process_wait (tid_t child_tid)
                     printf("passed sema down without exit\n");
                     printf("current thread name %s\n", cur->name);
                     printf("f's thread name %s\n", f->name);
+
+                    printf("checkpoint\n");
+
                     if (f->parent_thread != NULL) {
                         printf("f's parent name %s\n", (f->parent_thread)->name);
                     }
-                    else printf("f has no parent\n");
+                    else {
+                        printf("f has no parent\n");
+                    }
+
+                    printf("checkpoint\n");
                 }
                 ASSERT(f->hasExited == true);
 
