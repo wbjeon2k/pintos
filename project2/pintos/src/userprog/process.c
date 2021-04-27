@@ -345,8 +345,8 @@ process_wait (tid_t child_tid)
                     printf("passed sema down without exit\n");
                     printf("current thread name %s\n", cur->name);
                     printf("f's thread name %s\n", f->name);
-                    if (f->parent != NULL) {
-                        printf("f's parent name %s\n", (f->parent)->name);
+                    if (f->parent_thread != NULL) {
+                        printf("f's parent name %s\n", (f->parent_thread)->name);
                     }
                     else printf("f has no parent\n");
                 }
