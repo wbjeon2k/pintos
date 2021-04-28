@@ -325,7 +325,7 @@ void exit(int exitcode) {
     //wait for all childs to exit
     cur->hasExited = true;
     //exit test
-    printf("cur exit code\n", cur->exit_code);
+    printf("cur exit code %d\n", cur->exit_code);
     printf("checkpoint 0");
     
     if (list_empty(&(cur->child_list)) == false) {

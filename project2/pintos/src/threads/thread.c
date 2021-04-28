@@ -309,6 +309,8 @@ thread_exit (void)
   printf("thread_exit start\n");
   print_cur_thread();
 
+  thread_current()->hasExited = true;
+
 #ifdef USERPROG
   process_exit ();
 #endif
