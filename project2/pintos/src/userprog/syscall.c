@@ -61,6 +61,12 @@ For # of arguments is
 3 : arguments are located in esp + 5(arg0), esp + 6(arg1), esp + 7(arg2)
 */
 
+/*
+If a system call is passed an invalid argument,
+acceptable options include returning an error value (for those calls that return a value),
+returning an undefined value, or terminating the process.
+*/
+
 uint32_t* esp_offset(const struct intr_frame* f, int i) {
     uint32_t* ret = f->esp;
     ret += i;
@@ -71,7 +77,7 @@ uint32_t* esp_offset(const struct intr_frame* f, int i) {
 inline bool check_VA(void* ptr) {
     if(!is_user_vaddr(ptr)) return false;
     if (ptr == NULL) return false;
-
+    if (ptr < 0x08048000) return false;
     struct thread* cur = thread_current();
 
     if (pagedir_get_page(cur->pagedir, ptr) == NULL) return false;
@@ -337,8 +343,7 @@ void exit(int exitcode) {
             process_wait(f->tid);
         }
     }
-
-    
+  
     //여기서 중복해서 지우는게 문제였다.
     //close all opening files before exit
     /*
@@ -349,7 +354,6 @@ void exit(int exitcode) {
         }
     }
     */
-    
 
     thread_exit();
 }
@@ -432,7 +436,8 @@ bool create(const char* file, unsigned initial_size) {
 bool remove(const char* file) {
     //filesys_remove(const char* name)
     if (!check_VA(file)) {
-        return false;
+        //return false;
+        exit(-1);
     }
     bool ret;
     lock_acquire(&file_lock);
@@ -457,7 +462,8 @@ int open(const char* file) {
 
     if (fd_content == NULL) {
         lock_release(&file_lock);
-        return -1;
+        //return -1;
+        exit(-1);
     }
 
     struct thread* cur;
@@ -477,7 +483,7 @@ int open(const char* file) {
 
 
 int filesize(int fd) {
-    if (fd < 0) return 0;
+    if (fd < 0 || fd > 200) exit(-1);
 
     lock_acquire(&file_lock);
 
@@ -490,7 +496,8 @@ int filesize(int fd) {
 
     if (fptr == NULL) {
         lock_release(&file_lock);
-        return 0;
+        //return 0;
+        exit(-1);
     }
     
     ret = file_length(fptr);
@@ -501,34 +508,37 @@ int filesize(int fd) {
 
 
 int read(int fd, void* buffer, unsigned length) {
-    if (fd < 0) return -1;
-    if (fd > 200) return -1;
+    if (fd < 0 || fd > 200) exit(-1);
 
     if (!check_VA(buffer)) {
-        //return -1;
-        exit(-1);
+        return -1;
+        //exit(-1);
     }
+
+    lock_acquire(&file_lock);
 
     if (fd == 0) {
         int i = 0;
         int cnt = 0;
+        uint8_t tmp;
         for (i = 0; i < length; ++i) {
             //uint8_t input_getc(void)
             //eof problem?
-            if (input_getc() == '\0') break;
-
+            tmp = input_getc();
+            if (tmp == 0) break;
+            *(buffer + i) = tmp;
             ++cnt;
         }
         //last 0
-        //lock_release(&file_lock);
+        lock_release(&file_lock);
         return cnt;
     }
     if (fd == 1 || fd == 2) {
-        //lock_release(&file_lock);
+        lock_release(&file_lock);
+        //exit(-1);
         return -1;
     }
-
-    lock_acquire(&file_lock);
+ 
 
     struct thread* cur;
     cur = thread_current();
@@ -537,7 +547,8 @@ int read(int fd, void* buffer, unsigned length) {
 
     if (fptr == NULL) {
         lock_release(&file_lock);
-        return -1;
+        //return -1;
+        exit(-1);
     }
 
     //file_deny_write(fptr);
@@ -553,26 +564,25 @@ int read(int fd, void* buffer, unsigned length) {
 }
 
 int write(int fd, const void* buffer, unsigned length) {
-    if (fd < 0) return 0;
-    if (fd > 200) return 0;
+    if (fd < 0 || fd > 200) exit(-1);
 
     if (!check_VA(buffer)) {
         //return 0;
         exit(-1);
     }
 
+    lock_acquire(&file_lock);
+
     if (fd == 1) {
         //fd 1, the system console
         putbuf(buffer, length);
-        //lock_release(&file_lock);
+        lock_release(&file_lock);
         return length;
     }
     if (fd == 0 || fd == 2) {
-        //lock_release(&file_lock);
-        return 0;
+        lock_release(&file_lock);
+        return 1-;
     }
-
-    lock_acquire(&file_lock);
 
     struct thread* cur;
     cur = thread_current();
@@ -580,12 +590,14 @@ int write(int fd, const void* buffer, unsigned length) {
 
     if (fptr == NULL) {
         lock_release(&file_lock);
-        return 0;
+        //return 0;
+        exit(-1);
     }
 
     if (fptr->deny_write) {
         lock_release(&file_lock);
-        return 0;
+        //return 0;
+        exit(-1);
     }
 
     //off_t file_write(struct file* file, const void* buffer, off_t size)
@@ -598,7 +610,7 @@ int write(int fd, const void* buffer, unsigned length) {
 
 //void file_seek(struct file* file, off_t new_pos)
 void seek(int fd, unsigned position) {
-    if (fd < 0) return;
+    if (fd < 0 || fd > 200) exit(-1);
 
     lock_acquire(&file_lock);
 
@@ -609,7 +621,8 @@ void seek(int fd, unsigned position) {
 
     if (fptr == NULL) {
         lock_release(&file_lock);
-        return;
+        //return;
+        exit(-1);
     }
 
     file_seek(fptr, position);
@@ -618,7 +631,7 @@ void seek(int fd, unsigned position) {
 
 //off_t file_tell(struct file* file)
 unsigned int tell(int fd) {
-    if (fd < 0) return 0;
+    if (fd < 0 || fd > 200) exit(-1);
 
     lock_acquire(&file_lock);
 
@@ -640,8 +653,7 @@ unsigned int tell(int fd) {
 
 //file_close (struct file *file) 
 void close(int fd) {
-    if (fd < 0) return;
-    if (fd > 200) return;
+    if (fd < 0 || fd > 200) exit(-1);
     lock_acquire(&file_lock);
 
     struct thread* cur;
