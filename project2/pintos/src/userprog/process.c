@@ -358,6 +358,7 @@ process_wait (tid_t child_tid)
                 f->isWaiting = true;
                 sema_down(&(cur->sema_wait));
 
+                printf("checkpoint 2");
                 printf("passed sema down\n");
                 print_cur_thread();
                 //syn read test
@@ -431,6 +432,9 @@ process_exit (void)
   uint32_t *pd;
 
   cur->hasExited = true;
+
+  printf("cur exit code\n", cur->exit_code);
+  printf("checkpoint 1");
 
   if (cur->exit_code == 1000000) {
       exitcodecheck();
