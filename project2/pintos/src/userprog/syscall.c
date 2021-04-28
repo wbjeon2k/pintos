@@ -581,7 +581,7 @@ int write(int fd, const void* buffer, unsigned length) {
     }
     if (fd == 0 || fd == 2) {
         lock_release(&file_lock);
-        return 1-;
+        return -1;
     }
 
     struct thread* cur;
