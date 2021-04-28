@@ -91,7 +91,7 @@ process_execute (const char *command)
   //pass full command with cmd_pass
   tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_pass);
   if (tid == TID_ERROR) {
-      //sema_up(&(cur->sema_exec));
+      sema_up(&(cur->sema_exec));
       return tid;
   }
   //create child_info, push into child list, sema up, return
