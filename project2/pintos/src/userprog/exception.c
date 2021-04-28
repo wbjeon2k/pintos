@@ -12,7 +12,7 @@ static long long page_fault_cnt;
 static void kill (struct intr_frame *);
 static void page_fault (struct intr_frame *);
 
-inline bool check_VA(void* ptr) {
+inline bool va_check(void* ptr) {
     if (!is_user_vaddr(ptr)) return false;
     if (ptr == NULL) return false;
 
@@ -163,7 +163,7 @@ page_fault (struct intr_frame *f)
 
   if (user && !not_present) exit(-1);
 
-  if (user && !check_VA(fault_addr)) exit(-1);
+  if (user && !va_check(fault_addr)) exit(-1);
 
   if (!user) { // kernel mode
       f->eip = (void*)f->eax;
