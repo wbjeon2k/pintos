@@ -71,6 +71,10 @@ static void schedule (void);
 void thread_schedule_tail (struct thread *prev);
 static tid_t allocate_tid (void);
 
+void print_cur_thread() {
+    printf("current thread: %s\n", thread_current()->name);
+}
+
 /* Initializes the threading system by transforming the code
    that's currently running into a thread.  This can't work in
    general and it is possible in this case only because loader.S
@@ -166,7 +170,9 @@ tid_t
 thread_create (const char *name, int priority,
                thread_func *function, void *aux) 
 {
-  //printf("thread create start\n");
+  printf("thread create start\n");
+  print_cur_thread();
+
   struct thread *t;
   struct kernel_thread_frame *kf;
   struct switch_entry_frame *ef;
@@ -300,6 +306,8 @@ void
 thread_exit (void) 
 {
   ASSERT (!intr_context ());
+  printf("thread_exit start\n");
+  print_cur_thread();
 
 #ifdef USERPROG
   process_exit ();
@@ -473,6 +481,9 @@ init_thread (struct thread *t, const char *name, int priority)
   ASSERT (t != NULL);
   ASSERT (PRI_MIN <= priority && priority <= PRI_MAX);
   ASSERT (name != NULL);
+
+  printf("init thread start\n");
+  print_cur_thread()
 
   memset (t, 0, sizeof *t);
   t->status = THREAD_BLOCKED;
