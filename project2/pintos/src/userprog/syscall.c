@@ -462,8 +462,8 @@ int open(const char* file) {
 
     if (fd_content == NULL) {
         lock_release(&file_lock);
-        //return -1;
-        exit(-1);
+        return -1;
+        //exit(-1);
     }
 
     struct thread* cur;
@@ -513,6 +513,10 @@ int read(int fd, void* buffer, unsigned length) {
     if (!check_VA(buffer)) {
         return -1;
         //exit(-1);
+    }
+
+    if (!check_VA(buffer + length - 1)) {
+        return -1;
     }
 
     lock_acquire(&file_lock);
