@@ -511,12 +511,13 @@ int read(int fd, void* buffer, unsigned length) {
     if (fd < 0 || fd > 200) exit(-1);
 
     if (!check_VA(buffer)) {
-        return -1;
-        //exit(-1);
+        //return -1;
+        exit(-1);
     }
 
     if (!check_VA(buffer + length - 1)) {
-        return -1;
+        exit(-1);
+        //return -1;
     }
 
     lock_acquire(&file_lock);
