@@ -170,8 +170,8 @@ tid_t
 thread_create (const char *name, int priority,
                thread_func *function, void *aux) 
 {
-  printf("thread create start\n");
-  print_cur_thread();
+  //printf("thread create start\n");
+  //print_cur_thread();
 
   struct thread *t;
   struct kernel_thread_frame *kf;
@@ -306,8 +306,8 @@ void
 thread_exit (void) 
 {
   ASSERT (!intr_context ());
-  printf("thread_exit start\n");
-  print_cur_thread();
+  //printf("thread_exit start\n");
+  //print_cur_thread();
 
   thread_current()->hasExited = true;
 
@@ -484,8 +484,8 @@ init_thread (struct thread *t, const char *name, int priority)
   ASSERT (PRI_MIN <= priority && priority <= PRI_MAX);
   ASSERT (name != NULL);
 
-  printf("init thread start\n");
-  print_cur_thread();
+  //printf("init thread start\n");
+  //print_cur_thread();
 
   memset (t, 0, sizeof *t);
   t->status = THREAD_BLOCKED;
