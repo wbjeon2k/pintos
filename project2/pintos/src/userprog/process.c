@@ -357,6 +357,9 @@ process_wait (tid_t child_tid)
                 chk = true;
                 f->isWaiting = true;
                 sema_down(&(cur->sema_wait));
+
+                printf("passed sema down\n");
+                print_cur_thread();
                 //syn read test
                 if (f->hasExited == false) {
                     printf("passed sema down without exit\n");

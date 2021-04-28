@@ -314,11 +314,13 @@ void halt(void) {
 }
 
 void exit(int exitcode) {
-    //printf("exit impl\n");
+    printf("exit called\n");
     printf("%s: exit(%d)\n", thread_name(), exitcode);
+    print_cur_thread();
 
     struct thread* cur;
     cur = thread_current();
+    cur->hasExited = true;
     cur->exit_code = exitcode;
     //wait for all childs to exit
     cur->hasExited = true;
