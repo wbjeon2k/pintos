@@ -38,9 +38,11 @@ void checkpoint(int i) {
 printf("thread_exit start\n");
 print_cur_thread();
 */
+/*
 void print_cur_thread() {
     printf("current thread: %s\n", thread_current()->name);
 }
+*/
 
 tid_t
 process_execute (const char *command) 
