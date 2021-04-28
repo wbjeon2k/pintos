@@ -86,50 +86,22 @@ process_execute (const char *command)
   //checkpoint(2);
   strlcpy(cmd_pass, command, cmd_len);
 
-  //printf("cmd_copy %s\n", cmd_copy);
-  //printf("cmd_pass %s\n", cmd_pass);
-
-  //first token == file name. only extract file name
-  //file_name = palloc_get_page(0);
-  //if (file_name == NULL) return TID_ERROR;
-  //checkpoint(3);
-
   file_name = strtok_r(cmd_copy, " ", &tmp_ptr);
-  //printf("fliename %s\n", file_name);
-  //checkpoint(4);
 
   /* Create a new thread to execute FILE_NAME. */
   //pass full command with cmd_pass
   tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_pass);
   if (tid == TID_ERROR) {
-      sema_up(&(cur->sema_exec));
+      //sema_up(&(cur->sema_exec));
       return tid;
   }
   //create child_info, push into child list, sema up, return
   //이걸 load 해서 넘어가기 전에 해야한다.
 
-  //free resource
-  //palloc_free_page(file_name);
-  //palloc_free_page(cmd_copy);
-  //free(cmd_copy);
-  //free(cmd_pass);
-
   //printf("process execute finish\n");
   //sema_up(&(cur->sema_exec));
   return tid;
 }
-
-/*
-   Example usage:
-
-   char s[] = "  String to  tokenize. ";
-   char *token, *save_ptr;
-
-   for (token = strtok_r (s, " ", &save_ptr); token != NULL;
-        token = strtok_r (NULL, " ", &save_ptr))
-     printf ("'%s'\n", token);
-
-*/
 
 /* A thread function that loads a user process and starts it
    running. */
@@ -187,12 +159,6 @@ start_process (void* cmd_)
       ++cnt;
   }
   argc = cnt;
-
-  //free(command);
-
-  //printf("cnt %d\n", cnt);
-  //checkpoint(5);
-  //printf("fliename %s\n", file_name);
 
   /* Initialize interrupt frame and load executable. */
   memset (&if_, 0, sizeof if_);
@@ -348,9 +314,6 @@ process_wait (tid_t child_tid)
         struct thread* f = list_entry(e, struct thread, child_list_elem);
         if (f->tid == child_tid) {
             //printf("tid match\n");
-            if (f->hasExited) {
-                return f->exit_code;
-            }
             if (f->isWaiting == false) {
                 //printf("waiting for tid %d to finish\n", child_tid);
 
@@ -358,32 +321,8 @@ process_wait (tid_t child_tid)
 
                 chk = true;
                 f->isWaiting = true;
-                sema_down(&(cur->sema_wait));
+                if(!(f->hasExited)) sema_down(&(cur->sema_wait));
 
-                printf("checkpoint 2");
-                printf("finish wait for %d\n", child_tid);
-                printf("passed sema down\n");
-                print_cur_thread();
-                //syn read test
-                if (f->hasExited == false) {
-                    printf("passed sema down without exit\n");
-                    printf("current thread name %s\n", cur->name);
-                    printf("f's thread name %s\n", f->name);
-                    printf("f's isWaiting status %d\n", f->isWaiting);
-                    printf("f's exit code %d\n", f->exit_code);
-
-                    printf("checkpoint\n");
-
-
-                    if ((f->parent_thread) != NULL) {
-                        printf("f's parent name %s\n", (f->parent_thread)->name);
-                    }
-                    else {
-                        printf("f has no parent\n");
-                    }
-
-                    printf("checkpoint\n");
-                }
                 ASSERT(f->hasExited == true);
 
                 //printf("finish waiting for tid %d\n", f->tid);
@@ -438,10 +377,6 @@ process_exit (void)
 
   printf("cur exit code\n", cur->exit_code);
   printf("checkpoint 1");
-
-  if (cur->exit_code == 1000000) {
-      exitcodecheck();
-  }
 
   ASSERT(cur->exit_code != 1000000);
   
