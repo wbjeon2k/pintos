@@ -21,3 +21,5 @@ pintos -v -k --gdb --bochs  --filesys-size=2 -p tests/userprog/bad-jump2 -a bad-
 어쩌면 근본 원인은 hasExited = true 가 되지 않았는데 sema down 을 통과하는 경우??
 
 pintos -v -k -T 300 --bochs  --filesys-size=2 -p tests/filesys/base/syn-read -a syn-read -p tests/filesys/base/child-syn-read -a child-syn-read -- -q    -f run syn-read < /dev/null 2> tests/filesys/base/syn-read.errors |tee tests/filesys/base/syn-read.output
+
+pintos -v -k --gdb --bochs  --filesys-size=2 -p tests/filesys/base/syn-read -a syn-read -p tests/filesys/base/child-syn-read -a child-syn-read -- -q    -f run syn-read

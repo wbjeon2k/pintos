@@ -72,7 +72,7 @@ void thread_schedule_tail (struct thread *prev);
 static tid_t allocate_tid (void);
 
 void print_cur_thread() {
-    printf("current thread: %s\n", thread_current()->name);
+    printf("current thread: %s\n", running_thread()->name);
 }
 
 /* Initializes the threading system by transforming the code
