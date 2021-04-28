@@ -383,6 +383,8 @@ tid_t exec(const char* cmd_) {
     struct thread* cur;
     cur = thread_current();
     struct list_elem* e;
+    /*child id에 해당하는 것만 검사하고 끝내는게 문제?*/
+    /*
     for (e = list_begin(&(cur->child_list)); e != list_end(&(cur->child_list));
         e = list_next(e)) {
         struct thread* f = list_entry(e, struct thread, child_list_elem);
@@ -390,6 +392,15 @@ tid_t exec(const char* cmd_) {
             if (f->load_success == false) {
                 return TID_ERROR;
             }
+        }
+    }
+    */
+
+    for (e = list_begin(&(cur->child_list)); e != list_end(&(cur->child_list));
+        e = list_next(e)) {
+        struct thread* f = list_entry(e, struct thread, child_list_elem);
+        if (f->load_success == false) {
+            return process_wait(f->tid);
         }
     }
 
