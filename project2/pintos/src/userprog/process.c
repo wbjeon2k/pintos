@@ -354,11 +354,14 @@ process_wait (tid_t child_tid)
             if (f->isWaiting == false) {
                 //printf("waiting for tid %d to finish\n", child_tid);
 
+                printf("start wait for %d\n", child_tid);
+
                 chk = true;
                 f->isWaiting = true;
                 sema_down(&(cur->sema_wait));
 
                 printf("checkpoint 2");
+                printf("finish wait for %d\n", child_tid);
                 printf("passed sema down\n");
                 print_cur_thread();
                 //syn read test
