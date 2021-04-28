@@ -12,6 +12,17 @@ static long long page_fault_cnt;
 static void kill (struct intr_frame *);
 static void page_fault (struct intr_frame *);
 
+inline bool check_VA(void* ptr) {
+    if (!is_user_vaddr(ptr)) return false;
+    if (ptr == NULL) return false;
+
+    //struct thread* cur = thread_current();
+
+    //if (pagedir_get_page(cur->pagedir, ptr) == NULL) return false;
+
+    return true;
+}
+
 /* Registers handlers for interrupts that can be caused by user
    programs.
 
@@ -149,18 +160,29 @@ page_fault (struct intr_frame *f)
   write = (f->error_code & PF_W) != 0;
   user = (f->error_code & PF_U) != 0;
 
-  exit(-1);
+
+  if (user && !not_present) exit(-1);
+
+  if (user && !check_VA(fault_addr)) exit(-1);
+
+  if (!user) { // kernel mode
+      f->eip = (void*)f->eax;
+      f->eax = 0xffffffff;
+      return;
+  }
+
+  
 
   /* To implement virtual memory, delete the rest of the function
      body, and replace it with code that brings in the page to
      which fault_addr refers. */
-  /*
+  
   printf ("Page fault at %p: %s error %s page in %s context.\n",
           fault_addr,
           not_present ? "not present" : "rights violation",
           write ? "writing" : "reading",
           user ? "user" : "kernel");
   kill (f);
-  */
+  
 }
 
