@@ -526,7 +526,7 @@ int read(int fd, void* buffer, unsigned length) {
             //eof problem?
             tmp = input_getc();
             if (tmp == 0) break;
-            *(buffer + i) = tmp;
+            *((char*)buffer + i) = tmp;
             ++cnt;
         }
         //last 0
