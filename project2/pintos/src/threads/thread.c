@@ -483,7 +483,7 @@ init_thread (struct thread *t, const char *name, int priority)
   ASSERT (name != NULL);
 
   printf("init thread start\n");
-  print_cur_thread()
+  print_cur_thread();
 
   memset (t, 0, sizeof *t);
   t->status = THREAD_BLOCKED;
