@@ -48,8 +48,7 @@ tid_t
 process_execute (const char *command) 
 {
   //printf("process execute start\n");
-    printf("process execute start\n");
-    print_cur_thread();
+  //print_cur_thread();
   char* cmd_copy;
   char* cmd_pass;
   char* tmp_ptr;
@@ -113,8 +112,8 @@ if load successful, make a child, push into child list
 static void
 start_process (void* cmd_)
 {
-  printf("start_process start with cmd %s\n", cmd_);
-  print_cur_thread();
+  //printf("start_process start with cmd %s\n", cmd_);
+  //print_cur_thread();
   char* command;
   struct intr_frame if_;
   bool success;
@@ -291,8 +290,8 @@ struct list_elem *e;
 int
 process_wait (tid_t child_tid) 
 {
-    printf("wait start: wait for %d\n", child_tid);
-    print_cur_thread();
+    //printf("wait start: wait for %d\n", child_tid);
+    //print_cur_thread();
     //printf("wait start\n");
     //temp infinite loop
     //for (;;) {}
@@ -317,11 +316,13 @@ process_wait (tid_t child_tid)
             if (f->isWaiting == false) {
                 //printf("waiting for tid %d to finish\n", child_tid);
 
-                printf("start wait for %d\n", child_tid);
+               // printf("start wait for %d\n", child_tid);
 
                 chk = true;
                 f->isWaiting = true;
-                if(!(f->hasExited)) sema_down(&(cur->sema_wait));
+                if (!(f->hasExited)) {
+                    sema_down(&(cur->sema_wait));
+                }
 
                 ASSERT(f->hasExited == true);
 
@@ -368,15 +369,15 @@ void exitcodecheck() {
 void
 process_exit (void)
 {
-  printf("process exit start\n");
-  print_cur_thread();
+  //printf("process exit start\n");
+  //print_cur_thread();
   struct thread *cur = thread_current ();
   uint32_t *pd;
 
   cur->hasExited = true;
 
-  printf("cur exit code\n", cur->exit_code);
-  printf("checkpoint 1");
+  //printf("cur exit code\n", cur->exit_code);
+  //printf("checkpoint 1");
 
   ASSERT(cur->exit_code != 1000000);
   
@@ -503,8 +504,8 @@ static bool load_segment (struct file *file, off_t ofs, uint8_t *upage,
 bool
 load (const char *file_name, void (**eip) (void), void **esp) 
 {
-  printf("load start\n");
-  print_cur_thread();
+  //printf("load start\n");
+  //print_cur_thread();
   struct thread *t = thread_current ();
   struct Elf32_Ehdr ehdr;
   struct file *file = NULL;

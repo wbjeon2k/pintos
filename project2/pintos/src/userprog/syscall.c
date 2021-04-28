@@ -314,7 +314,7 @@ void halt(void) {
 }
 
 void exit(int exitcode) {
-    printf("exit called\n");
+    //printf("exit called\n");
     printf("%s: exit(%d)\n", thread_name(), exitcode);
     print_cur_thread();
 
@@ -325,8 +325,8 @@ void exit(int exitcode) {
     //wait for all childs to exit
     cur->hasExited = true;
     //exit test
-    printf("cur exit code %d\n", cur->exit_code);
-    printf("checkpoint 0");
+    //printf("cur exit code %d\n", cur->exit_code);
+    //printf("checkpoint 0");
     
     if (list_empty(&(cur->child_list)) == false) {
         struct list_elem* e;
