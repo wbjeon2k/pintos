@@ -193,6 +193,7 @@ start_process (void* cmd_)
 
   //create child_info, push into child list, sema up, return
 
+  //YES!!
   palloc_free_page(argv_list);
   cur->load_success = true;
   sema_up(&(cur->parent_thread->sema_exec));
