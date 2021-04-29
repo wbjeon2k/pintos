@@ -76,6 +76,7 @@ process_execute (const char *command)
   //checkpoint(1);
   cmd_pass = malloc(cmd_len);
   if (cmd_pass == NULL) {
+      free(cmd_copy);
       sema_up(&(cur->sema_exec));
       return TID_ERROR;
   }
@@ -91,12 +92,15 @@ process_execute (const char *command)
   //pass full command with cmd_pass
   tid = thread_create (file_name, PRI_DEFAULT, start_process, cmd_pass);
   if (tid == TID_ERROR) {
+      free(cmd_copy);
       sema_up(&(cur->sema_exec));
       return tid;
   }
   //create child_info, push into child list, sema up, return
   //이걸 load 해서 넘어가기 전에 해야한다.
 
+  free(cmd_copy);
+  free(cmd_pass);
   //printf("process execute finish\n");
   //sema_up(&(cur->sema_exec));
   return tid;
@@ -170,6 +174,7 @@ start_process (void* cmd_)
 
   //checkpoint(6);
 
+  palloc_free_page(argv_list);
   
   /* If load failed, quit. */
   //palloc_free_page (command);
