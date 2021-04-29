@@ -414,11 +414,14 @@ process_exit (void)
   
   //test
   //sema up parent process
+  lock_acquire(&cur->parent_thread->wait_access_lock);
+
   sema_up(&(cur->parent_thread->sema_wait));
   //stop before resume thread_exit.
   cur->going_to_exit = true;
   sema_down(&(cur->parent_thread->sema_allow_thread_exit));
 
+  lock_release(&cur->parent_thread->wait_access_lock);
   /* Destroy the current process's page directory and switch back
      to the kernel-only page directory. */
   pd = cur->pagedir;
