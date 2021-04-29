@@ -401,13 +401,8 @@ process_exit (void)
       struct list_elem* e;
       e = list_begin(&(cur->child_list));
       struct thread* f = list_entry(e, struct thread, child_list_elem);
-      if (f->hasExited == false) {
-          process_wait(f->tid);
-      }
-      else {
-          sema_up(&(f->parent_thread->sema_allow_thread_exit));
-          list_remove(e);
-      }
+      sema_up(&(f->parent_thread->sema_allow_thread_exit));
+      list_remove(e);
   }
 
   int i = 0;
