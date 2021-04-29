@@ -388,6 +388,11 @@ process_exit (void)
   //printf("checkpoint 1");
 
   ASSERT(cur->exit_code != 1000000);
+
+  int i = 0;
+  for (i = 0; i < 200; ++i) {
+      close(cur->fd_table[i]);
+  }
   
   //test
   //sema up parent process
