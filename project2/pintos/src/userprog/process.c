@@ -322,16 +322,18 @@ process_wait (tid_t child_tid)
                 f->isWaiting = true;
                 /*sema down until exit?? test*/
                 
+                /*
                 sema_down(&(cur->sema_wait));
                 while (!(f->hasExited)) {
                     sema_down(&(cur->sema_wait));
                 }
+                */
 
-                /*
+                
                 if (!(f->hasExited)) {
                     sema_down(&(cur->sema_wait));
                 }
-                */
+                
                 
 
                 ASSERT(f->hasExited == true);
@@ -386,24 +388,14 @@ process_exit (void)
 
   cur->hasExited = true;
 
-  /*
+  
   while (list_empty(&(cur->child_list)) == false) {
       struct list_elem* e;
       e = list_begin(&(cur->child_list));
       struct thread* f = list_entry(e, struct thread, child_list_elem);
       process_wait(f->tid);
   }
-  */
 
-  /*sema down until exit?? test*/
-  //maybe have to allow processes to exit
-  while (list_empty(&(cur->child_list)) == false) {
-      struct list_elem* e;
-      e = list_begin(&(cur->child_list));
-      struct thread* f = list_entry(e, struct thread, child_list_elem);
-      sema_up(&(f->parent_thread->sema_allow_thread_exit));
-      list_remove(e);
-  }
 
   int i = 0;
   for (i = 0; i < 200; ++i) {
