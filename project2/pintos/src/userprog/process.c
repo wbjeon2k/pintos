@@ -304,6 +304,7 @@ process_wait (tid_t child_tid)
         //printf("child list empty\n");
         return -1;
     }
+    
 
     bool chk = false;
     struct list_elem* e;
@@ -416,6 +417,7 @@ process_exit (void)
   //sema up parent process
   //lock_acquire(&cur->parent_thread->wait_access_lock);
   //lock_release(&cur->parent_thread->wait_access_lock);
+  printf("sema wait up by: %s\n", cur->name);
   sema_up(&(cur->parent_thread->sema_wait));
   //stop before resume thread_exit.
   cur->going_to_exit = true;

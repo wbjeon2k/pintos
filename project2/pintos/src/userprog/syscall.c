@@ -414,11 +414,11 @@ tid_t exec(const char* cmd_) {
 int wait(tid_t wait_pid) {
     struct thread* cur = thread_current();
 
-    lock_acquire(&cur->wait_access_lock);
+    //lock_acquire(&cur->wait_access_lock);
     
     //printf("wait impl pid %d\n", wait_pid);
     int ret = process_wait(wait_pid);
-    lock_release(&cur->wait_access_lock);
+    //lock_release(&cur->wait_access_lock);
     //printf("wait ret %d\n", ret);
     return ret;
 }
