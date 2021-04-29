@@ -327,6 +327,10 @@ process_wait (tid_t child_tid)
 
                 sema_down(&(cur->sema_wait));
 
+                while (!(f->going_to_exit)) {
+                    //test busy wait;
+                }
+
                 if (f->hasExited == false) {
                     checkpoint(0); 
                     printf("parent thread %s\n", cur->parent_thread->name);
@@ -412,6 +416,7 @@ process_exit (void)
   //sema up parent process
   sema_up(&(cur->parent_thread->sema_wait));
   //stop before resume thread_exit.
+  cur->going_to_exit = true;
   sema_down(&(cur->parent_thread->sema_allow_thread_exit));
 
   /* Destroy the current process's page directory and switch back

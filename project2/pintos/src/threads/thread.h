@@ -134,6 +134,8 @@ struct thread
     bool hasExited; // true if exit() has called
     bool load_success; // true if load at start_process successed.
 
+    bool going_to_exit;
+
     //sync: for exec, wait
     struct semaphore sema_exec;
     struct semaphore sema_wait;

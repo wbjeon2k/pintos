@@ -513,6 +513,7 @@ init_thread (struct thread *t, const char *name, int priority)
   t->isWaiting = false;
   t->hasExited = false;
   t->load_success = false;
+  t->going_to_exit = false;
   //t->parent_thread = thread_current();
 }
 
