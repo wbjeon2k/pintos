@@ -329,7 +329,6 @@ process_wait (tid_t child_tid)
 
                 if (f->hasExited == false) {
                     checkpoint(0); 
-                    printf("checkpoint %d\n", i);
                     printf("parent thread %s\n", cur->parent_thread->name);
                     printf("current thread %s\n", cur->name);
                     printf("waitint tid %d\n", f->tid);
