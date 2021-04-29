@@ -402,6 +402,7 @@ process_exit (void)
       }
       else {
           sema_up(&(f->sema_allow_thread_exit));
+          list_remove(e);
       }
   }
 
