@@ -320,9 +320,13 @@ process_wait (tid_t child_tid)
 
                 chk = true;
                 f->isWaiting = true;
+                /*
                 if (!(f->hasExited)) {
                     sema_down(&(cur->sema_wait));
                 }
+                */
+
+                sema_down(&(cur->sema_wait));
 
                 ASSERT(f->hasExited == true);
 
