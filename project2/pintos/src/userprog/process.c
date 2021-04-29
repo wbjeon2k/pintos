@@ -376,6 +376,13 @@ process_exit (void)
 
   cur->hasExited = true;
 
+  while (list_empty(&(cur->child_list)) == false) {
+      struct list_elem* e;
+      e = list_begin(&(cur->child_list));
+      struct thread* f = list_entry(e, struct thread, child_list_elem);
+      process_wait(f->tid);
+  }
+
   //printf("cur exit code\n", cur->exit_code);
   //printf("checkpoint 1");
 

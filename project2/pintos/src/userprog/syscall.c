@@ -321,7 +321,7 @@ void halt(void) {
 
 void exit(int exitcode) {
     //printf("exit called\n");
-    printf("%s: exit(%d)\n", thread_name(), exitcode);
+    
     //print_cur_thread();
 
     struct thread* cur;
@@ -329,11 +329,15 @@ void exit(int exitcode) {
     cur->hasExited = true;
     cur->exit_code = exitcode;
     //wait for all childs to exit
-    cur->hasExited = true;
+    //cur->hasExited = true;
+
+    printf("%s: exit(%d)\n", thread_name(), exitcode);
     //exit test
     //printf("cur exit code %d\n", cur->exit_code);
     //printf("checkpoint 0");
     
+    /*
+    이걸 process exit 에서 한다면?
     if (list_empty(&(cur->child_list)) == false) {
         struct list_elem* e;
         for (e = list_begin(&(cur->child_list)); e != list_end(&(cur->child_list));
@@ -343,17 +347,16 @@ void exit(int exitcode) {
             process_wait(f->tid);
         }
     }
+    */
   
     //여기서 중복해서 지우는게 문제였다.
     //close all opening files before exit
-    /*
+    
     int i = 0;
     for (i = 0; i < 200; ++i) {
-        if ((cur->fd_table)[i] != NULL) {
-            close(i);
-        }
+        close(i);
     }
-    */
+    
 
     thread_exit();
 }
@@ -372,12 +375,12 @@ tid_t exec(const char* cmd_) {
     struct thread* parent = thread_current();
     
     //file lock: load 도 file operation 이니까 sync 필요(?)
-    lock_acquire(&file_lock);
+    //lock_acquire(&file_lock);
     child_tid = process_execute(cmd);
     
     //printf("sema exec down\n");
     sema_down(&(parent->sema_exec)); //acquire sema_exec
-    lock_release(&file_lock);
+    //lock_release(&file_lock);
     //printf("sema exec down finish\n");
     //sema_up(parent->sema_exec);
 
@@ -666,10 +669,12 @@ void close(int fd) {
     struct file* fptr;
     fptr = (cur->fd_table)[fd];
 
+    /*
     if (fptr == NULL) {
         lock_release(&file_lock);
         return;
     }
+    */
 
     file_close(fptr);
     //for close twice
