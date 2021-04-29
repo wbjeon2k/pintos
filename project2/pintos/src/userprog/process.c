@@ -383,6 +383,7 @@ process_exit (void)
       process_wait(f->tid);
   }
 
+  if (f->loaded_file != NULL) file_close(f->loaded_file);
 
   //printf("cur exit code\n", cur->exit_code);
   //printf("checkpoint 1");
