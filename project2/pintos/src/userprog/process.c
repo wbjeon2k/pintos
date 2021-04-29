@@ -322,9 +322,16 @@ process_wait (tid_t child_tid)
                 f->isWaiting = true;
                 /*sema down until exit?? test*/
                 
+                sema_down(&(cur->sema_wait));
+                while (!(f->hasExited)) {
+                    sema_down(&(cur->sema_wait));
+                }
+
+                /*
                 if (!(f->hasExited)) {
                     sema_down(&(cur->sema_wait));
                 }
+                */
                 
 
                 ASSERT(f->hasExited == true);
@@ -398,8 +405,8 @@ process_exit (void)
           process_wait(f->tid);
       }
       else {
-          sema_up(&(f->sema_allow_thread_exit));
-          list_remove(e);
+          sema_up(&(f->parent_thread->sema_allow_thread_exit));
+          //list_remove(e);
       }
   }
 
