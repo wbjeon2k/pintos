@@ -140,7 +140,8 @@ struct thread
     struct semaphore sema_exec;
     struct semaphore sema_wait;
     struct semaphore sema_allow_thread_exit;
-
+    //
+    //
     struct lock wait_access_lock;
 
     struct file* fd_table[200];
