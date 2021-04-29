@@ -327,9 +327,9 @@ process_wait (tid_t child_tid)
 
                 sema_down(&(cur->sema_wait));
 
-                while (!(f->going_to_exit)) {
+                //while (!(f->going_to_exit)) {
                     //test busy wait;
-                }
+                //}
 
                 if (f->hasExited == false) {
                     checkpoint(0); 

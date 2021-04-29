@@ -141,6 +141,8 @@ struct thread
     struct semaphore sema_wait;
     struct semaphore sema_allow_thread_exit;
 
+    struct lock wait_access_lock;
+
     struct file* fd_table[200];
     struct file* loaded_file;
     int fd_idx; // for open. last index of fd

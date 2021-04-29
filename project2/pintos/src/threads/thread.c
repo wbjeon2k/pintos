@@ -500,6 +500,7 @@ init_thread (struct thread *t, const char *name, int priority)
   sema_init(&(t->sema_exec), 0);
   sema_init(&(t->sema_wait), 0);
   sema_init(&(t->sema_allow_thread_exit), 0);
+  lock_init(&wait_access_lock);
 
   int i = 0;
   for (i = 0; i < 200; ++i) {

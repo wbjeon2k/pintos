@@ -402,9 +402,9 @@ tid_t exec(const char* cmd_) {
     for (e = list_begin(&(cur->child_list)); e != list_end(&(cur->child_list));
         e = list_next(e)) {
         struct thread* f = list_entry(e, struct thread, child_list_elem);
-        if (f->load_success == false) {
-            return process_wait(f->tid);
-           // return -1;
+        if (f->tid == child_tid && f->load_success == false) {
+           //return process_wait(f->tid);
+           return -1;
         }
     }
 
