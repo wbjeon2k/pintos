@@ -326,8 +326,10 @@ process_wait (tid_t child_tid)
                 }
                 */
 
-                sema_down(&(cur->sema_wait));
-
+                //설마 지금까지 child 가 아니라 parent sema를???
+                //sema_down(&(cur->sema_wait));
+                sema_down(&(f->sema_wait));
+                
                 //while (!(f->going_to_exit)) {
                     //test busy wait;
                 //}
@@ -336,7 +338,7 @@ process_wait (tid_t child_tid)
                     checkpoint(0); 
                     printf("parent thread %s\n", cur->parent_thread->name);
                     printf("current thread %s\n", cur->name);
-                    printf("waitint tid %d\n", f->tid);
+                    printf("waiting tid %d\n", f->tid);
                     printf("wating task name %s\n", f->name);
                     printf("f-> exitcode :%d\n", f->exit_code);
                     
@@ -349,7 +351,9 @@ process_wait (tid_t child_tid)
                 ret = f->exit_code;
 
                 list_remove(&(f->child_list_elem));
-                sema_up(&(cur->sema_allow_thread_exit));
+                //sema_up(&(cur->sema_allow_thread_exit));
+                sema_up(&(f->sema_allow_thread_exit));
+
                 return ret;
             }
             else {
@@ -417,11 +421,12 @@ process_exit (void)
   //sema up parent process
   //lock_acquire(&cur->parent_thread->wait_access_lock);
   //lock_release(&cur->parent_thread->wait_access_lock);
-  printf("sema wait up by: %s exit code %d tid %d\n", cur->name, cur->exit_code, cur->tid);
-  sema_up(&(cur->parent_thread->sema_wait));
+  //printf("sema wait up by: %s exit code %d tid %d\n", cur->name, cur->exit_code, cur->tid);
+  sema_up(&(cur->sema_wait));
+  //checkpoint(1);
   //stop before resume thread_exit.
   cur->going_to_exit = true;
-  sema_down(&(cur->parent_thread->sema_allow_thread_exit));
+  sema_down(&(cur->sema_allow_thread_exit));
 
   
   /* Destroy the current process's page directory and switch back
