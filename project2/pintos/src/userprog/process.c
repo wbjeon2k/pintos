@@ -99,7 +99,7 @@ process_execute (const char *command)
   //create child_info, push into child list, sema up, return
   //이걸 load 해서 넘어가기 전에 해야한다.
 
-  free(cmd_copy);
+  //free(cmd_copy);
   //free(cmd_pass);
   //printf("process execute finish\n");
   //sema_up(&(cur->sema_exec));
