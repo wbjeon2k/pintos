@@ -328,6 +328,10 @@ process_wait (tid_t child_tid)
 
                 sema_down(&(cur->sema_wait));
 
+                while (f->hasExited == false) {
+                    sema_down(&(cur->sema_wait));
+                }
+
                 ASSERT(f->hasExited == true);
 
                 //printf("finish waiting for tid %d\n", f->tid);
