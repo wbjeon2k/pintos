@@ -403,8 +403,8 @@ tid_t exec(const char* cmd_) {
         e = list_next(e)) {
         struct thread* f = list_entry(e, struct thread, child_list_elem);
         if (f->load_success == false) {
-            //return process_wait(f->tid);
-            return -1;
+            return process_wait(f->tid);
+           // return -1;
         }
     }
 
