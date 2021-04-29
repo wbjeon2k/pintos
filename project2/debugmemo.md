@@ -26,3 +26,5 @@ pintos -v -k --gdb --bochs  --filesys-size=2 -p tests/filesys/base/syn-read -a s
 pintos -v -k -T 300 --bochs  --filesys-size=2 -p tests/filesys/base/syn-read -a syn-read -p tests/filesys/base/child-syn-read -a child-syn-read -- -q    -f run syn-read
 
 실행 파일이 fd table 에 자동으로 들어가는게 아니었다....
+
+pintos -v -k -T 60 --bochs  --filesys-size=2 -p tests/filesys/base/syn-write -a syn-write -p tests/filesys/base/child-syn-wrt -a child-syn-wrt -- -q    -f run syn-write
