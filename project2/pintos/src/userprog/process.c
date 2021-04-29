@@ -389,7 +389,7 @@ process_exit (void)
   if (cur->loaded_file != NULL) file_close(cur->loaded_file);
 
   int i = 0;
-  for (int i = 0; i < 200; ++i) {
+  for (i = 0; i < 200; ++i) {
       if (cur->fd_table[i] != NULL) file_close(cur->fd_table[i]);
   }
 
