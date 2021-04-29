@@ -320,7 +320,13 @@ process_wait (tid_t child_tid)
 
                 chk = true;
                 f->isWaiting = true;
+                /*sema down until exit?? test*/
+                /*
                 if (!(f->hasExited)) {
+                    sema_down(&(cur->sema_wait));
+                }
+                */
+                while (!(f->hasExited)) {
                     sema_down(&(cur->sema_wait));
                 }
 
@@ -376,12 +382,35 @@ process_exit (void)
 
   cur->hasExited = true;
 
+  /*
   while (list_empty(&(cur->child_list)) == false) {
       struct list_elem* e;
       e = list_begin(&(cur->child_list));
       struct thread* f = list_entry(e, struct thread, child_list_elem);
       process_wait(f->tid);
   }
+  */
+
+  /*sema down until exit?? test*/
+  //maybe have to allow processes to exit
+  while (list_empty(&(cur->child_list)) == false) {
+      struct list_elem* e;
+      e = list_begin(&(cur->child_list));
+      struct thread* f = list_entry(e, struct thread, child_list_elem);
+      if (f->hasExited == false) {
+          process_wait(f->tid);
+      }
+      else {
+          sema_up(&(f->sema_allow_thread_exit));
+      }
+  }
+
+  int i = 0;
+  for (i = 0; i < 200; ++i) {
+      close(i);
+  }
+
+  close(cur->loaded_file);
 
   //printf("cur exit code\n", cur->exit_code);
   //printf("checkpoint 1");
@@ -537,6 +566,7 @@ load (const char *file_name, void (**eip) (void), void **esp)
   //load: process execute 에서 filesys open, close 모두 사용
   //여기서 deny, 밑에 close 에서 allow.
 
+  t->loaded_file = file;
   file_deny_write(file);
 
   /* Read and verify executable header. */

@@ -23,3 +23,6 @@ pintos -v -k --gdb --bochs  --filesys-size=2 -p tests/userprog/bad-jump2 -a bad-
 pintos -v -k -T 300 --bochs  --filesys-size=2 -p tests/filesys/base/syn-read -a syn-read -p tests/filesys/base/child-syn-read -a child-syn-read -- -q    -f run syn-read < /dev/null 2> tests/filesys/base/syn-read.errors |tee tests/filesys/base/syn-read.output
 
 pintos -v -k --gdb --bochs  --filesys-size=2 -p tests/filesys/base/syn-read -a syn-read -p tests/filesys/base/child-syn-read -a child-syn-read -- -q    -f run syn-read
+pintos -v -k -T 300 --bochs  --filesys-size=2 -p tests/filesys/base/syn-read -a syn-read -p tests/filesys/base/child-syn-read -a child-syn-read -- -q    -f run syn-read
+
+실행 파일이 fd table 에 자동으로 들어가는게 아니었다....

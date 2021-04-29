@@ -140,6 +140,7 @@ struct thread
     struct semaphore sema_allow_thread_exit;
 
     struct file* fd_table[200];
+    struct file* loaded_file;
     int fd_idx; // for open. last index of fd
 
 #ifdef USERPROG

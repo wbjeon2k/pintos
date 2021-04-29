@@ -352,11 +352,6 @@ void exit(int exitcode) {
     //여기서 중복해서 지우는게 문제였다.
     //close all opening files before exit
     
-    int i = 0;
-    for (i = 0; i < 200; ++i) {
-        close(i);
-    }
-    
 
     thread_exit();
 }
