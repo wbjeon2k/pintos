@@ -174,7 +174,7 @@ start_process (void* cmd_)
 
   //checkpoint(6);
 
-  palloc_free_page(argv_list);
+  
   
   /* If load failed, quit. */
   //palloc_free_page (command);
@@ -193,6 +193,7 @@ start_process (void* cmd_)
 
   //create child_info, push into child list, sema up, return
 
+  palloc_free_page(argv_list);
   cur->load_success = true;
   sema_up(&(cur->parent_thread->sema_exec));
 
