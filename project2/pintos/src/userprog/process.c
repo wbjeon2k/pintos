@@ -327,6 +327,7 @@ process_wait (tid_t child_tid)
                 */
 
                 //설마 지금까지 child 가 아니라 parent sema를???
+                //holy shit... pass all but multi-oom
                 //sema_down(&(cur->sema_wait));
                 sema_down(&(f->sema_wait));
                 
