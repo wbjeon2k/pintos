@@ -328,14 +328,14 @@ process_wait (tid_t child_tid)
                 sema_down(&(cur->sema_wait));
 
                 if (f->hasExited == false) {
-                    checkpoint(0) {
-                        printf("checkpoint %d\n", i);
-                        printf("parent thread %s\n", cur->parent_thread->name);
-                        printf("current thread %s\n", cur->name);
-                        printf("waitint tid %d\n", f->tid);
-                        printf("wating task name %s\n", f->name);
-                        printf("f-> exitcode :%d\n", f->exit_code);
-                    }
+                    checkpoint(0); 
+                    printf("checkpoint %d\n", i);
+                    printf("parent thread %s\n", cur->parent_thread->name);
+                    printf("current thread %s\n", cur->name);
+                    printf("waitint tid %d\n", f->tid);
+                    printf("wating task name %s\n", f->name);
+                    printf("f-> exitcode :%d\n", f->exit_code);
+                    
                 }
 
                 ASSERT(f->hasExited == true);
