@@ -315,8 +315,7 @@ process_wait (tid_t child_tid)
             //printf("tid match\n");
             if (f->isWaiting == false) {
                 //printf("waiting for tid %d to finish\n", child_tid);
-
-               // printf("start wait for %d\n", child_tid);
+                //printf("start wait for %d\n", child_tid);
 
                 chk = true;
                 f->isWaiting = true;
@@ -327,8 +326,6 @@ process_wait (tid_t child_tid)
                 */
 
                 sema_down(&(cur->sema_wait));
-
-                if(!(f->hasExited)) sema_down(&(cur->sema_wait));
 
                 ASSERT(f->hasExited == true);
 
@@ -390,6 +387,11 @@ process_exit (void)
   }
 
   if (cur->loaded_file != NULL) file_close(cur->loaded_file);
+
+  int i = 0;
+  for (int i = 0; i < 200; ++i) {
+      if (cur->fd_table[i] != NULL) file_close(cur->fd_table[i]);
+  }
 
   //printf("cur exit code\n", cur->exit_code);
   //printf("checkpoint 1");
