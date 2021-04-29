@@ -321,14 +321,11 @@ process_wait (tid_t child_tid)
                 chk = true;
                 f->isWaiting = true;
                 /*sema down until exit?? test*/
-                /*
+                
                 if (!(f->hasExited)) {
                     sema_down(&(cur->sema_wait));
                 }
-                */
-                while (!(f->hasExited)) {
-                    sema_down(&(cur->sema_wait));
-                }
+                
 
                 ASSERT(f->hasExited == true);
 
