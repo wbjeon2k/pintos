@@ -417,7 +417,7 @@ process_exit (void)
   //sema up parent process
   //lock_acquire(&cur->parent_thread->wait_access_lock);
   //lock_release(&cur->parent_thread->wait_access_lock);
-  printf("sema wait up by: %s\n", cur->name);
+  printf("sema wait up by: %s exit code %d tid %d\n", cur->name, cur->exit_code, cur->tid);
   sema_up(&(cur->parent_thread->sema_wait));
   //stop before resume thread_exit.
   cur->going_to_exit = true;
