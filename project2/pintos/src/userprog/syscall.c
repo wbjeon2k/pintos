@@ -373,6 +373,7 @@ tid_t exec(const char* cmd_) {
     //lock_acquire(&file_lock);
     child_tid = process_execute(cmd);
     
+    if (child_tid == TID_ERROR) return TID_ERROR;
     //printf("sema exec down\n");
     sema_down(&(parent->sema_exec)); //acquire sema_exec
     //lock_release(&file_lock);
@@ -402,7 +403,8 @@ tid_t exec(const char* cmd_) {
         e = list_next(e)) {
         struct thread* f = list_entry(e, struct thread, child_list_elem);
         if (f->load_success == false) {
-            return process_wait(f->tid);
+            //return process_wait(f->tid);
+            return -1;
         }
     }
 
