@@ -134,12 +134,13 @@ struct thread
     bool hasExited; // true if exit() has called
     bool load_success; // true if load at start_process successed.
 
-    bool going_to_exit;
+    bool going_to_exit;//check flag between semaup(sema wait) and semadown(allow exit)
 
     //sync: for exec, wait
     struct semaphore sema_exec;
     struct semaphore sema_wait;
     struct semaphore sema_allow_thread_exit;
+    //semadown(wait) --> semaup(wait), semadown(allow exit) --> prevent erasing thread --> allow exit
     //
     //
     struct lock wait_access_lock;
