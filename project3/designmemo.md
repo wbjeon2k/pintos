@@ -1,25 +1,166 @@
 # Project 3
 
 ### Todo
-
+frame table
+SPT / page fault
+mmap/ stack growth / page reclaim at process_exit
+evict
 
 ### Memo
 
+frame table:  
+frame_table with hash map
+insert FTE as hash_elem
 
+FTE consist of:
+pointer to a page (4.1.5) --> void* page
+list_elem for hash_elem chain
+list_elem for all frame list (free/in-use)
++?
 
+page table:
+page_table with hasp map,
+insert PTE as hash_elem
 
+in OS10 : hased page table
+VPN --> hashed into a page table
+page table: hashmap with chaining
+each hash element: VPN + value of mapped frame + pointer to next element
+original VPN hashed --> find chain, find match --> if match : get mapped frame
+
+PTE consist of:  
+original VPN
+value of mapped frame --> FTE? only frame?
+list elem for hash chain
 
 
 
 ### Manual summary
 
-#### 3.1  
+#### 4.1  
 
-#### 3.2  
+4.1.1:  
+devices/blocks : sector based read/write to block device. use this to implement swap disk.  
+
+4.1.2:  
+page num, frame num. read A.6  
+page table structure. read A.7  
+
+swap slot must be aligned too.  
+
+4.1.3:  
+SPT, frame table, swap table, table of file mapping  
+
+1.decide scope: global/per process
+2.non-pageable memory?  
+
+bitmap: lib/kernel/bitmap,
+resource i is in use --> bit i is true
+
+hash map: read A.8  
+
+4.1.4:  
+
+1.page fault: kernel looks up (sup) page table
+2.process termination: decide what resources to be free.  
+segments/pages  
+
+page fault handler:  
+page fault might indicate brought in / swap
+
+1.locate te page that faulted in the SPT.
+-if the reference is valid --> get reference. may be in swap disk
+-invalid: try to access kernel VM, write on read-only --> terminate process, free all its resources.
+
+2.acquire a free frame to store the page  
+
+3.fetch the data into frame
+by 1.reading from filesys 2.swap disk 3.zeroing  
+
+4.point the PTE for the faulting VA to PA --> pagedir.c  
+
+4.1.5:  
+
+frame table: contains one entry for each frame.  
+each frame contains a user page.  
+each entry in the frame table contains a pointer to a page.  
+
+-try to obtain free page with palloc(PAL_USER)
+-no free frame --> evict.  
+eviction policy: use dirty/access bits. second change in OS10.  
+-have to evict && swap disk full --> panic kernel.  
+
+eviction:  
+1.choose a frame to evict with dirty/access bit
+2.remove references to the  evicting frame from every page table that is referencing.
+--> no sharing!!
+--> only a SINGLE page can refer to a page at any given time!  
+3.either write the page to filesys || swap  
+
+any read/write operation:
+--> CPU automatically change access/dirty bit as 1.
+--> CPU does not turn access/dirty off
+--> handled by kernel
+--> turn it off regularly using timer (in lecture)  
+
+4.1.6:  
+swap table:  
+track - free swap slots - inuse swap slots  
+evict call --> pick free swap slot.
+page read back OR process terminated --> free in-use slot.
+
+block_swap, block_get_role, swap.dsk
+
+allocate swap slot only when needed!!
+--> only when eviction called.  
+
+4.1.7:  
+
+mmap syscall:  
+map the files into virtual pages
+--> program can use memory instruction directly on the file data
+--> may be have to use pinning?  
+
+track waht memory is used by mmap files
+--> ensure mmap files does not overlap!  
+
+#### 4.2  
+
+4.2: implement order  
+
+1.frame table:  
+change process.c
+no swap yet --> run out of frame: panic
+have to pass all userprog tests
+
+2.SPT, page fault handler
+change process.c
+for now, consider only valid access.
+loading code/data segment in page fault handler --> maybe load_segment?
+after 2: pass all functionality, some of robustness in userprog
+
+3.stack growth/mmap/page reclaim when process_exit
+
+4.eviction
+sync: P1 faults on a page when P2 is evicting?  
 
 
-#### 3.3  
+#### 4.3  
 
-#### 3.4  
+4.3.2:  
 
-#### 3.5  
+demand paging --> only when kernel gets page fault
+
+evict:
+dirty --> write in swap disk
+non-dirty --> never swap!
+
+replacement policy: close to LRU, second chance
+
+sync:
+page fault --> require IO --> page fault with no IO should continue --> sync!
+
+load_segment:
+page_read_bytes: number of bytes to read from the executable file.
+page_zero_bytes: number of bytes to initialize as 0
+page_read + page_zero bytes == page size == 4096  
