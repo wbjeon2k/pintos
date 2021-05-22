@@ -3,7 +3,7 @@
 ### Todo
 frame table
 SPT / page fault
-mmap/ stack growth / page reclaim at process_exit
+mmap / stack growth / page reclaim at process_exit
 evict
 
 ### Memo
@@ -17,6 +17,37 @@ pointer to a page (4.1.5) --> void* page
 list_elem for hash_elem chain
 list_elem for all frame list (free/in-use)
 +?
+
+FTE{
+    PA(from palloc), VA, owner thread tid, list elem, hash elem + PTE? SPTE? + pin
+}
+frame table: all palloced frames, hash map
+frame list: all frames, list
+
+PA --> FTE mapping: via frame table --> hash map
+FTE --> PA: PA attribute in FTE
+
+frame_init: init.c 에 추가 --> frame list, frame lock, frame table 초기화
+
+frame alloc/free/evict: 모두 filesys 처럼 lock 거는게 좋을것 같다
+
+userpool: bitmap, defined in palloc, first fit
+
+frame alloc:
+palloc(user) --> get from user pool --> no user pool --> evict --> 일단은 panic
+FTE create --> frame list, frame table 에 등록
+
+frame free:
+hash map, list 에서 제거
+palloc free
+
+palloc: kernel VA == PA return! --> palloc(user) 그대로 PA 사용 가능.
+
+hashless: comparator in hash chain list.
+hash hashfunc: get hash entry --> get key from entry --> use hash byte/string/int 셋중엔 byte? int?
+
+typedef:
+신경 안써도 된다. list 에서 custom comparator 만들듯이 custom hash less / hash func 쓰면 됨.
 
 page table:
 page_table with hasp map,
@@ -143,6 +174,7 @@ after 2: pass all functionality, some of robustness in userprog
 
 4.eviction
 sync: P1 faults on a page when P2 is evicting?  
+--> use pinning/ lock evict like filesys_lock on project 2?
 
 
 #### 4.3  
