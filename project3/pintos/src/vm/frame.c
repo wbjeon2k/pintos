@@ -23,6 +23,33 @@ inline bool palloc_chk_zero(palloc_flags pf) {
 	else return false;
 }
 
+unsigned frmae_hf(const struct hash_elem* e, void* aux UNUSED) {
+	struct FTE* tmp = NULL;
+	//hash_entry(hfind, struct FTE, fte_hash_elem);
+	tmp = hash_entry(e, struct FTE, fte_hash_elem);
+
+	void* key = tmp->PA;
+	unsigned ret = 0;
+	//ret = hash_int()
+	ret = hash_bytes(key, sizeof key);
+	return ret;
+}
+
+bool frame_hash_comp(const struct hash_elem* a,
+					 const struct hash_elem* b,
+					 void* aux UNUSED) {
+	struct FTE* tmp1;
+	struct FTE* tmp2;
+
+	tmp1 = hash_entry(a, struct FTE, fte_hash_elem);
+	tmp2 = hash_entry(b, struct FTE, fte_hash_elem);
+
+	ASSERT(tmp1 != tmp2);
+	if (tmp1->PA > tmp2->PA) return true;
+	else return false;
+}
+
+
 void frame_init(void) {
 	//like syscall init in syscall
 	//add in init.c
