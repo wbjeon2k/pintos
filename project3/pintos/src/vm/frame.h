@@ -16,6 +16,9 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <string.h>
+#include <round.h>
+#include <stdlib.h>
+
 
 /* How to allocate pages. */
 /* from palloc.h */
@@ -44,10 +47,13 @@ struct list frame_list; //all frame list --> iterate when evict
 struct hash frame_table; //all frames hash --> map PA to FTE
 
 void frame_init(void);
-void* frame_alloc();
-void* frame_free();
+void* frame_alloc(palloc_flags);
+void frame_free(void*);
 void* frame_evict();
 
+unsigned frame_hf(const struct hash_elem* e, void* aux UNUSED);
+bool frame_hash_comp(const struct hash_elem* a, const struct hash_elem* b, void* aux UNUSED);
+//hash_entry (hash_cur (&i), struct foo, elem)
 
 /**  **/
 
