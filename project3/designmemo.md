@@ -30,6 +30,8 @@ FTE --> PA: PA attribute in FTE
 frame_init: init.c 에 추가 --> frame list, frame lock, frame table 초기화
 
 frame alloc/free/evict: 모두 filesys 처럼 lock 거는게 좋을것 같다
+frame evict: frame alloc 도중에 실행 --> 이미 frame alloc 이 frame_lock 가지고 있음 --> ? --> 따로 lock?
+--> 필요없음. evict caller 는 frame alloc 말고 없음 --> 이미 frame lock이 걸려 있어서 frame alloc race condition 없음.
 
 userpool: bitmap, defined in palloc, first fit
 

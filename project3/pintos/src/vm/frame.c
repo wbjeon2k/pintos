@@ -113,3 +113,10 @@ void frame_free(void* ptr) {
 	//free frame finish?
 }
 
+void* frame_evict() {
+	//panic for now.
+	//later: evict frame with dirty/access, second chance, swap;
+	PANIC("Panic: temp evict panic");
+	return NULL;
+}
+
