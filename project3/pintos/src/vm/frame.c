@@ -33,7 +33,7 @@ inline bool palloc_chk_zero(enum palloc_flags pf) {
 	else return false;
 }
 
-unsigned frmae_hf(const struct hash_elem* e, void* aux UNUSED) {
+unsigned frame_hf(const struct hash_elem* e, void* aux UNUSED) {
 	struct FTE* tmp = NULL;
 	//hash_entry(hfind, struct FTE, fte_hash_elem);
 	tmp = hash_entry(e, struct FTE, fte_hash_elem);
