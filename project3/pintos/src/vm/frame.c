@@ -13,6 +13,14 @@
 #include <round.h>
 #include <stdlib.h>
 
+//from palloc.h
+enum palloc_flags
+{
+	PAL_ASSERT = 001,           /* Panic on failure. */
+	PAL_ZERO = 002,             /* Zero page contents. */
+	PAL_USER = 004              /* User page. */
+};
+
 inline bool palloc_chk_user(palloc_flags pf) {
 	if ((pf & 0x4) == 0x4) return true;
 	else return false;
@@ -103,10 +111,10 @@ void frame_free(void* ptr) {
 	lock_acquire(&frame_lock);
 
 	struct FTE tmp;
-	tmp->PA = ptr;
+	tmp.PA = ptr;
 
 	struct hash_elem* hfind = NULL;
-	hfind = hash_find(&frame_table, &(tmp->fte_hash_elem));
+	hfind = hash_find(&frame_table, &(tmp.fte_hash_elem));
 	if (hfind == NULL) {
 		lock_release(&frame_lock);
 		PANIC("Panic : frame is not in frame table");
