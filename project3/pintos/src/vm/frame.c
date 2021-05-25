@@ -92,7 +92,8 @@ void* frame_alloc(enum palloc_flags pf) {
 	ASSERT(ret != NULL);
 
 	struct FTE* new_fte = NULL;
-	new_fte = malloc(sizeof new_fte);
+	//new_fte = malloc(sizeof new_fte);
+	new_fte = malloc(sizeof (struct FTE));
 	if (new_fte == NULL) {
 		lock_release(&frame_lock);
 		return NULL;
