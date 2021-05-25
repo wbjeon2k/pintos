@@ -107,6 +107,7 @@ void* frame_alloc(enum palloc_flags pf) {
 	list_push_back(&frame_list, &(new_fte->fte_list_elem));
 	hash_insert(&frame_table, &(new_fte->fte_hash_elem));
 
+
 	return ret;
 
 }
@@ -147,6 +148,7 @@ void frame_free(void* ptr) {
 		PANIC("Panic : frame list delete failed");
 	}
 
+	lock_release(&frame_lock);
 	palloc_free_page(ptr);
 
 	//free frame finish?
