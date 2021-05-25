@@ -44,10 +44,6 @@ struct FTE {
     bool isPinned; // for pinning used in eviction
 };
 
-struct lock frame_lock; //like file lock in syscall
-struct list frame_list; //all frame list --> iterate when evict
-struct hash frame_table; //all frames hash --> map PA to FTE
-
 void frame_init(void);
 void* frame_alloc(palloc_flags);
 void frame_free(void*);

@@ -23,6 +23,10 @@ enum palloc_flags
 };
 */
 
+struct lock frame_lock; //like file lock in syscall
+struct list frame_list; //all frame list --> iterate when evict
+struct hash frame_table; //all frames hash --> map PA to FTE
+
 inline bool palloc_chk_user(enum palloc_flags pf) {
 	if ((pf & 0x4) == 0x4) return true;
 	else return false;
