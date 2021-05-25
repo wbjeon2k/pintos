@@ -103,7 +103,8 @@ void* frame_alloc(enum palloc_flags pf) {
 	new_fte->owner_thread = thread_current()->tid;
 	new_fte->isPinned = true;
 
-	list_insert(&frame_list, &(new_fte->fte_list_elem));
+	//no insert! diff from STL
+	list_push_back(&frame_list, &(new_fte->fte_list_elem));
 	hash_insert(&frame_table, &(new_fte->fte_hash_elem));
 
 	return ret;
