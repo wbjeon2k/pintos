@@ -21,12 +21,12 @@ enum palloc_flags
 	PAL_USER = 004              /* User page. */
 };
 
-inline bool palloc_chk_user(palloc_flags pf) {
+inline bool palloc_chk_user(enum palloc_flags pf) {
 	if ((pf & 0x4) == 0x4) return true;
 	else return false;
 }
 
-inline bool palloc_chk_zero(palloc_flags pf) {
+inline bool palloc_chk_zero(enum palloc_flags pf) {
 	if ((pf & 0x2) == 0x2) return true;
 	else return false;
 }
@@ -68,7 +68,7 @@ void frame_init(void) {
 	hash_init(&frame_table, frame_hf, frame_hash_comp, NULL);
 }
 
-void* frame_alloc(palloc_flags pf) {
+void* frame_alloc(enum palloc_flags pf) {
 	lock_acquire(&frame_lock);
 
 	void* ret = NULL;
