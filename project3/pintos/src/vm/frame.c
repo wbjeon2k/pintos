@@ -111,7 +111,7 @@ void* frame_alloc(enum palloc_flags pf) {
 	list_push_back(&frame_list, &(new_fte->fte_list_elem));
 	hash_insert(&frame_table, &(new_fte->fte_hash_elem));
 
-
+	lock_release(&frame_lock);
 	return ret;
 
 }
