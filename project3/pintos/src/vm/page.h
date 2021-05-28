@@ -8,11 +8,13 @@ enum spte_flags
     SPTE_ZERO = 004              // page is zero-fill 
 };
 
+/*
+add this in struct thread : struct SPTHT* SPT
+*/
 struct SPTHT {
-
+    tid_t owner_thread;
+    struct hash hash_table;
 };
-
-
 
 struct SPTE {
     void* VA;
@@ -20,13 +22,21 @@ struct SPTE {
     struct hash_elem spte_hash_elem;
     bool isValid; // valid == on frame, invalid == not on frame.
 
-
+    enum spte_flags spte_flags;
 
     /* for filesys */
 
+    struct file* file;
+    void* buffer;
+    off_t file_size;
+
     /* for swap */
 
+    size_t swap_idx;
+
     /* for zero */
+
+    bool fill_zero;
 
 };
 
@@ -42,6 +52,19 @@ bool get_from_filesys();
 bool get_from_swapdsk();
 bool get_a_zeropage();
 
+
+/*
+  2.search in SPT table
+  3.find SPTE
+  4.get frame by normal/evict
+  5-1: get_from_filesys
+  5-2: get_from_swapdsk
+  5-3: get_a_zeropage
+  6. map VA--> PA with functions in pagedir
+  7. map original PTE --> PA
+  8. set SPTE valid --> make it on frame
+  9. normal routine ending --> just end like nothing happened.
+*/
 
 /* How to allocate pages. */
 /* from palloc.h */
