@@ -66,6 +66,49 @@ original VPN
 value of mapped frame --> FTE? only frame?
 list elem for hash chain
 
+pagedir: add VA --> PA mapping, PA: palloc_get_page(USER) 로 할당된 PA
+
+PintOS now: VA --> pagedir --> PTE --> PA
+PintOS new:
+VA --> SPT table by hash table --> check SPTE
+--> in frame: same as before
+--> not in frame:
+1.3 cases 1.in fliesys / 2.in swap disk / 3.just zero
+2.acquire frame by non-evict / evict
+3.copy page content from filesys/swapdsk/zero
+4.map va-->pa by pagedir, change into on-frame
+
+SPTE{
+    VA
+    PA
+    hash elem: for SPT hash table
+    bool valid: valid --> on frame / invalid --> not in frame.
+    invalid type: filesys, swap, zero --> make it like palloc enum, check by bits 001, 002, 004
+
+    for filesys: struct file, buffer, size
+
+    for swap: location in swap table
+    --> swap table is a bitmap, same like user pool in palloc
+    swap maybe similar with userpool?
+}
+
+VA --> fault --> search in SPT hash table --> find SPTE --> get free frame | evict -->
+1.filesys read
+read a page from file, zero out last remaining
+2.swap
+find swap page from swapdsk, read page
+3.zero
+fill a page with 0
+4.normal frame with no evict
+--> map VA->PA with functions in pagedir
+--> map original PTE -> PA
+--> set SPTE valid, make it on frame
+
+SPT is per process!
+
+swapdsk: bitmap, first fit just like userpool
+
+
 
 
 ### Manual summary
