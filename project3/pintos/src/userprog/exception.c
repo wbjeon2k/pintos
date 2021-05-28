@@ -6,6 +6,10 @@
 #include "threads/thread.h"
 #include "lib/user/syscall.h"
 
+/* VM */
+
+#include "vm/page.h"
+
 /* Number of page faults processed. */
 static long long page_fault_cnt;
 
@@ -159,6 +163,24 @@ page_fault (struct intr_frame *f)
   not_present = (f->error_code & PF_P) == 0;
   write = (f->error_code & PF_W) != 0;
   user = (f->error_code & PF_U) != 0;
+
+  /*
+  page fault --> call all the SPTE routine here
+
+  no program logic here. call functions in page.h
+
+  1.check invalid access (kernel VA?)
+  2.search in SPT table
+  3.find SPTE
+  4.get frame by normal/evict
+  5-1: get_from_filesys
+  5-2: get_from_swapdsk
+  5-3: get_a_zeropage
+  6. map VA--> PA with functions in pagedir
+  7. map original PTE --> PA
+  8. set SPTE valid --> make it on frame
+  9. normal routine ending --> just end like nothing happened.
+  */
 
   //skip page fault error message --> pass bad-ptr series
   if (user && !not_present) exit(-1);
