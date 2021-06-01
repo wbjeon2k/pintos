@@ -49,8 +49,8 @@ struct SPTE* create_new_SPTE(void* VA);
 
 //void? bool?
 //bool--> able to indicate success/fail --> better?
-bool insert_SPTE();
-bool delete_SPTE();
+bool insert_SPTE(struct SPTHT* sptht, struct SPTE* spte);
+bool delete_SPTE(struct SPTHT* sptht, struct SPTE* spte);
 bool is_inside_SPTE(struct SPTHT* sptht, struct SPTE* spte);
 struct SPTE* find_SPTE(struct SPTHT* sptht, void* VA);
 

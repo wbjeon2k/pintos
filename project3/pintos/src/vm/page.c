@@ -36,6 +36,28 @@ struct SPTE* create_new_SPTE(struct SPTHT* sptht, void* VA) {
 	return new_spte;
 }
 
+bool insert_SPTE(struct SPTHT* sptht, struct SPTE* spte) {
+	if (spte == NULL || sptht == NULL) return false;
+	if (is_inside_SPTE(sptht, spte)) return false;
+
+	hash_insert(&(sptht->hash_table), &(spte->spte_hash_elem));
+	return true;
+}
+
+/*
+If the elements of the hash table are dynamically allocated,
+   or own resources that are, then it is the caller's
+   responsibility to deallocate them. 
+*/
+bool delete_SPTE(struct SPTHT* sptht, struct SPTE* spte) {
+	if (spte == NULL || sptht == NULL) return false;
+	if (!is_inside_SPTE(sptht, spte)) return false;
+
+	hash_delete(&(sptht->hash_table), &(spte->spte_hash_elem));
+	free(spte);
+	return true;
+}
+
 bool is_inside_SPTE(struct SPTHT* sptht, struct SPTE* spte) {
 	struct hash_elem* hfind = NULL;
 	hfind = hash_find(&(sptht->hash_table), &(spte->spte_hash_elem));
@@ -56,6 +78,7 @@ struct SPTE* find_SPTE(struct SPTHT* sptht, void* VA) {
 	ptr_spte = hash_entry(hfind, struct SPTE, spte_hash_elem);
 	return ptr_spte;
 }
+
 
 unsigned sptht_hf(const struct hash_elem* e, void* aux UNUSED) {
 	struct FTE* tmp = NULL;
