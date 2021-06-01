@@ -13,6 +13,8 @@
 #include "threads/vaddr.h"
 #include "filesys/file.h"
 
+#include "vm/page.h"
+
 /* States in a thread's life cycle. */
 enum thread_status
   {
@@ -155,6 +157,11 @@ struct thread
     uint32_t *pagedir;                  /* Page directory. */
 
 #endif
+
+    //supplemental page table made with hash table
+    //initialized at threadinit
+    struct SPTHT* SPT_hash_table;
+
     /* Owned by thread.c. */
     unsigned magic;                     /* Detects stack overflow. */
   };
