@@ -19,6 +19,7 @@ struct SPTHT {
 struct SPTE {
     void* VA;
     void* PA;
+    tid_t owner;
     struct hash_elem spte_hash_elem;
     bool isValid; // valid == on frame, invalid == not on frame.
 
@@ -40,13 +41,18 @@ struct SPTE {
 
 };
 
+unsigned sptht_hf(const struct hash_elem*, void* UNUSED);
+bool sptht_hash_comp(const struct hash_elem*, const struct hash_elem*, void* UNUSED);
+
 struct SPTHT* create_new_SPT();
-struct SPTE* create_new_SPTE();
+struct SPTE* create_new_SPTE(void* VA);
 
 //void? bool?
 //bool--> able to indicate success/fail --> better?
 bool insert_SPTE();
 bool delete_SPTE();
+bool is_inside_SPTE(struct SPTHT* sptht, struct SPTE* spte);
+struct SPTE* find_SPTE(struct SPTHT* sptht, void* VA);
 
 bool get_from_filesys();
 bool get_from_swapdsk();
