@@ -106,11 +106,12 @@ bool get_from_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint8_t
 
 }
 
-
 /*
   page fault --> call all the SPTE routine here
 
-  no program logic here. call functions in page.h
+  parameter : sptht, pagedir, VA
+
+  VA-->SPTE-->pagedir-->PA
 
   1.check invalid access (kernel VA?)
   2.search in SPT table
@@ -123,8 +124,26 @@ bool get_from_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint8_t
   7. map original PTE --> PA
   8. set SPTE valid --> make it on frame
   9. normal routine ending --> just end like nothing happened.
-  */
+ */
+///* Owned by userprog/process.c. */ uint32_t* pagedir;
+bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir) {
+	//2,3
+	struct SPTE* spte;
+	spte = find_SPTE(sptht, VA);
+	if (spte == NULL) {
+		return false; // no spte in spt table
+	}
 
+	//4
+	void* get_frame = frame_alloc(PAL_USER);
+	if (get_frame == NULL) { return false; }
+	//get frame / evict fail
+
+	//5-1
+	if (spte->spte_flags == SPTE_FILESYS) {
+
+	}
+}
 
 unsigned sptht_hf(const struct hash_elem* e, void* aux UNUSED) {
 	struct FTE* tmp = NULL;
