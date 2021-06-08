@@ -25,7 +25,7 @@ struct SPTHT* create_new_SPT() {
 	return new_spt;
 }
 
-struct SPTE* create_new_SPTE(struct SPTHT* sptht, void* VA) {
+struct SPTE* create_new_SPTE(void* VA) {
 	struct SPTE* new_spte = NULL;
 	new_spte = malloc(sizeof(struct SPTE));
 	if (new_spte == NULL) {
@@ -77,6 +77,29 @@ struct SPTE* find_SPTE(struct SPTHT* sptht, void* VA) {
 	//list_entry (e, struct foo, elem);
 	ptr_spte = hash_entry(hfind, struct SPTE, spte_hash_elem);
 	return ptr_spte;
+}
+
+/** page load from file, swap disk, zero **/
+
+//read a page from file, insert SPTE into SPTHT
+bool get_from_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint8_t* upage,
+	uint32_t read_bytes, uint32_t zero_bytes, bool writable) {
+
+	struct SPTE* new_spte;
+	new_spte = create_new_SPTE(upage);
+
+	new_spte->file = file;
+	new_spte->file_offset = ofs;
+	new_spte->read_bytes = read_bytes;
+	new_spte->zero_bytes = zero_bytes;
+	new_spte->writable = writable;
+
+	new_spte->PA = NULL;
+	new_spte->owner = thread_current()->tid;
+	new_spte->isValid = false;
+	new_spte->spte_flags = SPTE_FILESYS;
+
+
 }
 
 

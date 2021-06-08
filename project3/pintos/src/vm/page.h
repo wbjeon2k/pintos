@@ -29,7 +29,10 @@ struct SPTE {
 
     struct file* file;
     void* buffer;
-    off_t file_size;
+    off_t file_offset;
+    uint32_t read_bytes;
+    uint32_t zero_bytes;
+    bool writable;
 
     /* for swap */
 
@@ -54,7 +57,14 @@ bool delete_SPTE(struct SPTHT* sptht, struct SPTE* spte);
 bool is_inside_SPTE(struct SPTHT* sptht, struct SPTE* spte);
 struct SPTE* find_SPTE(struct SPTHT* sptht, void* VA);
 
-bool get_from_filesys();
+/*
+static bool
+load_segment (struct file *file, off_t ofs, uint8_t *upage,
+              uint32_t read_bytes, uint32_t zero_bytes, bool writable)
+*/
+bool get_from_filesys(struct file* file, off_t ofs, uint8_t* upage,
+    uint32_t read_bytes, uint32_t zero_bytes, bool writable);
+
 bool get_from_swapdsk();
 bool get_a_zeropage();
 
