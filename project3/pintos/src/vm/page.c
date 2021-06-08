@@ -86,7 +86,7 @@ struct SPTE* find_SPTE(struct SPTHT* sptht, void* VA) {
 //pagefault --> 여기서 insert 한 SPTE 참조 --> 실제 page load.
 //load_segment 에서 이걸 call 했을때 파일을 다 load 하면 demand loading 이 아니다!
 
-bool get_from_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint8_t* upage,
+bool enroll_spte_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint8_t* upage,
 	uint32_t read_bytes, uint32_t zero_bytes, bool writable) {
 
 	struct SPTE* new_spte;
@@ -103,7 +103,7 @@ bool get_from_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint8_t
 	new_spte->isValid = false;
 	new_spte->spte_flags = SPTE_FILESYS;
 
-
+	if (insert_SPTE(sptht, new_spte)) return true;
 }
 
 /*
@@ -141,7 +141,17 @@ bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir) {
 
 	//5-1
 	if (spte->spte_flags == SPTE_FILESYS) {
+		//load a page with file_sys read
+	}
 
+	//5-2
+	if (spte->spte_flags == SPTE_SWAPDSK) {
+		//load a page with swap read? swap in?
+	}
+
+	//5-3
+	if (spte->spte_flags == SPTE_ZERO) {
+		//zero page
 	}
 }
 
