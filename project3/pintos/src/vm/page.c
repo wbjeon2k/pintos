@@ -81,7 +81,11 @@ struct SPTE* find_SPTE(struct SPTHT* sptht, void* VA) {
 
 /** page load from file, swap disk, zero **/
 
-//read a page from file, insert SPTE into SPTHT
+//insert SPTE into SPTHT
+//file mapping 만 하고 실제 load는 pagefault 가 일어났을 때 해야한다.
+//pagefault --> 여기서 insert 한 SPTE 참조 --> 실제 page load.
+//load_segment 에서 이걸 call 했을때 파일을 다 load 하면 demand loading 이 아니다!
+
 bool get_from_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint8_t* upage,
 	uint32_t read_bytes, uint32_t zero_bytes, bool writable) {
 
@@ -101,6 +105,25 @@ bool get_from_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint8_t
 
 
 }
+
+
+/*
+  page fault --> call all the SPTE routine here
+
+  no program logic here. call functions in page.h
+
+  1.check invalid access (kernel VA?)
+  2.search in SPT table
+  3.find SPTE
+  4.get frame by normal/evict
+  5-1: get_from_filesys
+  5-2: get_from_swapdsk
+  5-3: get_a_zeropage
+  6. map VA--> PA with functions in pagedir
+  7. map original PTE --> PA
+  8. set SPTE valid --> make it on frame
+  9. normal routine ending --> just end like nothing happened.
+  */
 
 
 unsigned sptht_hf(const struct hash_elem* e, void* aux UNUSED) {
