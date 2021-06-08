@@ -8,6 +8,8 @@
 #include "lib/kernel/hash.h"
 #include "lib/kernel/bitmap.h"
 
+#include "filesys/file.h"
+
 #include <debug.h>
 #include <inttypes.h>
 #include <stdio.h>
@@ -104,6 +106,10 @@ bool enroll_spte_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint
 	new_spte->spte_flags = SPTE_FILESYS;
 
 	if (insert_SPTE(sptht, new_spte)) return true;
+	else {
+		free(new_spte);
+		return false;
+	}
 }
 
 /*
@@ -112,6 +118,7 @@ bool enroll_spte_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint
   parameter : sptht, pagedir, VA
 
   VA-->SPTE-->pagedir-->PA
+  off-frame --> on-frame --> have to set valid
 
   1.check invalid access (kernel VA?)
   2.search in SPT table
@@ -135,24 +142,51 @@ bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir) {
 	}
 
 	//4
-	void* get_frame = frame_alloc(PAL_USER);
+	void* get_frame = frame_alloc(PAL_USER | PAL_ZERO);
 	if (get_frame == NULL) { return false; }
 	//get frame / evict fail
 
+	bool load_check = false;
+
 	//5-1
+	//off_t file_read(struct file* file, void* buffer, off_t size)
 	if (spte->spte_flags == SPTE_FILESYS) {
+		ASSERT((spte->read_bytes) + spte->zero_bytes == PGSIZE);
 		//load a page with file_sys read
+		void* buffer = get_frame;
+		off_t read_success = file_read(spte->file, buffer, spte->read_bytes);
+
+		if (read_success != spte->read_bytes){
+			frame_free(get_frame);
+			return false;
+		}
 	}
 
 	//5-2
 	if (spte->spte_flags == SPTE_SWAPDSK) {
 		//load a page with swap read? swap in?
+
 	}
 
 	//5-3
 	if (spte->spte_flags == SPTE_ZERO) {
 		//zero page
+
 	}
+
+	//6. map VA-- > PA with functions in pagedir
+	//bool pagedir_set_page(uint32_t * pd, void* upage, void* kpage, bool writable)
+	if (pagedir_set_page(pagedir, spte->VA, get_frame, spte->writable) == false) {
+		frame_free(get_frame);
+		return false;
+	}
+
+	//8. set SPTE valid --> make it on frame
+	spte->isValid = true;
+	spte->PA = get_frame;
+
+	return true;
+
 }
 
 unsigned sptht_hf(const struct hash_elem* e, void* aux UNUSED) {

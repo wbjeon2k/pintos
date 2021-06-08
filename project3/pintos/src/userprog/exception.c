@@ -182,6 +182,24 @@ page_fault (struct intr_frame *f)
   9. normal routine ending --> just end like nothing happened.
   */
 
+  if (not_present) {
+      if (!user) { // kernel mode
+          f->eip = (void*)f->eax;
+          f->eax = 0xffffffff;
+          return;
+      }
+
+      printf("Page fault at %p: %s error %s page in %s context.\n",
+          fault_addr,
+          not_present ? "not present" : "rights violation",
+          write ? "writing" : "reading",
+          user ? "user" : "kernel");
+      kill(f);
+  }
+
+  void* fault_va_page = pg_round_down(fault_addr);
+
+  
   //skip page fault error message --> pass bad-ptr series
   if (user && !not_present) exit(-1);
 
@@ -192,6 +210,7 @@ page_fault (struct intr_frame *f)
       f->eax = 0xffffffff;
       return;
   }
+  
 
   
 
