@@ -162,6 +162,18 @@ void* frame_evict() {
 	//panic for now.
 	//later: evict frame with dirty/access, second chance, swap;
 	PANIC("Panic: temp evict panic");
+
+	/*
+	call swap out -->
+	get swap idx -->
+	enroll on spte right after?
+
+	OR
+
+	call enroll_spte_swap
+	swap out call in enroll_spte_swap
+	*/
+
 	return NULL;
 }
 
