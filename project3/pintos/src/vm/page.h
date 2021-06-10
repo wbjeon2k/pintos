@@ -36,14 +36,14 @@ enum spte_flags
 add this in struct thread : struct SPTHT* SPT
 */
 struct SPTHT {
-    tid_t owner_thread;
+    int owner_thread;
     struct hash hash_table;
 };
 
 struct SPTE {
     void* VA;
     void* PA;
-    tid_t owner;
+    int owner;
     struct hash_elem spte_hash_elem;
     bool isValid; // valid == on frame, invalid == not on frame.
 

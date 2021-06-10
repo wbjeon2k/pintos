@@ -35,7 +35,7 @@ enum palloc_flags
 struct FTE {
     void* VA;
     void* PA;
-    tid_t owner_thread;
+    int owner_thread;
     struct hash_elem fte_hash_elem;
     struct list_elem fte_list_elem;
 
