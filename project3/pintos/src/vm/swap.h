@@ -1,6 +1,27 @@
 #ifndef VM_SWAP_H
 #define VM_SWAP_H
 
+#include "vm/page.h"
+//#include "vm/swap.h"
+#include "vm/frame.h"
+
+#include "threads/thread.h"
+#include "threads/palloc.h"
+#include "threads/synch.h"
+#include "lib/kernel/list.h"
+#include "lib/kernel/hash.h"
+#include "lib/kernel/bitmap.h"
+
+#include "filesys/file.h"
+
+
+#include <debug.h>
+#include <inttypes.h>
+#include <stdio.h>
+#include <string.h>
+#include <round.h>
+#include <stdlib.h>
+
 /*
 swak disk is similar with user pool
 //' A memory pool. 
