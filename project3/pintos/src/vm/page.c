@@ -1,4 +1,5 @@
 #include "vm/page.h"
+#include "vm/swap.h"
 #include "vm/frame.h"
 
 #include "threads/thread.h"
@@ -9,6 +10,7 @@
 #include "lib/kernel/bitmap.h"
 
 #include "filesys/file.h"
+
 
 #include <debug.h>
 #include <inttypes.h>
@@ -152,6 +154,7 @@ bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir) {
 	//off_t file_read(struct file* file, void* buffer, off_t size)
 	if (spte->spte_flags == SPTE_FILESYS) {
 		ASSERT((spte->read_bytes) + spte->zero_bytes == PGSIZE);
+		ASSERT(spte->zero_bytes != PGSIZE);
 		//load a page with file_sys read
 		void* buffer = get_frame;
 		off_t read_success = file_read(spte->file, buffer, spte->read_bytes);
@@ -165,7 +168,11 @@ bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir) {
 	//5-2
 	if (spte->spte_flags == SPTE_SWAPDSK) {
 		//load a page with swap read? swap in?
-
+		size_t swap_idx = spte->swap_idx;
+		if (!swap_in(swap_idx, get_frame)) {
+			frame_free(get_frame);
+			return false;
+		}
 	}
 
 	//5-3

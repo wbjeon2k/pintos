@@ -58,7 +58,8 @@ swap in: swapdsk --> mem
 swap out : mem --> swapdsk
 */
 
-bool swap_in(int swap_idx, void* VA) {
+bool swap_in(int swap_idx, void* PA) {
+    //read into actual PA mem
     //void block_read (struct block *, block_sector_t, void *);
     int i = 0;
     for (i = 0; i < 8; ++i) {
@@ -67,7 +68,8 @@ bool swap_in(int swap_idx, void* VA) {
     return true;
 }
 
-block_sector_t swap_out(void* VA) {
+block_sector_t swap_out(void* PA) {
+    //buffer is at actual PA mem
     //void block_write (struct block *, block_sector_t, const void *);
     int swap_idx = find_first_fit();
     if (swap_idx == BITMAP_ERROR) {
