@@ -48,15 +48,15 @@ false = 비어있음
 true = 차있음
 */
 int find_first_fit() {
-    lock_acquire(&swap_dsk->lock);
-    int page_idx = bitmap_scan_and_flip(pool->swap_dsk, 0, 1, false);
-    lock_release(&swap_dsk->lock);
+    lock_acquire(&(swap_dsk.lock));
+    int page_idx = bitmap_scan_and_flip(swap_dsk.swap_table, 0, 1, false);
+    lock_release(&(swap_dsk.lock));
     return page_idx;
 }
 
 bool check_on(int swap_idx) {
     //bool bitmap_test(const struct bitmap* b, size_t idx)
-    return bitmap_test(swap_dsk->swap_table, swap_idx);
+    return bitmap_test(swap_dsk.swap_table, swap_idx);
 }
 
 /*
@@ -69,7 +69,7 @@ bool swap_in(int swap_idx, void* PA) {
     //void block_read (struct block *, int, void *);
     int i = 0;
     for (i = 0; i < 8; ++i) {
-        block_read(swap_dsk->swap_table, (swap_idx * 8) + i, VA + (512) * i;
+        block_read(swap_dsk.swap_table, (swap_idx * 8) + i, VA + (512) * i;
     }
     return true;
 }
@@ -83,18 +83,18 @@ int swap_out(void* PA) {
     }
     int i = 0;
     for (i = 0; i < 8; ++i) {
-        block_write(swap_dsk->swap_table, (swap_idx * 8) + i, VA + (512) * i;
+        block_write(swap_dsk.swap_table, (swap_idx * 8) + i, VA + (512) * i;
     }
     return swap_idx;
 }
 
 //just turn off bitmap
 bool swap_free(int swap_idx) {
-    lock_acquire(&swap_dsk->lock);
+    lock_acquire(&(swap_dsk.lock));
     //void bitmap_flip (struct bitmap *b, size_t bit_idx) 
     ASSERT(check_on(swap_idx) == true);
-    bitmap_flip(swap_dsk->swap_table, swap_idx);
-    lock_release(&swap_dsk->lock);
+    bitmap_flip(swap_dsk.swap_table, swap_idx);
+    lock_release(&(swap_dsk.lock));
     return true;
 }
 
