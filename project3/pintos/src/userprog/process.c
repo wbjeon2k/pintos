@@ -20,7 +20,10 @@
 #include "threads/vaddr.h"
 
 /** VM **/
+
+#ifdef VM
 #include "vm/frame.h"
+#endif VM
 
 static thread_func start_process NO_RETURN;
 static bool load (const char *cmdline, void (**eip) (void), void **esp);
