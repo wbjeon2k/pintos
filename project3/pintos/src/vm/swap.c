@@ -24,8 +24,8 @@ int swapdsk_size;
 
 void swap_init() {
     //struct block *block_get_role (enum block_type);
-    swap_dsk->disk = block_get_role(BLOCK_SWAP);
-    if (swap_dsk->disk == NULL) {
+    swap_dsk.disk = block_get_role(BLOCK_SWAP);
+    if (swap_dsk.disk == NULL) {
         PANIC("Error: No swapdsk added");
         return;
     }
@@ -33,11 +33,12 @@ void swap_init() {
     //int block_size (struct block *);
     //page size = 4096, sector size = 512
     //4096/512==8 --> need consecutive 8 sectors to store a page
-    swapdsk_size = block_size(swap_dsk->disk);
+    swapdsk_size = block_size(swap_dsk.disk);
 
     //bitmap_create default value : false;
     //swapdsk size == 4MB °íÁ¤.
-    swap_dsk->swap_table = bitmap_create(swapdsk_size / 8);
+    swap_dsk.swap_table = bitmap_create(swapdsk_size / 8);
+    lock_init(&(swap_dsk.lock));
 
     return;
 }
