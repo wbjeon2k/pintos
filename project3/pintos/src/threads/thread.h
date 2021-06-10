@@ -160,7 +160,7 @@ struct thread
 
     //supplemental page table made with hash table
     //initialized at threadinit
-    struct SPTHT* SPT_hash_table;
+    struct SPTHT* sptht;
 
     /* Owned by thread.c. */
     unsigned magic;                     /* Detects stack overflow. */

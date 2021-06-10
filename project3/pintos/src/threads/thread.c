@@ -521,8 +521,8 @@ init_thread (struct thread *t, const char *name, int priority)
 
   /* VM SPT init */
 
-  t->SPT_hash_table = create_new_SPT();
-  t->SPT_hash_table->owner_thread = t->tid;
+  t->sptht = create_new_SPT();
+  t->sptht->owner_thread = t->tid;
 
   //t->parent_thread = thread_current();
 }
