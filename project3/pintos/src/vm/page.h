@@ -1,7 +1,6 @@
 #ifndef VM_PAGE_H
 #define VM_PAGE_H
 
-#include "vm/page.h"
 #include "vm/swap.h"
 #include "vm/frame.h"
 
