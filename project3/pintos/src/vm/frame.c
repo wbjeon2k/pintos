@@ -166,6 +166,7 @@ void* frame_evict() {
 	//later: evict frame with dirty/access, second chance, swap;
 	PANIC("Panic: temp evict panic");
 
+	return NULL;
 	/*
 	call swap out -->
 	get swap idx -->
@@ -182,8 +183,8 @@ void* frame_evict() {
 	*/
 
 	void* page_to_swap_out;
-	swap_out(page_to_swap_out);
-
+	int swap_idx = swap_out(page_to_swap_out);
+	if(swap_idx == -1) PANIC("Panic: swap out error OR swap out dsk short");
 
 
 	/*
