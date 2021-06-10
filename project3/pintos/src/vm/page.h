@@ -22,7 +22,6 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include <round.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 enum spte_flags
