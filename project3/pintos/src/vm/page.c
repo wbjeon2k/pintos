@@ -71,7 +71,7 @@ bool is_inside_SPTE(struct SPTHT* sptht, struct SPTE* spte) {
 
 struct SPTE* find_SPTE(struct SPTHT* sptht, void* VA) {
 	struct SPTE tmp_spte;
-	tmp_stpe.VA = VA;
+	tmp_spte.VA = VA;
 	if (!is_inside_SPTE(sptht, &tmp_spte)) return NULL;
 
 	struct hash_elem* hfind = NULL;
