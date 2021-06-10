@@ -14,4 +14,9 @@ struct pool
 
 /**  **/
 
+struct swapdsk {
+    struct bitmap* swap_table;
+    struct block* hw_disk;
+};
+
 #endif

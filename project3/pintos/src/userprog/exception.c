@@ -182,7 +182,9 @@ page_fault (struct intr_frame *f)
   9. normal routine ending --> just end like nothing happened.
   */
 
+  //try to write on read only --> skip load
   if (not_present) {
+
       if (!user) { // kernel mode
           f->eip = (void*)f->eax;
           f->eax = 0xffffffff;
@@ -199,6 +201,11 @@ page_fault (struct intr_frame *f)
 
   void* fault_va_page = pg_round_down(fault_addr);
 
+  struct thread* cur = thread_current();
+
+  //bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t * pagedir)
+  if (load_on_pagefault(cur->sptht, fault_addr, fault_va_page)) return;
+  //load fail --> really fault
   
   //skip page fault error message --> pass bad-ptr series
   if (user && !not_present) exit(-1);
@@ -210,8 +217,6 @@ page_fault (struct intr_frame *f)
       f->eax = 0xffffffff;
       return;
   }
-  
-
   
 
   /* To implement virtual memory, delete the rest of the function
