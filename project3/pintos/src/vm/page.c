@@ -114,6 +114,11 @@ bool enroll_spte_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint
 	}
 }
 
+block_sector_t enroll_spte_swapdisk(void* VA) {
+	struct SPTE* new_spte;
+	new_spte = create_new_SPTE(VA);
+}
+
 /*
   page fault --> call all the SPTE routine here
 
