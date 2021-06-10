@@ -59,16 +59,35 @@ swap out : mem --> swapdsk
 */
 
 bool swap_in(int swap_idx, void* VA) {
-
+    //void block_read (struct block *, block_sector_t, void *);
+    int i = 0;
+    for (i = 0; i < 8; ++i) {
+        block_read(swap_dsk->swap_table, (swap_idx * 8) + i, VA + (512) * i;
+    }
+    return true;
 }
 
 block_sector_t swap_out(void* VA) {
-
+    //void block_write (struct block *, block_sector_t, const void *);
+    int swap_idx = find_first_fit();
+    if (swap_idx == BITMAP_ERROR) {
+        return -1;
+    }
+    int i = 0;
+    for (i = 0; i < 8; ++i) {
+        block_write(swap_dsk->swap_table, (swap_idx * 8) + i, VA + (512) * i;
+    }
+    return swap_idx;
 }
 
 //just turn off bitmap
 bool swap_free(int swap_idx) {
-
+    lock_acquire(&swap_dsk->lock);
+    //void bitmap_flip (struct bitmap *b, size_t bit_idx) 
+    ASSERT(check_on(swap_idx) == true);
+    bitmap_flip(swap_dsk->swap_table, swap_idx);
+    lock_release(&swap_dsk->lock);
+    return true;
 }
 
 

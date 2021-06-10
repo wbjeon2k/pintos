@@ -171,7 +171,7 @@ bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir) {
 	//5-3
 	if (spte->spte_flags == SPTE_ZERO) {
 		//zero page
-
+		//already zeroed at frame_alloc(PAL_USER | PAL_ZERO). just continue
 	}
 
 	//6. map VA-- > PA with functions in pagedir
