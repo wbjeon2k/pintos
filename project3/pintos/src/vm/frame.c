@@ -1,4 +1,7 @@
 #include "vm/frame.h"
+#include "vm/page.h"
+#include "vm/swap.h"
+
 #include "threads/thread.h"
 #include "threads/palloc.h"
 #include "threads/synch.h"
@@ -172,6 +175,23 @@ void* frame_evict() {
 
 	call enroll_spte_swap
 	swap out call in enroll_spte_swap
+	*/
+
+	/*
+	frame select logic here
+	*/
+
+	void* page_to_swap_out;
+	swap_out(page_to_swap_out);
+
+
+
+	/*
+	select frame to evict
+	--> swap out
+	--> get swap idx
+	--> enroll spte swap, change isValid=false, flags = SWAP
+	
 	*/
 
 	return NULL;
