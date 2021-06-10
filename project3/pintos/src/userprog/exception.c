@@ -6,11 +6,6 @@
 #include "threads/thread.h"
 #include "lib/user/syscall.h"
 
-/* VM */
-#ifdef VM
-#include "vm/page.h"
-#endif
-
 /* Number of page faults processed. */
 static long long page_fault_cnt;
 
@@ -165,52 +160,6 @@ page_fault (struct intr_frame *f)
   write = (f->error_code & PF_W) != 0;
   user = (f->error_code & PF_U) != 0;
 
-  /*
-  page fault --> call all the SPTE routine here
-
-  no program logic here. call functions in page.h
-
-  1.check invalid access (kernel VA?)
-  2.search in SPT table
-  3.find SPTE
-  4.get frame by normal/evict
-  5-1: get_from_filesys
-  5-2: get_from_swapdsk
-  5-3: get_a_zeropage
-  6. map VA--> PA with functions in pagedir
-  7. map original PTE --> PA
-  8. set SPTE valid --> make it on frame
-  9. normal routine ending --> just end like nothing happened.
-  */
-
-  /*
-  //try to write on read only --> skip load
-  if (not_present) {
-
-      if (!user) { // kernel mode
-          f->eip = (void*)f->eax;
-          f->eax = 0xffffffff;
-          return;
-      }
-
-      printf("Page fault at %p: %s error %s page in %s context.\n",
-          fault_addr,
-          not_present ? "not present" : "rights violation",
-          write ? "writing" : "reading",
-          user ? "user" : "kernel");
-      kill(f);
-  }
-
-  void* fault_va_page = pg_round_down(fault_addr);
-
-  struct thread* cur = thread_current();
-
-  //bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t * pagedir)
-  if (load_on_pagefault(cur->sptht, fault_addr, fault_va_page)) return;
-  //load fail --> really fault
-
-  */
-  
   //skip page fault error message --> pass bad-ptr series
   if (user && !not_present) exit(-1);
 
@@ -221,6 +170,7 @@ page_fault (struct intr_frame *f)
       f->eax = 0xffffffff;
       return;
   }
+
   
 
   /* To implement virtual memory, delete the rest of the function

@@ -20,10 +20,7 @@
 #include "threads/vaddr.h"
 
 /** VM **/
-
-#ifdef VM
 #include "vm/frame.h"
-#endif VM
 
 static thread_func start_process NO_RETURN;
 static bool load (const char *cmdline, void (**eip) (void), void **esp);
@@ -773,10 +770,6 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       if (kpage == NULL)
         return false;
 
-      /*
-      todo: enroll_spte
-      */
-
       /* Load this page. */
       if (file_read (file, kpage, page_read_bytes) != (int) page_read_bytes)
         {
@@ -840,10 +833,6 @@ install_page (void *upage, void *kpage, bool writable)
 
   /* Verify that there's not already a page at that virtual
      address, then map our page there. */
-  /* PTE --> PA mapping */
   return (pagedir_get_page (t->pagedir, upage) == NULL
           && pagedir_set_page (t->pagedir, upage, kpage, writable));
-
-  /* have to add VM */
-  /* VA --> SPTE mapping */
 }

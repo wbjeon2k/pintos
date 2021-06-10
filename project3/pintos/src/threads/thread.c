@@ -14,9 +14,6 @@
 #ifdef USERPROG
 #include "userprog/process.h"
 #endif
-#ifdef VM
-#include "vm/page.h"
-#endif
 
 /* Random value for struct thread's `magic' member.
    Used to detect stack overflow.  See the big comment at the top
@@ -518,15 +515,6 @@ init_thread (struct thread *t, const char *name, int priority)
   t->hasExited = false;
   t->load_success = false;
   t->going_to_exit = false;
-
-  /* VM SPT init */
-#ifdef VM
-  t->sptht = create_new_SPT();
-  t->sptht->owner_thread = t->tid;
-#endif // DEBUG
-
-  
-
   //t->parent_thread = thread_current();
 }
 
