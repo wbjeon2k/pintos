@@ -13,7 +13,7 @@
 
 #include "filesys/file.h"
 
-
+#include <stddef.h>
 #include <debug.h>
 #include <inttypes.h>
 #include <stdio.h>
