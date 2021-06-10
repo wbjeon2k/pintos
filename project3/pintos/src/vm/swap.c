@@ -15,7 +15,7 @@
 
 struct swapdsk swap_dsk;
 
-block_sector_t swapdsk_size;
+int swapdsk_size;
 
 void swap_init() {
     //struct block *block_get_role (enum block_type);
@@ -25,7 +25,7 @@ void swap_init() {
         return;
     }
 
-    //block_sector_t block_size (struct block *);
+    //int block_size (struct block *);
     //page size = 4096, sector size = 512
     //4096/512==8 --> need consecutive 8 sectors to store a page
     swapdsk_size = block_size(swap_dsk->disk);
@@ -41,14 +41,14 @@ void swap_init() {
 false = 비어있음
 true = 차있음
 */
-block_sector_t find_first_fit() {
+int find_first_fit() {
     lock_acquire(&swap_dsk->lock);
-    block_sector_t page_idx = bitmap_scan_and_flip(pool->swap_dsk, 0, 1, false);
+    int page_idx = bitmap_scan_and_flip(pool->swap_dsk, 0, 1, false);
     lock_release(&swap_dsk->lock);
     return page_idx;
 }
 
-bool check_on(block_sector_t swap_idx) {
+bool check_on(int swap_idx) {
     //bool bitmap_test(const struct bitmap* b, size_t idx)
     return bitmap_test(swap_dsk->swap_table, swap_idx);
 }
@@ -60,7 +60,7 @@ swap out : mem --> swapdsk
 
 bool swap_in(int swap_idx, void* PA) {
     //read into actual PA mem
-    //void block_read (struct block *, block_sector_t, void *);
+    //void block_read (struct block *, int, void *);
     int i = 0;
     for (i = 0; i < 8; ++i) {
         block_read(swap_dsk->swap_table, (swap_idx * 8) + i, VA + (512) * i;
@@ -68,9 +68,9 @@ bool swap_in(int swap_idx, void* PA) {
     return true;
 }
 
-block_sector_t swap_out(void* PA) {
+int swap_out(void* PA) {
     //buffer is at actual PA mem
-    //void block_write (struct block *, block_sector_t, const void *);
+    //void block_write (struct block *, int, const void *);
     int swap_idx = find_first_fit();
     if (swap_idx == BITMAP_ERROR) {
         return -1;

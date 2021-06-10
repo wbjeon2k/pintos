@@ -85,7 +85,7 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
 bool enroll_spte_filesys(struct file* file, off_t ofs, uint8_t* upage,
     uint32_t read_bytes, uint32_t zero_bytes, bool writable);
 
-block_sector_t enroll_spte_swapdisk(void* VA);
+int enroll_spte_swapdisk(void* VA);
 bool get_a_zeropage();
 bool enroll_spte_zeropage();
 
