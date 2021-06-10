@@ -103,7 +103,7 @@ bool enroll_spte_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint
 	new_spte->writable = writable;
 
 	new_spte->PA = NULL;
-	new_spte->owner = thread_current()->tid;
+	//new_spte->owner = thread_current()->tid;
 	new_spte->isValid = false;
 	new_spte->spte_flags = SPTE_FILESYS;
 

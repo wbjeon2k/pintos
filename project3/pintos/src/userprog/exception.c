@@ -182,6 +182,7 @@ page_fault (struct intr_frame *f)
   9. normal routine ending --> just end like nothing happened.
   */
 
+  /*
   //try to write on read only --> skip load
   if (not_present) {
 
@@ -206,6 +207,8 @@ page_fault (struct intr_frame *f)
   //bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t * pagedir)
   if (load_on_pagefault(cur->sptht, fault_addr, fault_va_page)) return;
   //load fail --> really fault
+
+  */
   
   //skip page fault error message --> pass bad-ptr series
   if (user && !not_present) exit(-1);
