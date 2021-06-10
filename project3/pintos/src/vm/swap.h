@@ -21,6 +21,10 @@
 #include <string.h>
 #include <round.h>
 #include <stdlib.h>
+#include <inttypes.h>
+#include <round.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 /*
 swak disk is similar with user pool
