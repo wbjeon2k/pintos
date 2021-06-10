@@ -3,17 +3,82 @@
 #include "lib/kernel/bitmap.h"
 #include <inttypes.h>
 
+#include "devices/block.h"
+
+#include <debug.h>
+#include <inttypes.h>
+#include <stdio.h>
+#include <string.h>
+#include <round.h>
+#include <stdlib.h>
+
+
+struct swapdsk swap_dsk;
+
+block_sector_t swapdsk_size;
+
+void swap_init() {
+    //struct block *block_get_role (enum block_type);
+    swap_dsk->disk = block_get_role(BLOCK_SWAP);
+    if (swap_dsk->disk == NULL) {
+        PANIC("Error: No swapdsk added");
+        return;
+    }
+
+    //block_sector_t block_size (struct block *);
+    //page size = 4096, sector size = 512
+    //4096/512==8 --> need consecutive 8 sectors to store a page
+    swapdsk_size = block_size(swap_dsk->disk);
+
+    //bitmap_create default value : false;
+    //swapdsk size == 4MB 고정.
+    swap_dsk->swap_table = bitmap_create(swapdsk_size / 8);
+
+    return;
+}
+
+/*
+false = 비어있음
+true = 차있음
+*/
+block_sector_t find_first_fit() {
+    lock_acquire(&swap_dsk->lock);
+    block_sector_t page_idx = bitmap_scan_and_flip(pool->swap_dsk, 0, 1, false);
+    lock_release(&swap_dsk->lock);
+    return page_idx;
+}
+
+bool check_on(block_sector_t swap_idx) {
+    //bool bitmap_test(const struct bitmap* b, size_t idx)
+    return bitmap_test(swap_dsk->swap_table, swap_idx);
+}
+
+/*
+swap in: swapdsk --> mem
+swap out : mem --> swapdsk
+*/
+
+bool swap_in(int swap_idx, void* VA) {
+
+}
+
+block_sector_t swap_out(void* VA) {
+
+}
+
+//just turn off bitmap
+bool swap_free(int swap_idx) {
+
+}
+
+
+
 /*
 
 void *
 palloc_get_multiple (enum palloc_flags flags, size_t page_cnt)
 {
-  struct pool *pool = flags & PAL_USER ? &user_pool : &kernel_pool;
-  void *pages;
-  size_t page_idx;
 
-  if (page_cnt == 0)
-    return NULL;
 
   lock_acquire (&pool->lock);
   page_idx = bitmap_scan_and_flip (pool->used_map, 0, page_cnt, false);
@@ -24,19 +89,10 @@ palloc_get_multiple (enum palloc_flags flags, size_t page_cnt)
   else
     pages = NULL;
 
-  if (pages != NULL)
-    {
-      if (flags & PAL_ZERO)
-        memset (pages, 0, PGSIZE * page_cnt);
-    }
-  else
-    {
-      if (flags & PAL_ASSERT)
-        PANIC ("palloc_get: out of pages");
-    }
-
   return pages;
 }
 */
+
+
 
 

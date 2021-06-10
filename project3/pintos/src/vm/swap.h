@@ -15,8 +15,22 @@ struct pool
 /**  **/
 
 struct swapdsk {
+    struct lock lock;
     struct bitmap* swap_table;
-    struct block* hw_disk;
+    struct block* disk;
 };
+
+void swap_init();
+
+/*
+void block_read (struct block *, block_sector_t, void *);
+void block_write (struct block *, block_sector_t, const void *);
+*/
+block_sector_t swap_out(void*);
+block_sector_t find_first_fit();
+bool swap_in(int, void*);
+bool swap_free(int);
+
+
 
 #endif
