@@ -70,12 +70,12 @@ bool is_inside_SPTE(struct SPTHT* sptht, struct SPTE* spte) {
 }
 
 struct SPTE* find_SPTE(struct SPTHT* sptht, void* VA) {
-	struct SPTE tmp_stpe;
+	struct SPTE tmp_spte;
 	tmp_stpe.VA = VA;
-	if (!is_inside_SPTE(sptht, &tmp_stpe)) return NULL;
+	if (!is_inside_SPTE(sptht, &tmp_spte)) return NULL;
 
 	struct hash_elem* hfind = NULL;
-	hfind = hash_find(&(sptht->hash_table), &(tmp_spte->spte_hash_elem));
+	hfind = hash_find(&(sptht->hash_table), &(tmp_spte.spte_hash_elem));
 
 	struct SPTE* ptr_spte;
 	//list_entry (e, struct foo, elem);
