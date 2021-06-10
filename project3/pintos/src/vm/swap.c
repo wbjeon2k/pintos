@@ -69,7 +69,7 @@ bool swap_in(int swap_idx, void* PA) {
     //void block_read (struct block *, int, void *);
     int i = 0;
     for (i = 0; i < 8; ++i) {
-        block_read(swap_dsk.swap_table, (swap_idx * 8) + i, VA + (512) * i;
+        block_read(swap_dsk.disk, (swap_idx * 8) + i, PA + (512) * i);
     }
     return true;
 }
@@ -83,7 +83,7 @@ int swap_out(void* PA) {
     }
     int i = 0;
     for (i = 0; i < 8; ++i) {
-        block_write(swap_dsk.swap_table, (swap_idx * 8) + i, VA + (512) * i;
+        block_write(swap_dsk.disk, (swap_idx * 8) + i, PA + (512) * i);
     }
     return swap_idx;
 }
