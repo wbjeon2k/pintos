@@ -261,8 +261,8 @@ unsigned sptht_hf(const struct hash_elem* e, void* aux UNUSED) {
 
 	void* key = tmp->VA;
 	unsigned ret = 0;
-	//ret = hash_int()
-	ret = hash_bytes(key, sizeof key);
+	ret = hash_int((uint32_t)key);
+	//ret = hash_bytes(key, sizeof key);
 	return ret;
 }
 
