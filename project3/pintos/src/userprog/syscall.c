@@ -92,7 +92,6 @@ inline bool check_esp(void* ptr) {
 }
 
 inline bool check_VA(void* ptr) {
-
     struct thread* cur = thread_current();
     void* ptr_page = (void*)pg_round_down(ptr);
     struct SPTE* tmp = find_SPTE(cur->sptht, ptr_page);
@@ -245,9 +244,9 @@ syscall_handler (struct intr_frame *f)
     if (syscall_nr == SYS_READ) {
         //get 3 arguments int fd, const void* buffer, unsigned length
         //call write_implement
-        //if (!check_VA(esp_offset(f, 5))) exit(-1);
-        if (!check_VA(esp_offset(f, 6))) exit(-1);
-        //if (!check_VA(esp_offset(f, 7))) exit(-1);
+
+        //if (!check_VA(esp_offset(f, 6))) exit(-1);
+
 
         //printf("argument1 address %x\n", esp_offset(f, 5));
         //printf("argument2 address %x\n", esp_offset(f, 6));
@@ -263,9 +262,9 @@ syscall_handler (struct intr_frame *f)
     if (syscall_nr == SYS_WRITE) {
         //get 3 arguments int fd, const void* buffer, unsigned length
         //call write_implement
-        //if (!check_VA(esp_offset(f, 5))) exit(-1);
-        if (!check_VA(esp_offset(f, 6))) exit(-1);
-        //if (!check_VA(esp_offset(f, 7))) exit(-1);
+
+        //if (!check_VA(esp_offset(f, 6))) exit(-1);
+
 
         //printf("argument1 address %x\n", esp_offset(f, 5));
         //printf("argument2 address %x\n", esp_offset(f, 6));
@@ -280,8 +279,8 @@ syscall_handler (struct intr_frame *f)
     //bool create(const char* file, unsigned initial_size);
     if (syscall_nr == SYS_CREATE) {
         //bool filesys_create(const char* name, off_t initial_size);
-        if (!check_VA(esp_offset(f, 4))) exit(-1);
-        //if (!check_VA(esp_offset(f, 5))) exit(-1);
+        //if (!check_VA(esp_offset(f, 4))) exit(-1);
+
         char* name = *esp_offset(f, 4);
         off_t initial_size = *esp_offset(f, 5);
         f->eax = create(name, initial_size);
@@ -290,7 +289,7 @@ syscall_handler (struct intr_frame *f)
     //Unix-like semantics for filesys_remove() are implemented.
     if (syscall_nr == SYS_REMOVE) {
         //bool filesys_remove (const char *name) 
-        if (!check_VA(esp_offset(f, 1))) exit(-1);
+        //if (!check_VA(esp_offset(f, 1))) exit(-1);
         char* name = *esp_offset(f, 1);
         f->eax = remove(name);
     }
@@ -298,14 +297,14 @@ syscall_handler (struct intr_frame *f)
     //struct file *filesys_open (const char *name);
     if (syscall_nr == SYS_OPEN) {
         //bool filesys_remove (const char *name) 
-        if (!check_VA(esp_offset(f, 1))) exit(-1);
+        //if (!check_VA(esp_offset(f, 1))) exit(-1);
         char* name = *esp_offset(f, 1);
         f->eax = open(name);
     }
     
     if (syscall_nr == SYS_FILESIZE) {
         //int filesize (int fd) 
-        if (!check_VA(esp_offset(f, 1))) exit(-1);
+        //if (!check_VA(esp_offset(f, 1))) exit(-1);
         int fd = *esp_offset(f, 1);
         f->eax = filesize(fd);
     }
