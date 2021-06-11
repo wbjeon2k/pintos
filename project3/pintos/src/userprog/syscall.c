@@ -380,7 +380,7 @@ tid_t exec(const char* cmd_) {
     char* cmd = cmd_;
     //pass exec bad ptr
     if (!check_VA(cmd)) {
-        return -1;
+        //return -1;
     }
     //printf("exec impl cmd %s\n", cmd);
     tid_t child_tid;
@@ -446,7 +446,7 @@ int wait(tid_t wait_pid) {
 bool create(const char* file, unsigned initial_size) {
     if (!check_VA(file)) {
         //return false;
-        exit(-1);
+        //exit(-1);
     }
     bool ret;
     lock_acquire(&file_lock);
@@ -460,7 +460,7 @@ bool remove(const char* file) {
     //filesys_remove(const char* name)
     if (!check_VA(file)) {
         //return false;
-        exit(-1);
+        //exit(-1);
     }
     bool ret;
     lock_acquire(&file_lock);
@@ -476,7 +476,7 @@ int open(const char* file) {
     //void file_deny_write(struct file* file)
     if (!check_VA(file)) {
         //return -1;
-        exit(-1);
+        //exit(-1);
     }
     int ret;
     lock_acquire(&file_lock);
@@ -535,11 +535,11 @@ int read(int fd, void* buffer, unsigned length) {
 
     if (!check_VA(buffer)) {
         //return -1;
-        exit(-1);
+        //exit(-1);
     }
 
     if (!check_VA(buffer + length - 1)) {
-        exit(-1);
+        //exit(-1);
         //return -1;
     }
 
@@ -596,7 +596,7 @@ int write(int fd, const void* buffer, unsigned length) {
 
     if (!check_VA(buffer)) {
         //return 0;
-        exit(-1);
+        //exit(-1);
     }
 
     lock_acquire(&file_lock);
