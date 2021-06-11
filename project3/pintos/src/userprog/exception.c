@@ -186,10 +186,10 @@ page_fault(struct intr_frame* f)
 
     struct thread* cur = thread_current();
 
-    void* esp = f->esp;
+    //void* esp = f->esp;
 
-    //if (user) esp = f->esp;
-    //else esp = cur->kernel_esp;
+    if (user) esp = f->esp;
+    else esp = cur->kernel_esp;
 
     void* fault_addr_rounddown = (void*)pg_round_down(fault_addr);
 

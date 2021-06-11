@@ -248,6 +248,16 @@ bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir) {
 	if (spte->spte_flags == SPTE_ZERO) {
 		//zero page
 		//already zeroed at frame_alloc(PAL_USER | PAL_ZERO). just continue
+		if (pagedir_set_page(pagedir, spte->VA, get_frame, spte->writable) == false) {
+			frame_free(get_frame);
+			return false;
+		}
+
+		//8. set SPTE valid --> make it on frame
+		spte->isValid = true;
+		spte->PA = get_frame;
+
+		return true;
 	}
 
 	//6. map VA-- > PA with functions in pagedir
