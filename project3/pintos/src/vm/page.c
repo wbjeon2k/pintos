@@ -114,6 +114,10 @@ bool enroll_spte_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint
 	}
 }
 
+bool enroll_spte_va(struct SPTHT* sptht, void* VA, void* PA) {
+
+}
+
 int enroll_spte_swapdisk(void* VA) {
 	struct SPTE* new_spte;
 	new_spte = create_new_SPTE(VA);

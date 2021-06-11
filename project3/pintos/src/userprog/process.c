@@ -805,6 +805,11 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       read_bytes -= page_read_bytes;
       zero_bytes -= page_zero_bytes;
       upage += PGSIZE;
+
+#ifdef VM
+      ofs += PGSIZE;
+#endif // VM
+
     }
   return true;
 }
@@ -851,8 +856,11 @@ install_page (void *upage, void *kpage, bool writable)
   pte_set = (pagedir_get_page(t->pagedir, upage) == NULL && pagedir_set_page (t->pagedir, upage, kpage, writable));
 
   if (pte_set) {
+#ifdef VM
       bool spte_set;
-      spte_set = 
+      spte_set = enroll_spte_va(t->sptht, upage, kpage);
+#endif
+      return pte_set;
   }
   else return false;
 }
