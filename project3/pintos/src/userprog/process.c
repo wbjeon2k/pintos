@@ -777,7 +777,7 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       uint8_t* kpage = frame_alloc(PAL_USER);
       if (kpage == NULL)
           return false;
-/*
+
 #ifdef VM
       struct thread* cur = thread_current();
 
@@ -786,7 +786,7 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
           return false;
       }
 #else
-*/
+
 
 
       /* Load this page. */
