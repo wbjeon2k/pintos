@@ -806,7 +806,7 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
           return false; 
         }
 
-//#endif // VM
+#endif // VM
 
       /* Advance. */
       read_bytes -= page_read_bytes;
