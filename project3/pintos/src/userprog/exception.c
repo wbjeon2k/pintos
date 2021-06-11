@@ -7,7 +7,7 @@
 #include "lib/user/syscall.h"
 
 
-#define MAX_STACK_8MB 8388608
+#define MAX_STACK_8MB (8 * 1024 * 1024)
 
 /* Number of page faults processed. */
 static long long page_fault_cnt;
@@ -19,9 +19,9 @@ inline bool va_check(void* ptr) {
     if (!is_user_vaddr(ptr)) return false;
     if (ptr == NULL) return false;
 
-    //struct thread* cur = thread_current();
+    struct thread* cur = thread_current();
 
-    //if (pagedir_get_page(cur->pagedir, ptr) == NULL) return false;
+    if (pagedir_get_page(cur->pagedir, ptr) == NULL) return false;
 
     return true;
 }
@@ -187,6 +187,7 @@ page_fault(struct intr_frame* f)
     struct thread* cur = thread_current();
 
     void* esp = NULL;
+
     if (user) esp = f->esp;
     else esp = cur->kernel_esp;
 

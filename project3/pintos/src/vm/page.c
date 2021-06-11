@@ -47,7 +47,8 @@ struct SPTE* create_new_SPTE(void* VA) {
 
 bool insert_SPTE(struct SPTHT* sptht, struct SPTE* spte) {
 	if (spte == NULL || sptht == NULL) return false;
-	if (is_inside_SPTE(sptht, spte)) return false;
+	if (spte->VA == NULL) return false;
+	if (find_SPTE(sptht, spte->VA) != NULL) return false;
 
 	hash_insert(&(sptht->hash_table), &(spte->spte_hash_elem));
 	return true;
@@ -60,7 +61,8 @@ If the elements of the hash table are dynamically allocated,
 */
 bool delete_SPTE(struct SPTHT* sptht, struct SPTE* spte) {
 	if (spte == NULL || sptht == NULL) return false;
-	if (!is_inside_SPTE(sptht, spte)) return false;
+	if (spte->VA == NULL) return false;
+	if (find_SPTE(sptht, spte->VA) == NULL) return false;
 
 	hash_delete(&(sptht->hash_table), &(spte->spte_hash_elem));
 	free(spte);

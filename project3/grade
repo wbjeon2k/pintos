@@ -1,0 +1,1978 @@
+TOTAL TESTING SCORE: 41.8%
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+SUMMARY BY TEST SET
+
+Test Set                                      Pts Max  % Ttl  % Max
+--------------------------------------------- --- --- ------ ------
+tests/vm/Rubric.functionality                   3/ 55   2.7%/ 50.0%
+tests/vm/Rubric.robustness                      8/ 28   4.3%/ 15.0%
+tests/userprog/Rubric.functionality           108/108  10.0%/ 10.0%
+tests/userprog/Rubric.robustness               85/ 88   4.8%/  5.0%
+tests/filesys/base/Rubric                      30/ 30  20.0%/ 20.0%
+--------------------------------------------- --- --- ------ ------
+Total                                                  41.8%/100.0%
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+SUMMARY OF INDIVIDUAL TESTS
+
+Functionality of virtual memory subsystem (tests/vm/Rubric.functionality):
+	- Test stack growth.
+	  ** 0/ 3 tests/vm/pt-grow-stack
+	  ** 0/ 3 tests/vm/pt-grow-stk-sc
+	  ** 0/ 3 tests/vm/pt-big-stk-obj
+	  ** 0/ 3 tests/vm/pt-grow-pusha
+
+	- Test paging behavior.
+	  ** 0/ 3 tests/vm/page-linear
+	  ** 0/ 3 tests/vm/page-parallel
+	     3/ 3 tests/vm/page-shuffle
+	  ** 0/ 4 tests/vm/page-merge-seq
+	  ** 0/ 4 tests/vm/page-merge-par
+	  ** 0/ 4 tests/vm/page-merge-mm
+	  ** 0/ 4 tests/vm/page-merge-stk
+
+	- Test "mmap" system call.
+	  ** 0/ 2 tests/vm/mmap-read
+	  ** 0/ 2 tests/vm/mmap-write
+	  ** 0/ 2 tests/vm/mmap-shuffle
+
+	  ** 0/ 2 tests/vm/mmap-twice
+
+	  ** 0/ 2 tests/vm/mmap-unmap
+	  ** 0/ 1 tests/vm/mmap-exit
+
+	  ** 0/ 3 tests/vm/mmap-clean
+
+	  ** 0/ 2 tests/vm/mmap-close
+	  ** 0/ 2 tests/vm/mmap-remove
+
+	- Section summary.
+	      1/ 20 tests passed
+	      3/ 55 points subtotal
+
+Robustness of virtual memory subsystem (tests/vm/Rubric.robustness):
+	- Test robustness of page table support.
+	  ** 0/ 2 tests/vm/pt-bad-addr
+	     3/ 3 tests/vm/pt-bad-read
+	     2/ 2 tests/vm/pt-write-code
+	     3/ 3 tests/vm/pt-write-code2
+	  ** 0/ 4 tests/vm/pt-grow-bad
+
+	- Test robustness of "mmap" system call.
+	  ** 0/ 1 tests/vm/mmap-bad-fd
+	  ** 0/ 1 tests/vm/mmap-inherit
+	  ** 0/ 1 tests/vm/mmap-null
+	  ** 0/ 1 tests/vm/mmap-zero
+
+	  ** 0/ 2 tests/vm/mmap-misalign
+
+	  ** 0/ 2 tests/vm/mmap-over-code
+	  ** 0/ 2 tests/vm/mmap-over-data
+	  ** 0/ 2 tests/vm/mmap-over-stk
+	  ** 0/ 2 tests/vm/mmap-overlap
+
+
+	- Section summary.
+	      3/ 14 tests passed
+	      8/ 28 points subtotal
+
+Functionality of system calls (tests/userprog/Rubric.functionality):
+	- Test argument passing on Pintos command line.
+	     3/ 3 tests/userprog/args-none
+	     3/ 3 tests/userprog/args-single
+	     3/ 3 tests/userprog/args-multiple
+	     3/ 3 tests/userprog/args-many
+	     3/ 3 tests/userprog/args-dbl-space
+
+	- Test "create" system call.
+	     3/ 3 tests/userprog/create-empty
+	     3/ 3 tests/userprog/create-long
+	     3/ 3 tests/userprog/create-normal
+	     3/ 3 tests/userprog/create-exists
+
+	- Test "open" system call.
+	     3/ 3 tests/userprog/open-missing
+	     3/ 3 tests/userprog/open-normal
+	     3/ 3 tests/userprog/open-twice
+
+	- Test "read" system call.
+	     3/ 3 tests/userprog/read-normal
+	     3/ 3 tests/userprog/read-zero
+
+	- Test "write" system call.
+	     3/ 3 tests/userprog/write-normal
+	     3/ 3 tests/userprog/write-zero
+
+	- Test "close" system call.
+	     3/ 3 tests/userprog/close-normal
+
+	- Test "exec" system call.
+	     5/ 5 tests/userprog/exec-once
+	     5/ 5 tests/userprog/exec-multiple
+	     5/ 5 tests/userprog/exec-arg
+
+	- Test "wait" system call.
+	     5/ 5 tests/userprog/wait-simple
+	     5/ 5 tests/userprog/wait-twice
+
+	- Test "exit" system call.
+	     5/ 5 tests/userprog/exit
+
+	- Test "halt" system call.
+	     3/ 3 tests/userprog/halt
+
+	- Test recursive execution of user programs.
+	    15/15 tests/userprog/multi-recurse
+
+	- Test read-only executable feature.
+	     3/ 3 tests/userprog/rox-simple
+	     3/ 3 tests/userprog/rox-child
+	     3/ 3 tests/userprog/rox-multichild
+
+	- Section summary.
+	     28/ 28 tests passed
+	    108/108 points subtotal
+
+Robustness of system calls (tests/userprog/Rubric.robustness):
+	- Test robustness of file descriptor handling.
+	     2/ 2 tests/userprog/close-stdin
+	     2/ 2 tests/userprog/close-stdout
+	     2/ 2 tests/userprog/close-bad-fd
+	     2/ 2 tests/userprog/close-twice
+	     2/ 2 tests/userprog/read-bad-fd
+	     2/ 2 tests/userprog/read-stdout
+	     2/ 2 tests/userprog/write-bad-fd
+	     2/ 2 tests/userprog/write-stdin
+	     2/ 2 tests/userprog/multi-child-fd
+
+	- Test robustness of pointer handling.
+	     3/ 3 tests/userprog/create-bad-ptr
+	     3/ 3 tests/userprog/exec-bad-ptr
+	     3/ 3 tests/userprog/open-bad-ptr
+	     3/ 3 tests/userprog/read-bad-ptr
+	     3/ 3 tests/userprog/write-bad-ptr
+
+	- Test robustness of buffer copying across page boundaries.
+	     3/ 3 tests/userprog/create-bound
+	     3/ 3 tests/userprog/open-boundary
+	     3/ 3 tests/userprog/read-boundary
+	     3/ 3 tests/userprog/write-boundary
+
+	- Test handling of null pointer and empty strings.
+	     2/ 2 tests/userprog/create-null
+	     2/ 2 tests/userprog/open-null
+	     2/ 2 tests/userprog/open-empty
+
+	- Test robustness of system call implementation.
+	     3/ 3 tests/userprog/sc-bad-arg
+	     3/ 3 tests/userprog/sc-bad-sp
+	     5/ 5 tests/userprog/sc-boundary
+	     5/ 5 tests/userprog/sc-boundary-2
+
+	- Test robustness of "exec" and "wait" system calls.
+	     5/ 5 tests/userprog/exec-missing
+	     5/ 5 tests/userprog/wait-bad-pid
+	     5/ 5 tests/userprog/wait-killed
+
+	- Test robustness of exception handling.
+	  ** 0/ 1 tests/userprog/bad-read
+	  ** 0/ 1 tests/userprog/bad-write
+	  ** 0/ 1 tests/userprog/bad-jump
+	     1/ 1 tests/userprog/bad-read2
+	     1/ 1 tests/userprog/bad-write2
+	     1/ 1 tests/userprog/bad-jump2
+
+	- Section summary.
+	     31/ 34 tests passed
+	     85/ 88 points subtotal
+
+Functionality of base file system (tests/filesys/base/Rubric):
+	- Test basic support for small files.
+	     1/ 1 tests/filesys/base/sm-create
+	     2/ 2 tests/filesys/base/sm-full
+	     2/ 2 tests/filesys/base/sm-random
+	     2/ 2 tests/filesys/base/sm-seq-block
+	     3/ 3 tests/filesys/base/sm-seq-random
+
+	- Test basic support for large files.
+	     1/ 1 tests/filesys/base/lg-create
+	     2/ 2 tests/filesys/base/lg-full
+	     2/ 2 tests/filesys/base/lg-random
+	     2/ 2 tests/filesys/base/lg-seq-block
+	     3/ 3 tests/filesys/base/lg-seq-random
+
+	- Test synchronized multiprogram access to files.
+	     4/ 4 tests/filesys/base/syn-read
+	     4/ 4 tests/filesys/base/syn-write
+	     2/ 2 tests/filesys/base/syn-remove
+
+	- Section summary.
+	     13/ 13 tests passed
+	     30/ 30 points subtotal
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/pt-grow-stack FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/pt-grow-stack:
+
+Copying tests/vm/pt-grow-stack to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run pt-grow-stack
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 111 sectors (55 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'pt-grow-stack' into the file system...
+Erasing ustar archive...
+Executing 'pt-grow-stack':
+(pt-grow-stack) begin
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run pt-grow-stack
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/pt-grow-stk-sc FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/pt-grow-stk-sc:
+
+Copying tests/vm/pt-grow-stk-sc to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run pt-grow-stk-sc
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 105 sectors (52 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'pt-grow-stk-sc' into the file system...
+Erasing ustar archive...
+Executing 'pt-grow-stk-sc':
+(pt-grow-stk-sc) begin
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run pt-grow-stk-sc
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/pt-big-stk-obj FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/pt-big-stk-obj:
+
+Copying tests/vm/pt-big-stk-obj to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run pt-big-stk-obj
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 111 sectors (55 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'pt-big-stk-obj' into the file system...
+Erasing ustar archive...
+Executing 'pt-big-stk-obj':
+(pt-big-stk-obj) begin
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run pt-big-stk-obj
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/pt-grow-pusha FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/pt-grow-pusha:
+
+Copying tests/vm/pt-grow-pusha to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run pt-grow-pusha
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 100 sectors (50 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'pt-grow-pusha' into the file system...
+Erasing ustar archive...
+Executing 'pt-grow-pusha':
+(pt-grow-pusha) begin
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run pt-grow-pusha
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/page-linear FAILURE:
+
+Kernel panic in run: PANIC at ../../vm/frame.c:167 in frame_evict(): Panic: temp evict panic
+Call stack: 0xc002833e
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+
+OUTPUT FROM tests/vm/page-linear:
+
+Copying tests/vm/page-linear to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run page-linear
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 108 sectors (54 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'page-linear' into the file system...
+Erasing ustar archive...
+Executing 'page-linear':
+Kernel PANIC at ../../vm/frame.c:167 in frame_evict(): Panic: temp evict panic
+Call stack: 0xc002833e.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Timer: 2930 ticks
+Thread: 0 idle ticks, 189 kernel ticks, 2741 user ticks
+hda2 (filesys): 64 reads, 220 writes
+hda3 (scratch): 107 reads, 2 writes
+hda4 (swap): 0 reads, 0 writes
+Console: 1157 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off..========================================================================
+                       Bochs x86 Emulator 2.6.2
+                Built from SVN snapshot on May 26, 2013
+                  Compiled on Mar 17 2018 at 20:11:01
+========================================================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/page-parallel FAILURE:
+
+Kernel panic in run: PANIC at ../../vm/frame.c:167 in frame_evict(): Panic: temp evict panic
+Call stack: 0xc002833e
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+
+OUTPUT FROM tests/vm/page-parallel:
+
+Copying tests/vm/page-parallel to scratch partition...
+Copying tests/vm/child-linear to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run page-parallel
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 205 sectors (102 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'page-parallel' into the file system...
+Putting 'child-linear' into the file system...
+Erasing ustar archive...
+Executing 'page-parallel':
+(page-parallel) begin
+(page-parallel) exec "child-linear"
+(page-parallel) exec "child-linear"
+Kernel PANIC at ../../vm/frame.c:167 in frame_evict(): Panic: temp evict panic
+Call stack: 0xc002833e.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Timer: 3398 ticks
+Thread: 0 idle ticks, 251 kernel ticks, 3147 user ticks
+hda2 (filesys): 162 reads, 416 writes
+hda3 (scratch): 204 reads, 2 writes
+hda4 (swap): 0 reads, 0 writes
+Console: 1306 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off..========================================================================
+                       Bochs x86 Emulator 2.6.2
+                Built from SVN snapshot on May 26, 2013
+                  Compiled on Mar 17 2018 at 20:11:01
+========================================================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/page-merge-seq FAILURE:
+
+Kernel panic in run: PANIC at ../../vm/frame.c:167 in frame_evict(): Panic: temp evict panic
+Call stack: 0xc002833e
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+
+OUTPUT FROM tests/vm/page-merge-seq:
+
+Copying tests/vm/page-merge-seq to scratch partition...
+Copying tests/vm/child-sort to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run page-merge-seq
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 212 sectors (106 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'page-merge-seq' into the file system...
+Putting 'child-sort' into the file system...
+Erasing ustar archive...
+Executing 'page-merge-seq':
+Kernel PANIC at ../../vm/frame.c:167 in frame_evict(): Panic: temp evict panic
+Call stack: 0xc002833e.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Timer: 2986 ticks
+Thread: 0 idle ticks, 253 kernel ticks, 2733 user ticks
+hda2 (filesys): 83 reads, 430 writes
+hda3 (scratch): 211 reads, 2 writes
+hda4 (swap): 0 reads, 0 writes
+Console: 1212 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off..========================================================================
+                       Bochs x86 Emulator 2.6.2
+                Built from SVN snapshot on May 26, 2013
+                  Compiled on Mar 17 2018 at 20:11:01
+========================================================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/page-merge-par FAILURE:
+
+Kernel panic in run: PANIC at ../../vm/frame.c:167 in frame_evict(): Panic: temp evict panic
+Call stack: 0xc002833e
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+
+OUTPUT FROM tests/vm/page-merge-par:
+
+Copying tests/vm/page-merge-par to scratch partition...
+Copying tests/vm/child-sort to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run page-merge-par
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 215 sectors (107 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'page-merge-par' into the file system...
+Putting 'child-sort' into the file system...
+Erasing ustar archive...
+Executing 'page-merge-par':
+Kernel PANIC at ../../vm/frame.c:167 in frame_evict(): Panic: temp evict panic
+Call stack: 0xc002833e.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Timer: 2995 ticks
+Thread: 0 idle ticks, 254 kernel ticks, 2741 user ticks
+hda2 (filesys): 83 reads, 436 writes
+hda3 (scratch): 214 reads, 2 writes
+hda4 (swap): 0 reads, 0 writes
+Console: 1212 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off..========================================================================
+                       Bochs x86 Emulator 2.6.2
+                Built from SVN snapshot on May 26, 2013
+                  Compiled on Mar 17 2018 at 20:11:01
+========================================================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/page-merge-mm FAILURE:
+
+Kernel panic in run: PANIC at ../../vm/frame.c:167 in frame_evict(): Panic: temp evict panic
+Call stack: 0xc002833e
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+
+OUTPUT FROM tests/vm/page-merge-mm:
+
+Copying tests/vm/page-merge-mm to scratch partition...
+Copying tests/vm/child-qsort-mm to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run page-merge-mm
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 222 sectors (111 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'page-merge-mm' into the file system...
+Putting 'child-qsort-mm' into the file system...
+Erasing ustar archive...
+Executing 'page-merge-mm':
+Kernel PANIC at ../../vm/frame.c:167 in frame_evict(): Panic: temp evict panic
+Call stack: 0xc002833e.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Timer: 3001 ticks
+Thread: 0 idle ticks, 257 kernel ticks, 2744 user ticks
+hda2 (filesys): 83 reads, 450 writes
+hda3 (scratch): 221 reads, 2 writes
+hda4 (swap): 0 reads, 0 writes
+Console: 1213 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off..========================================================================
+                       Bochs x86 Emulator 2.6.2
+                Built from SVN snapshot on May 26, 2013
+                  Compiled on Mar 17 2018 at 20:11:01
+========================================================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/page-merge-stk FAILURE:
+
+Kernel panic in run: PANIC at ../../vm/frame.c:167 in frame_evict(): Panic: temp evict panic
+Call stack: 0xc002833e
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+
+OUTPUT FROM tests/vm/page-merge-stk:
+
+Copying tests/vm/page-merge-stk to scratch partition...
+Copying tests/vm/child-qsort to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run page-merge-stk
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 222 sectors (111 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'page-merge-stk' into the file system...
+Putting 'child-qsort' into the file system...
+Erasing ustar archive...
+Executing 'page-merge-stk':
+Kernel PANIC at ../../vm/frame.c:167 in frame_evict(): Panic: temp evict panic
+Call stack: 0xc002833e.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Timer: 3001 ticks
+Thread: 0 idle ticks, 257 kernel ticks, 2744 user ticks
+hda2 (filesys): 83 reads, 450 writes
+hda3 (scratch): 221 reads, 2 writes
+hda4 (swap): 0 reads, 0 writes
+Console: 1213 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off..========================================================================
+                       Bochs x86 Emulator 2.6.2
+                Built from SVN snapshot on May 26, 2013
+                  Compiled on Mar 17 2018 at 20:11:01
+========================================================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-read FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/mmap-read:
+
+Copying tests/vm/mmap-read to scratch partition...
+Copying ../../tests/vm/sample.txt to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-read
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 108 sectors (54 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-read' into the file system...
+Putting 'sample.txt' into the file system...
+Erasing ustar archive...
+Executing 'mmap-read':
+(mmap-read) begin
+(mmap-read) open "sample.txt"
+(mmap-read) mmap "sample.txt"
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-read
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-write FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/mmap-write:
+
+Copying tests/vm/mmap-write to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-write
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 105 sectors (52 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-write' into the file system...
+Erasing ustar archive...
+Executing 'mmap-write':
+(mmap-write) begin
+(mmap-write) create "sample.txt"
+(mmap-write) open "sample.txt"
+(mmap-write) mmap "sample.txt"
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-write
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-shuffle FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/mmap-shuffle:
+
+Copying tests/vm/mmap-shuffle to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-shuffle
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 112 sectors (56 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-shuffle' into the file system...
+Erasing ustar archive...
+Executing 'mmap-shuffle':
+(mmap-shuffle) begin
+(mmap-shuffle) create "buffer"
+(mmap-shuffle) open "buffer"
+(mmap-shuffle) mmap "buffer"
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-shuffle
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-twice FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/mmap-twice:
+
+Copying tests/vm/mmap-twice to scratch partition...
+Copying ../../tests/vm/sample.txt to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-twice
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 107 sectors (53 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-twice' into the file system...
+Putting 'sample.txt' into the file system...
+Erasing ustar archive...
+Executing 'mmap-twice':
+(mmap-twice) begin
+(mmap-twice) open "sample.txt" #0
+(mmap-twice) mmap "sample.txt" #0 at 0x10000000
+(mmap-twice) open "sample.txt" #1
+(mmap-twice) mmap "sample.txt" #1 at 0x20000000
+(mmap-twice) compare mmap'd file 0 against data
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-twice
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-unmap FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/mmap-unmap:
+
+Copying tests/vm/mmap-unmap to scratch partition...
+Copying ../../tests/vm/sample.txt to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-unmap
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 107 sectors (53 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-unmap' into the file system...
+Putting 'sample.txt' into the file system...
+Erasing ustar archive...
+Executing 'mmap-unmap':
+(mmap-unmap) begin
+(mmap-unmap) open "sample.txt"
+(mmap-unmap) mmap "sample.txt"
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-unmap
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-exit FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/mmap-exit:
+
+Copying tests/vm/mmap-exit to scratch partition...
+Copying tests/vm/child-mm-wrt to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-exit
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 206 sectors (103 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-exit' into the file system...
+Putting 'child-mm-wrt' into the file system...
+Erasing ustar archive...
+Executing 'mmap-exit':
+(mmap-exit) begin
+(child-mm-wrt) begin
+(child-mm-wrt) create "sample.txt"
+(child-mm-wrt) open "sample.txt"
+(child-mm-wrt) mmap "sample.txt"
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-exit
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-clean FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/mmap-clean:
+
+Copying tests/vm/mmap-clean to scratch partition...
+Copying ../../tests/vm/sample.txt to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-clean
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 110 sectors (55 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-clean' into the file system...
+Putting 'sample.txt' into the file system...
+Erasing ustar archive...
+Executing 'mmap-clean':
+(mmap-clean) begin
+(mmap-clean) open "sample.txt"
+(mmap-clean) mmap "sample.txt"
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-clean
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-close FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/mmap-close:
+
+Copying tests/vm/mmap-close to scratch partition...
+Copying ../../tests/vm/sample.txt to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-close
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 107 sectors (53 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-close' into the file system...
+Putting 'sample.txt' into the file system...
+Erasing ustar archive...
+Executing 'mmap-close':
+(mmap-close) begin
+(mmap-close) open "sample.txt"
+(mmap-close) mmap "sample.txt"
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-close
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-remove FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/mmap-remove:
+
+Copying tests/vm/mmap-remove to scratch partition...
+Copying ../../tests/vm/sample.txt to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-remove
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 109 sectors (54 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-remove' into the file system...
+Putting 'sample.txt' into the file system...
+Erasing ustar archive...
+Executing 'mmap-remove':
+(mmap-remove) begin
+(mmap-remove) open "sample.txt"
+(mmap-remove) mmap "sample.txt"
+(mmap-remove) remove "sample.txt"
+(mmap-remove) try to open "sample.txt"
+(mmap-remove) create "another"
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-remove
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/pt-bad-addr FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/pt-bad-addr:
+
+Copying tests/vm/pt-bad-addr to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run pt-bad-addr
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 101 sectors (50 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'pt-bad-addr' into the file system...
+Erasing ustar archive...
+Executing 'pt-bad-addr':
+(pt-bad-addr) begin
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run pt-bad-addr
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/pt-grow-bad FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/pt-grow-bad:
+
+Copying tests/vm/pt-grow-bad to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run pt-grow-bad
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 100 sectors (50 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'pt-grow-bad' into the file system...
+Erasing ustar archive...
+Executing 'pt-grow-bad':
+(pt-grow-bad) begin
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run pt-grow-bad
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-bad-fd FAILURE:
+
+run: try to mmap invalid fd: FAILED
+
+OUTPUT FROM tests/vm/mmap-bad-fd:
+
+Copying tests/vm/mmap-bad-fd to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-bad-fd
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 101 sectors (50 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-bad-fd' into the file system...
+Erasing ustar archive...
+Executing 'mmap-bad-fd':
+(mmap-bad-fd) begin
+(mmap-bad-fd) try to mmap invalid fd
+(mmap-bad-fd) try to mmap invalid fd: FAILED
+mmap-bad-fd: exit(1)
+Execution of 'mmap-bad-fd' complete.
+Timer: 232 ticks
+Thread: 0 idle ticks, 202 kernel ticks, 36 user ticks
+hda2 (filesys): 61 reads, 206 writes
+hda3 (scratch): 100 reads, 2 writes
+hda4 (swap): 0 reads, 0 writes
+Console: 1057 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off..========================================================================
+                       Bochs x86 Emulator 2.6.2
+                Built from SVN snapshot on May 26, 2013
+                  Compiled on Mar 17 2018 at 20:11:01
+========================================================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-inherit FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/mmap-inherit:
+
+Copying tests/vm/mmap-inherit to scratch partition...
+Copying ../../tests/vm/sample.txt to scratch partition...
+Copying tests/vm/child-inherit to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-inherit
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 208 sectors (104 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-inherit' into the file system...
+Putting 'sample.txt' into the file system...
+Putting 'child-inherit' into the file system...
+Erasing ustar archive...
+Executing 'mmap-inherit':
+(mmap-inherit) begin
+(mmap-inherit) open "sample.txt"
+(mmap-inherit) mmap "sample.txt"
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-inherit
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-null FAILURE:
+
+run: try to mmap at address 0: FAILED
+
+OUTPUT FROM tests/vm/mmap-null:
+
+Copying tests/vm/mmap-null to scratch partition...
+Copying ../../tests/vm/sample.txt to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-null
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 105 sectors (52 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-null' into the file system...
+Putting 'sample.txt' into the file system...
+Erasing ustar archive...
+Executing 'mmap-null':
+(mmap-null) begin
+(mmap-null) open "sample.txt"
+(mmap-null) try to mmap at address 0
+(mmap-null) try to mmap at address 0: FAILED
+mmap-null: exit(1)
+Execution of 'mmap-null' complete.
+Timer: 259 ticks
+Thread: 0 idle ticks, 222 kernel ticks, 43 user ticks
+hda2 (filesys): 92 reads, 216 writes
+hda3 (scratch): 104 reads, 2 writes
+hda4 (swap): 0 reads, 0 writes
+Console: 1120 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off..========================================================================
+                       Bochs x86 Emulator 2.6.2
+                Built from SVN snapshot on May 26, 2013
+                  Compiled on Mar 17 2018 at 20:11:01
+========================================================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-zero FAILURE:
+
+Kernel panic in run: PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+0xc0029ea2: hash_bytes (.../../lib/kernel/hash.c:276)
+
+OUTPUT FROM tests/vm/mmap-zero:
+
+Copying tests/vm/mmap-zero to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-zero
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 102 sectors (51 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-zero' into the file system...
+Erasing ustar archive...
+Executing 'mmap-zero':
+(mmap-zero) begin
+(mmap-zero) create empty file "empty"
+(mmap-zero) open "empty"
+(mmap-zero) mmap "empty"
+Kernel PANIC at ../../threads/thread.c:294 in thread_current(): assertion `is_thread (t)' failed.
+Call stack: 0xc002833e 0xc0029ea2 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Kernel PANIC recursion at ../../threads/thread.c:294 in thread_current().
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-zero
+Pintos booting with 4,096 kB RAM...
+[...details of reboot(s) omitted...]
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-misalign FAILURE:
+
+run: try to mmap at misaligned address: FAILED
+
+OUTPUT FROM tests/vm/mmap-misalign:
+
+Copying tests/vm/mmap-misalign to scratch partition...
+Copying ../../tests/vm/sample.txt to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-misalign
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 105 sectors (52 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-misalign' into the file system...
+Putting 'sample.txt' into the file system...
+Erasing ustar archive...
+Executing 'mmap-misalign':
+(mmap-misalign) begin
+(mmap-misalign) open "sample.txt"
+(mmap-misalign) try to mmap at misaligned address
+(mmap-misalign) try to mmap at misaligned address: FAILED
+mmap-misalign: exit(1)
+Execution of 'mmap-misalign' complete.
+Timer: 262 ticks
+Thread: 0 idle ticks, 222 kernel ticks, 46 user ticks
+hda2 (filesys): 92 reads, 216 writes
+hda3 (scratch): 104 reads, 2 writes
+hda4 (swap): 0 reads, 0 writes
+Console: 1174 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off..========================================================================
+                       Bochs x86 Emulator 2.6.2
+                Built from SVN snapshot on May 26, 2013
+                  Compiled on Mar 17 2018 at 20:11:01
+========================================================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-over-code FAILURE:
+
+run: try to mmap over code segment: FAILED
+
+OUTPUT FROM tests/vm/mmap-over-code:
+
+Copying tests/vm/mmap-over-code to scratch partition...
+Copying ../../tests/vm/sample.txt to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-over-code
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 105 sectors (52 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-over-code' into the file system...
+Putting 'sample.txt' into the file system...
+Erasing ustar archive...
+Executing 'mmap-over-code':
+(mmap-over-code) begin
+(mmap-over-code) open "sample.txt"
+(mmap-over-code) try to mmap over code segment
+(mmap-over-code) try to mmap over code segment: FAILED
+mmap-over-code: exit(1)
+Execution of 'mmap-over-code' complete.
+Timer: 263 ticks
+Thread: 0 idle ticks, 223 kernel ticks, 46 user ticks
+hda2 (filesys): 92 reads, 216 writes
+hda3 (scratch): 104 reads, 2 writes
+hda4 (swap): 0 reads, 0 writes
+Console: 1175 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off..========================================================================
+                       Bochs x86 Emulator 2.6.2
+                Built from SVN snapshot on May 26, 2013
+                  Compiled on Mar 17 2018 at 20:11:01
+========================================================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-over-data FAILURE:
+
+run: try to mmap over data segment: FAILED
+
+OUTPUT FROM tests/vm/mmap-over-data:
+
+Copying tests/vm/mmap-over-data to scratch partition...
+Copying ../../tests/vm/sample.txt to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-over-data
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 105 sectors (52 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-over-data' into the file system...
+Putting 'sample.txt' into the file system...
+Erasing ustar archive...
+Executing 'mmap-over-data':
+(mmap-over-data) begin
+(mmap-over-data) open "sample.txt"
+(mmap-over-data) try to mmap over data segment
+(mmap-over-data) try to mmap over data segment: FAILED
+mmap-over-data: exit(1)
+Execution of 'mmap-over-data' complete.
+Timer: 263 ticks
+Thread: 0 idle ticks, 223 kernel ticks, 46 user ticks
+hda2 (filesys): 92 reads, 216 writes
+hda3 (scratch): 104 reads, 2 writes
+hda4 (swap): 0 reads, 0 writes
+Console: 1175 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off..========================================================================
+                       Bochs x86 Emulator 2.6.2
+                Built from SVN snapshot on May 26, 2013
+                  Compiled on Mar 17 2018 at 20:11:01
+========================================================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-over-stk FAILURE:
+
+run: try to mmap over stack segment: FAILED
+
+OUTPUT FROM tests/vm/mmap-over-stk:
+
+Copying tests/vm/mmap-over-stk to scratch partition...
+Copying ../../tests/vm/sample.txt to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-over-stk
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 105 sectors (52 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-over-stk' into the file system...
+Putting 'sample.txt' into the file system...
+Erasing ustar archive...
+Executing 'mmap-over-stk':
+(mmap-over-stk) begin
+(mmap-over-stk) open "sample.txt"
+(mmap-over-stk) try to mmap over stack segment
+(mmap-over-stk) try to mmap over stack segment: FAILED
+mmap-over-stk: exit(1)
+Execution of 'mmap-over-stk' complete.
+Timer: 263 ticks
+Thread: 0 idle ticks, 223 kernel ticks, 46 user ticks
+hda2 (filesys): 92 reads, 216 writes
+hda3 (scratch): 104 reads, 2 writes
+hda4 (swap): 0 reads, 0 writes
+Console: 1168 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off..========================================================================
+                       Bochs x86 Emulator 2.6.2
+                Built from SVN snapshot on May 26, 2013
+                  Compiled on Mar 17 2018 at 20:11:01
+========================================================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/vm/mmap-overlap FAILURE:
+
+run: try to mmap "zeros" again: FAILED
+
+OUTPUT FROM tests/vm/mmap-overlap:
+
+Copying tests/vm/mmap-overlap to scratch partition...
+Copying tests/vm/zeros to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run mmap-overlap
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 117 sectors (58 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'mmap-overlap' into the file system...
+Putting 'zeros' into the file system...
+Erasing ustar archive...
+Executing 'mmap-overlap':
+(mmap-overlap) begin
+(mmap-overlap) open "zeros" once
+(mmap-overlap) mmap "zeros"
+(mmap-overlap) open "zeros" again
+(mmap-overlap) try to mmap "zeros" again
+(mmap-overlap) try to mmap "zeros" again: FAILED
+mmap-overlap: exit(1)
+Execution of 'mmap-overlap' complete.
+Timer: 275 ticks
+Thread: 0 idle ticks, 227 kernel ticks, 54 user ticks
+hda2 (filesys): 95 reads, 240 writes
+hda3 (scratch): 116 reads, 2 writes
+hda4 (swap): 0 reads, 0 writes
+Console: 1206 characters output
+Keyboard: 0 keys pressed
+Exception: 0 page faults
+Powering off..========================================================================
+                       Bochs x86 Emulator 2.6.2
+                Built from SVN snapshot on May 26, 2013
+                  Compiled on Mar 17 2018 at 20:11:01
+========================================================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/userprog/bad-read FAILURE:
+
+Kernel panic in run: PANIC at ../../lib/kernel/hash.c:272 in hash_bytes(): assertion `buf != NULL' failed.
+Call stack: 0xc002833e
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+
+OUTPUT FROM tests/userprog/bad-read:
+
+Copying tests/userprog/bad-read to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run bad-read
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 101 sectors (50 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'bad-read' into the file system...
+Erasing ustar archive...
+Executing 'bad-read':
+(bad-read) begin
+Kernel PANIC at ../../lib/kernel/hash.c:272 in hash_bytes(): assertion `buf != NULL' failed.
+Call stack: 0xc002833e 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Timer: 209 ticks
+Thread: 0 idle ticks, 185 kernel ticks, 24 user ticks
+hda2 (filesys): 62 reads, 206 writes
+hda3 (scratch): 100 reads, 2 writes
+hda4 (swap): 0 reads, 0 writes
+Console: 1178 characters output
+Keyboard: 0 keys pressed
+Exception: 1 page faults
+Powering off..========================================================================
+                       Bochs x86 Emulator 2.6.2
+                Built from SVN snapshot on May 26, 2013
+                  Compiled on Mar 17 2018 at 20:11:01
+========================================================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/userprog/bad-write FAILURE:
+
+Kernel panic in run: PANIC at ../../lib/kernel/hash.c:272 in hash_bytes(): assertion `buf != NULL' failed.
+Call stack: 0xc002833e
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+
+OUTPUT FROM tests/userprog/bad-write:
+
+Copying tests/userprog/bad-write to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run bad-write
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 101 sectors (50 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'bad-write' into the file system...
+Erasing ustar archive...
+Executing 'bad-write':
+(bad-write) begin
+Kernel PANIC at ../../lib/kernel/hash.c:272 in hash_bytes(): assertion `buf != NULL' failed.
+Call stack: 0xc002833e 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Timer: 209 ticks
+Thread: 0 idle ticks, 185 kernel ticks, 24 user ticks
+hda2 (filesys): 61 reads, 206 writes
+hda3 (scratch): 100 reads, 2 writes
+hda4 (swap): 0 reads, 0 writes
+Console: 1182 characters output
+Keyboard: 0 keys pressed
+Exception: 1 page faults
+Powering off..========================================================================
+                       Bochs x86 Emulator 2.6.2
+                Built from SVN snapshot on May 26, 2013
+                  Compiled on Mar 17 2018 at 20:11:01
+========================================================================
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
+
+DETAILS OF tests/userprog/bad-jump FAILURE:
+
+Kernel panic in run: PANIC at ../../lib/kernel/hash.c:272 in hash_bytes(): assertion `buf != NULL' failed.
+Call stack: 0xc002833e
+Translation of call stack:
+0xc002833e: debug_panic (.../../lib/kernel/debug.c:38)
+
+OUTPUT FROM tests/userprog/bad-jump:
+
+Copying tests/userprog/bad-jump to scratch partition...
+warning: can't find squish-pty, so terminal input will fail
+bochs -q
+PiLo hda1
+Loading...........
+Kernel command line: -q -f extract run bad-jump
+Pintos booting with 4,096 kB RAM...
+383 pages available in kernel pool.
+383 pages available in user pool.
+Calibrating timer...  204,600 loops/s.
+hda: 13,104 sectors (6 MB), model "BXHD00011", serial "Generic 1234"
+hda1: 186 sectors (93 kB), Pintos OS kernel (20)
+hda2: 4,096 sectors (2 MB), Pintos file system (21)
+hda3: 101 sectors (50 kB), Pintos scratch (22)
+hda4: 8,192 sectors (4 MB), Pintos swap (23)
+filesys: using hda2
+scratch: using hda3
+swap: using hda4
+Formatting file system...done.
+Boot complete.
+Extracting ustar archive from scratch device into file system...
+Putting 'bad-jump' into the file system...
+Erasing ustar archive...
+Executing 'bad-jump':
+(bad-jump) begin
+Kernel PANIC at ../../lib/kernel/hash.c:272 in hash_bytes(): assertion `buf != NULL' failed.
+Call stack: 0xc002833e 0.
+The `backtrace' program can make call stacks useful.
+Read "Backtraces" in the "Debugging Tools" chapter
+of the Pintos documentation for more information.
+Timer: 209 ticks
+Thread: 0 idle ticks, 185 kernel ticks, 24 user ticks
+hda2 (filesys): 62 reads, 206 writes
+hda3 (scratch): 100 reads, 2 writes
+hda4 (swap): 0 reads, 0 writes
+Console: 1178 characters output
+Keyboard: 0 keys pressed
+Exception: 1 page faults
+Powering off..========================================================================
+                       Bochs x86 Emulator 2.6.2
+                Built from SVN snapshot on May 26, 2013
+                  Compiled on Mar 17 2018 at 20:11:01
+========================================================================
