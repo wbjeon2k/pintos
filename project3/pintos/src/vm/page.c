@@ -26,6 +26,9 @@ struct SPTHT* create_new_SPT() {
 		PANIC("Panic at create_new_SPT : malloc fail, used all kernel pool");
 		return NULL;
 	}
+
+	hash_init(&new_spt, sptht_hf, sptht_hash_comp, NULL);
+
 	return new_spt;
 }
 
