@@ -115,7 +115,19 @@ bool enroll_spte_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint
 }
 
 bool enroll_spte_va(struct SPTHT* sptht, void* VA, void* PA) {
+	struct SPTE* new_spte;
+	new_spte = create_new_SPTE(VA);
 
+	new_spte->PA = PA;
+	new_spte->isValid = true; // pa page is on frame
+	new_spte->spte_flags = 0;
+
+
+	if (insert_SPTE(sptht, new_spte)) return true;
+	else {
+		free(new_spte);
+		return false;
+	}
 }
 
 int enroll_spte_swapdisk(void* VA) {
