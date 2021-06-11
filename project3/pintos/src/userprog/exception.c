@@ -19,9 +19,9 @@ inline bool va_check(void* ptr) {
     if (!is_user_vaddr(ptr)) return false;
     if (ptr == NULL) return false;
 
-    struct thread* cur = thread_current();
+    //struct thread* cur = thread_current();
 
-    if (pagedir_get_page(cur->pagedir, ptr) == NULL) return false;
+    //if (pagedir_get_page(cur->pagedir, ptr) == NULL) return false;
 
     return true;
 }
@@ -186,43 +186,54 @@ page_fault(struct intr_frame* f)
 
     struct thread* cur = thread_current();
 
-    void* esp = NULL;
+    void* esp = f->esp;
 
-    if (user) esp = f->esp;
-    else esp = cur->kernel_esp;
+    //if (user) esp = f->esp;
+    //else esp = cur->kernel_esp;
 
     void* fault_addr_rounddown = (void*)pg_round_down(fault_addr);
 
-    //load_on_pagefault(struct SPTHT*, void*, uint32_t*)
-    if (load_on_pagefault(cur->sptht, fault_addr_rounddown, cur->pagedir)) return;
+    if (!va_check(fault_addr_rounddown)) {
+        exit(-1);
+    }
 
-    if (!stack_grow_check(fault_addr, esp)) {
-        if (user) exit(-1);
+    struct SPTE* tmp_spte;
+    tmp_spte = find_SPTE(cur->sptht, fault_addr_rounddown);
 
-        if (!user) { // kernel mode
-            f->eip = (void*)f->eax;
-            f->eax = 0xffffffff;
-            return;
-        }
+    if (tmp_spte != NULL) {
+        //load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir)
+        if (tmp_spte->isValid == false) load_on_pagefault(cur->sptht, fault_addr_rounddown, cur->pagedir);
 
         return;
     }
-
-    //bool enroll_spte_zeropage(struct SPTHT* sptht, void* VA)
-    if (!enroll_spte_zeropage(cur->sptht, fault_addr_rounddown)) {
-        if (user) exit(-1);
-
-        if (!user) { // kernel mode
-            f->eip = (void*)f->eax;
-            f->eax = 0xffffffff;
+    else {
+        if (stack_grow_check(fault_addr_rounddown, esp)) {
+            enroll_spte_zeropage(cur->sptht, fault_addr_rounddown);
+            load_on_pagefault(cur->sptht, fault_addr_rounddown, cur->pagedir);
             return;
         }
+        else {
+            if (user) exit(-1);
 
-        return;
+            if (!user) { // kernel mode
+                f->eip = (void*)f->eax;
+                f->eax = 0xffffffff;
+                return;
+            }
+
+            /* To implement virtual memory, delete the rest of the function
+               body, and replace it with code that brings in the page to
+               which fault_addr refers. */
+
+            printf("Page fault at %p: %s error %s page in %s context.\n",
+                fault_addr,
+                not_present ? "not present" : "rights violation",
+                write ? "writing" : "reading",
+                user ? "user" : "kernel");
+            kill(f);
+            return;
+        }
     }
-  
-  //load_on_pagefault(struct SPTHT*, void*, uint32_t*)
-  if (load_on_pagefault(cur->sptht, fault_addr_rounddown, cur->pagedir)) return;
 
 #endif // VM
 
