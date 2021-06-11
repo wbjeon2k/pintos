@@ -27,7 +27,9 @@ struct SPTHT* create_new_SPT() {
 		return NULL;
 	}
 
-	hash_init(&new_spt, sptht_hf, sptht_hash_comp, NULL);
+	hash_init(&(new_spt->hash_table), sptht_hf, sptht_hash_comp, NULL);
+
+	printf("create_new_SPT success\n");
 
 	return new_spt;
 }
