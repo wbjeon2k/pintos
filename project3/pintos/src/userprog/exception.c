@@ -186,7 +186,7 @@ page_fault(struct intr_frame* f)
 
     struct thread* cur = thread_current();
 
-    //void* esp = f->esp;
+    void* esp = NULL;
 
     if (user) esp = f->esp;
     else esp = cur->kernel_esp;
