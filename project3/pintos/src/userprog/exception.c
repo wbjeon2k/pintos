@@ -123,9 +123,9 @@ kill (struct intr_frame *f)
     }
 }
 
-bool stack_grow_check(void* VA, void* esp) {
+bool stack_grow_check(void* VA, void* esp, struct intr_frame* f) {
     bool ret = true;
-    ret = (esp <= VA || VA == esp - 4 || VA == esp - 32);
+    ret = (esp <= VA || VA == f->esp - 4 || VA == f->esp - 32);
     ret = (is_user_vaddr(VA) && PHYS_BASE - MAX_STACK_8MB <= VA);
     return ret;
 }
@@ -215,6 +215,7 @@ page_fault(struct intr_frame* f)
             printf("checkpoint3\n");
             if(enroll_spte_zeropage(cur->sptht, fault_addr_rounddown)) printf("checkpoint3-1\n");
             if(load_on_pagefault(cur->sptht, fault_addr_rounddown, cur->pagedir)) printf("checkpoint3-2\n");
+            f->esp = fault_addr_rounddown;
             return;
         }
         else {
