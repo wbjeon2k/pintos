@@ -196,7 +196,7 @@ syscall_handler (struct intr_frame *f)
 
     uint32_t* esp_copy = f->esp;
     //check esp
-    if (!check_esp(esp_offset(f, 0))) exit(-1);
+    //if (!check_esp(esp_offset(f, 0))) exit(-1);
 
     uint32_t syscall_nr = *esp_copy;
 
