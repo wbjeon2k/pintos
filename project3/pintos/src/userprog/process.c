@@ -21,6 +21,8 @@
 
 /** VM **/
 #include "vm/frame.h"
+#include "vm/page.h"
+#include "vm/swap.h"
 
 static thread_func start_process NO_RETURN;
 static bool load (const char *cmdline, void (**eip) (void), void **esp);
@@ -570,6 +572,12 @@ load (const char *file_name, void (**eip) (void), void **esp)
   t->pagedir = pagedir_create ();
   if (t->pagedir == NULL) 
     goto done;
+
+  /* VM sptht*/
+#ifdef VM
+  t->sptht = create_new_SPT();
+#endif // VM
+
   process_activate ();
 
   /* Open executable file. */
@@ -770,6 +778,12 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       if (kpage == NULL)
         return false;
 
+#ifdef VM
+      struct thread* cur = thread_current();
+      if (!enroll_spte_filesys(cur->sptht, file, ofs, upage, read_bytes, zero_bytes, writable)) return false;
+#endif // VM
+
+
       /* Load this page. */
       if (file_read (file, kpage, page_read_bytes) != (int) page_read_bytes)
         {
@@ -833,6 +847,12 @@ install_page (void *upage, void *kpage, bool writable)
 
   /* Verify that there's not already a page at that virtual
      address, then map our page there. */
-  return (pagedir_get_page (t->pagedir, upage) == NULL
-          && pagedir_set_page (t->pagedir, upage, kpage, writable));
+  bool pte_set;
+  pte_set = (pagedir_get_page(t->pagedir, upage) == NULL && pagedir_set_page (t->pagedir, upage, kpage, writable));
+
+  if (pte_set) {
+      bool spte_set;
+      spte_set = 
+  }
+  else return false;
 }

@@ -15,6 +15,10 @@
 #include "userprog/process.h"
 #endif
 
+#ifdef VM
+#include "vm/page.h"
+#endif
+
 /* Random value for struct thread's `magic' member.
    Used to detect stack overflow.  See the big comment at the top
    of thread.h for details. */
@@ -516,6 +520,9 @@ init_thread (struct thread *t, const char *name, int priority)
   t->load_success = false;
   t->going_to_exit = false;
   //t->parent_thread = thread_current();
+
+
+
 }
 
 /* Allocates a SIZE-byte frame at the top of thread T's stack and

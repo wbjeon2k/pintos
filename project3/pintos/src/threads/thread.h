@@ -13,6 +13,10 @@
 #include "threads/vaddr.h"
 #include "filesys/file.h"
 
+#ifdef VM
+#include "vm/page.h"
+#endif
+
 /* States in a thread's life cycle. */
 enum thread_status
   {
@@ -154,6 +158,10 @@ struct thread
     /* Owned by userprog/process.c. */
     uint32_t *pagedir;                  /* Page directory. */
 
+#endif
+
+#ifdef VM
+    struct SPTHT* sptht;
 #endif
     /* Owned by thread.c. */
     unsigned magic;                     /* Detects stack overflow. */
