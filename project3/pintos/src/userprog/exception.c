@@ -211,7 +211,7 @@ page_fault(struct intr_frame* f)
         return;
     }
     else {
-        if (stack_grow_check(fault_addr_rounddown, esp)) {
+        if (stack_grow_check(fault_addr_rounddown, esp, f)) {
             printf("checkpoint3\n");
             if(enroll_spte_zeropage(cur->sptht, fault_addr_rounddown)) printf("checkpoint3-1\n");
             if(load_on_pagefault(cur->sptht, fault_addr_rounddown, cur->pagedir)) printf("checkpoint3-2\n");
