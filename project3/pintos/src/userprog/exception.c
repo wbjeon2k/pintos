@@ -222,11 +222,7 @@ page_fault(struct intr_frame* f)
 
 #endif // VM
 
-
-  //skip page fault error message --> pass bad-ptr series
-  if (user && !not_present) exit(-1);
-
-  if (user && !va_check(fault_addr)) exit(-1);
+  if (user) exit(-1);
 
   if (!user) { // kernel mode
       f->eip = (void*)f->eax;
