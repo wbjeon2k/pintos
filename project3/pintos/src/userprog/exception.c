@@ -194,6 +194,7 @@ page_fault(struct intr_frame* f)
     void* fault_addr_rounddown = (void*)pg_round_down(fault_addr);
 
     if (!va_check(fault_addr_rounddown)) {
+        printf("checkpoint1\n");
         exit(-1);
     }
 
@@ -202,17 +203,22 @@ page_fault(struct intr_frame* f)
 
     if (tmp_spte != NULL) {
         //load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir)
-        if (tmp_spte->isValid == false) load_on_pagefault(cur->sptht, fault_addr_rounddown, cur->pagedir);
+        if (tmp_spte->isValid == false) {
+            printf("checkpoint2\n");
+            load_on_pagefault(cur->sptht, fault_addr_rounddown, cur->pagedir);
+        }
 
         return;
     }
     else {
         if (stack_grow_check(fault_addr_rounddown, esp)) {
+            printf("checkpoint3\n");
             enroll_spte_zeropage(cur->sptht, fault_addr_rounddown);
             load_on_pagefault(cur->sptht, fault_addr_rounddown, cur->pagedir);
             return;
         }
         else {
+            printf("checkpoint4\n");
             if (user) exit(-1);
 
             if (!user) { // kernel mode
