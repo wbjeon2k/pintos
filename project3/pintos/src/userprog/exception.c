@@ -160,6 +160,16 @@ page_fault (struct intr_frame *f)
   write = (f->error_code & PF_W) != 0;
   user = (f->error_code & PF_U) != 0;
 
+#ifdef VM
+
+  struct thread* cur = thread_current();
+  void* fault_addr_rounddown = (void*)pg_round_down(fault_addr);
+  //load_on_pagefault(struct SPTHT*, void*, uint32_t*)
+  if (load_on_pagefault(cur->sptht, fault_addr_rounddown, cur->pagedir)) return;
+
+#endif // VM
+
+
   //skip page fault error message --> pass bad-ptr series
   if (user && !not_present) exit(-1);
 

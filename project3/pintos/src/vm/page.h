@@ -92,6 +92,8 @@ bool get_a_zeropage();
 bool enroll_spte_zeropage();
 
 
+bool load_on_pagefault(struct SPTHT*, void*, uint32_t*);
+
 /*
   2.search in SPT table
   3.find SPTE
