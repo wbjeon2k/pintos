@@ -177,6 +177,19 @@ bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir) {
 
 	bool load_check = false;
 
+	if (spte->isValid == true) {
+		if (pagedir_set_page(pagedir, spte->VA, get_frame, spte->writable) == false) {
+			frame_free(get_frame);
+			return false;
+		}
+
+		//8. set SPTE valid --> make it on frame
+		spte->isValid = true;
+		spte->PA = get_frame;
+
+		return true;
+	}
+
 	//5-1
 	//off_t file_read(struct file* file, void* buffer, off_t size)
 	if (spte->spte_flags == SPTE_FILESYS) {
