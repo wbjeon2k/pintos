@@ -75,6 +75,7 @@ uint32_t* esp_offset(const struct intr_frame* f, int i) {
 
 //포인터 아닌 일반 변수들까지 체크할 필요 없음. 
 inline bool check_VA(void* ptr) {
+    printf("check VA start\n");
     if(!is_user_vaddr(ptr)) return false;
     if (ptr == NULL) return false;
     if (ptr < 0x08048000) return false;
