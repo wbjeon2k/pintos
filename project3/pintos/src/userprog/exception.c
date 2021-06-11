@@ -192,6 +192,9 @@ page_fault(struct intr_frame* f)
 
     void* fault_addr_rounddown = (void*)pg_round_down(fault_addr);
 
+    //load_on_pagefault(struct SPTHT*, void*, uint32_t*)
+    if (load_on_pagefault(cur->sptht, fault_addr_rounddown, cur->pagedir)) return;
+
     if (!stack_grow_check(fault_addr, esp)) {
         if (user) exit(-1);
 
