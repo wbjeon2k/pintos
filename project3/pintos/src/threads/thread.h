@@ -163,6 +163,9 @@ struct thread
 #ifdef VM
     struct SPTHT* sptht;
 #endif
+
+    void* kernel_esp;
+
     /* Owned by thread.c. */
     unsigned magic;                     /* Detects stack overflow. */
   };

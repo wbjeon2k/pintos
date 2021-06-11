@@ -6,6 +6,9 @@
 #include "threads/thread.h"
 #include "lib/user/syscall.h"
 
+
+#define MAX_STACK_8MB 8e+6
+
 /* Number of page faults processed. */
 static long long page_fault_cnt;
 
