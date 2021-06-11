@@ -136,6 +136,22 @@ bool enroll_spte_va(struct SPTHT* sptht, void* VA, void* PA, bool writable) {
 	}
 }
 
+bool enroll_spte_zeropage(struct SPTHT* sptht, void* VA) {
+	struct SPTE* new_spte;
+	new_spte = create_new_SPTE(VA);
+
+	new_spte->PA = NULL;
+	new_spte->isValid = false;
+	new_spte->spte_flags = SPTE_ZERO;
+
+	if (insert_SPTE(sptht, new_spte)) return true;
+	else {
+		free(new_spte);
+		return false;
+	}
+
+}
+
 int enroll_spte_swapdisk(void* VA) {
 	struct SPTE* new_spte;
 	new_spte = create_new_SPTE(VA);

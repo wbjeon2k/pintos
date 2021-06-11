@@ -89,7 +89,7 @@ bool enroll_spte_filesys(struct SPTHT* , struct file* , off_t, uint8_t* , uint32
 bool enroll_spte_va(struct SPTHT*, void*, void*, bool);
 int enroll_spte_swapdisk(void* VA);
 bool get_a_zeropage();
-bool enroll_spte_zeropage();
+bool enroll_spte_zeropage(struct SPTHT*, void*);
 
 
 bool load_on_pagefault(struct SPTHT*, void*, uint32_t*);
