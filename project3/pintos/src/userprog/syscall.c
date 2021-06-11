@@ -80,10 +80,12 @@ inline bool check_VA(void* ptr) {
     if (ptr < 0x08048000) return false;
     struct thread* cur = thread_current();
 
-    //if (pagedir_get_page(cur->pagedir, ptr) == NULL) return false;
+    if (pagedir_get_page(cur->pagedir, ptr) == NULL) return false;
+    /*
     void* ptr_page = (void*)pg_round_down(ptr);
     struct SPTE* tmp = find_SPTE(cur->sptht, ptr_page);
     if (tmp == NULL) return false;
+    */
 
     return true;
 }
