@@ -764,8 +764,8 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
   ASSERT (ofs % PGSIZE == 0);
 
   file_seek (file, ofs);
-  while (read_bytes > 0 || zero_bytes > 0) 
-    {
+  while (read_bytes > 0 || zero_bytes > 0)
+  {
       /* Calculate how to fill this page.
          We will read PAGE_READ_BYTES bytes from FILE
          and zero the final PAGE_ZERO_BYTES bytes. */
@@ -776,11 +776,14 @@ load_segment (struct file *file, off_t ofs, uint8_t *upage,
       //uint8_t *kpage = palloc_get_page (PAL_USER);
       uint8_t* kpage = frame_alloc(PAL_USER);
       if (kpage == NULL)
-        return false;
+          return false;
 
 #ifdef VM
       struct thread* cur = thread_current();
-      if (!enroll_spte_filesys(cur->sptht, file, ofs, upage, read_bytes, zero_bytes, writable)) return false;
+      if (!enroll_spte_filesys(cur->sptht, file, ofs, upage, read_bytes, zero_bytes, writable)) {
+          frame_free(kpage);
+          return false;
+      }
 #endif // VM
 
 
@@ -858,7 +861,7 @@ install_page (void *upage, void *kpage, bool writable)
   if (pte_set) {
 #ifdef VM
       bool spte_set;
-      spte_set = enroll_spte_va(t->sptht, upage, kpage);
+      spte_set = enroll_spte_va(t->sptht, upage, kpage,writable);
       pte_set = (pte_set && spte_set);
 #endif
       return pte_set;
