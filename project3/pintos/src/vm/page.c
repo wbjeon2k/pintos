@@ -41,6 +41,9 @@ struct SPTE* create_new_SPTE(void* VA) {
 		PANIC("Panic at create_new_SPTE : malloc fail, used all kernel pool");
 		return NULL;
 	}
+
+	VA = (void*)pg_round_down(VA);
+
 	new_spte->VA = VA;
 	return new_spte;
 }
@@ -77,6 +80,8 @@ bool is_inside_SPTE(struct SPTHT* sptht, struct SPTE* spte) {
 }
 
 struct SPTE* find_SPTE(struct SPTHT* sptht, void* VA) {
+	VA = (void*)pg_round_down(VA);
+
 	struct SPTE tmp_spte;
 	tmp_spte.VA = VA;
 	if (!is_inside_SPTE(sptht, &tmp_spte)) return NULL;
@@ -122,6 +127,8 @@ bool enroll_spte_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint
 }
 
 bool enroll_spte_va(struct SPTHT* sptht, void* VA, void* PA, bool writable) {
+	VA = (void*)pg_round_down(VA);
+
 	struct SPTE* new_spte;
 	new_spte = create_new_SPTE(VA);
 
@@ -139,6 +146,8 @@ bool enroll_spte_va(struct SPTHT* sptht, void* VA, void* PA, bool writable) {
 }
 
 bool enroll_spte_zeropage(struct SPTHT* sptht, void* VA) {
+	VA = (void*)pg_round_down(VA);
+
 	struct SPTE* new_spte;
 	new_spte = create_new_SPTE(VA);
 
@@ -181,6 +190,8 @@ int enroll_spte_swapdisk(void* VA) {
  */
 ///* Owned by userprog/process.c. */ uint32_t* pagedir;
 bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir) {
+	VA = (void*)pg_round_down(VA);
+
 	//2,3
 	struct SPTE* spte;
 	spte = find_SPTE(sptht, VA);
