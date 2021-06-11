@@ -216,9 +216,6 @@ page_fault(struct intr_frame* f)
 
         return;
     }
-
-
-
   
   //load_on_pagefault(struct SPTHT*, void*, uint32_t*)
   if (load_on_pagefault(cur->sptht, fault_addr_rounddown, cur->pagedir)) return;
