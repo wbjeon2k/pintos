@@ -74,7 +74,7 @@ uint32_t* esp_offset(const struct intr_frame* f, int i) {
 }
 
 //포인터 아닌 일반 변수들까지 체크할 필요 없음. 
-inline bool check_VA(void* ptr) {
+inline bool check_esp(void* ptr) {
     //printf("check VA start\n");
     if(!is_user_vaddr(ptr)) return false;
     if (ptr == NULL) return false;
@@ -87,6 +87,15 @@ inline bool check_VA(void* ptr) {
     struct SPTE* tmp = find_SPTE(cur->sptht, ptr_page);
     if (tmp == NULL) return false;
     */
+
+    return true;
+}
+
+inline bool check_VA(void* ptr) {
+
+    void* ptr_page = (void*)pg_round_down(ptr);
+    struct SPTE* tmp = find_SPTE(cur->sptht, ptr_page);
+    if (tmp == NULL) return false;
 
     return true;
 }
@@ -187,7 +196,7 @@ syscall_handler (struct intr_frame *f)
 
     uint32_t* esp_copy = f->esp;
     //check esp
-    if (!check_VA(esp_offset(f, 0))) exit(-1);
+    if (!check_esp(esp_offset(f, 0))) exit(-1);
 
     uint32_t syscall_nr = *esp_copy;
 
