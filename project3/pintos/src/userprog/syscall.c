@@ -210,7 +210,7 @@ syscall_handler (struct intr_frame *f)
 
     if (syscall_nr == SYS_EXIT) {
         //process_exit();
-        if (!check_VA(esp_offset(f, 1))) exit(-1);
+        //if (!check_VA(esp_offset(f, 1))) exit(-1);
         //printf("argument1 address %x\n", esp_offset(f, 1));
 
         int exit_code = *esp_offset(f, 1);
@@ -220,7 +220,7 @@ syscall_handler (struct intr_frame *f)
 
     if (syscall_nr == SYS_EXEC) {
         //1 parameter
-        if (!check_VA(esp_offset(f, 1))) exit(-1);
+        //if (!check_VA(esp_offset(f, 1))) exit(-1);
         //printf("argument1 address %x\n", esp_offset(f, 1));
 
         char* cmd = *esp_offset(f, 1);
