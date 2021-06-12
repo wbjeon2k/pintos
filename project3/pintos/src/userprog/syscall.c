@@ -517,6 +517,7 @@ void munmap(int mmap_id) {
         if (f->mmap_id == mmap_id) {
             void* upage = f->base_addr;
             int i = 0;
+            /*
             int s = (f->file_size / PGSIZE) + ((f->file_size % PGSIZE) == 0 ? 0 : 1);
             struct file* mapped_file = f->file;
             for (i = 0; i < s; ++i) {
@@ -536,6 +537,36 @@ void munmap(int mmap_id) {
                 }
 
                 delete_SPTE(cur->sptht, tmp_spte);
+            }
+
+            */
+
+            int read_bytes = f->file_size;
+            int zero_bytes = 0;
+            int ofs = 0;
+            while (read_bytes > 0 || zero_bytes > 0) {
+                size_t page_read_bytes = read_bytes < PGSIZE ? read_bytes : PGSIZE;
+                size_t page_zero_bytes = PGSIZE - page_read_bytes;
+
+                struct SPTE* tmp_spte;
+                void* ith_page = upage + i * PGSIZE;
+                tmp_spte = find_SPTE(cur->sptht, ith_page);
+
+                if (pagedir_is_dirty(cur->pagedir, ith_page)) {
+                    lock_acquire(&file_lock);
+
+                    file_write_at(mapped_file, ith_page, page_read_bytes, ofs);
+
+                    lock_release(&file_lock);
+                }
+
+                delete_SPTE(cur->sptht, tmp_spte);
+
+
+                ++i
+                read_bytes -= page_read_bytes;
+                zero_bytes -= page_zero_bytes;
+                ofs += PGSIZE;
             }
 
             list_remove(&(f->mmap_list_elem));
