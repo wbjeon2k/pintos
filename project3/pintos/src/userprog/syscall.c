@@ -563,7 +563,7 @@ void munmap(int mmap_id) {
                 delete_SPTE(cur->sptht, tmp_spte);
 
 
-                ++i
+                ++i;
                 read_bytes -= page_read_bytes;
                 zero_bytes -= page_zero_bytes;
                 ofs += PGSIZE;
