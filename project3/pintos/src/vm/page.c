@@ -330,7 +330,7 @@ bool sptht_hash_comp(const struct hash_elem* a,
 	tmp1 = hash_entry(a, struct SPTE, spte_hash_elem);
 	tmp2 = hash_entry(b, struct SPTE, spte_hash_elem);
 
-	ASSERT(tmp1 != tmp2);
+	//ASSERT(tmp1 != tmp2);
 	if (tmp1->VA > tmp2->VA) return true;
 	else return false;
 }
