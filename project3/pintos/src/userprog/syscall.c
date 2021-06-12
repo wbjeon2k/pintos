@@ -440,7 +440,7 @@ int mmap(int fd, void* addr) {
     mentry = create_mmap_entry();
     if (mentry == NULL) return -1;
 
-    mentry->file = file;
+    mentry->file = fd_file;
     mentry->base_addr = addr;
     mentry->file_size = file_size;
     ++cur->last_mmap;
