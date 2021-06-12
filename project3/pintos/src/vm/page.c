@@ -154,6 +154,7 @@ bool enroll_spte_zeropage(struct SPTHT* sptht, void* VA) {
 	new_spte->PA = NULL;
 	new_spte->isValid = false;
 	new_spte->spte_flags = SPTE_ZERO;
+	//pass some grow stack
 	new_spte->writable = true;
 
 	if (insert_SPTE(sptht, new_spte)) return true;
