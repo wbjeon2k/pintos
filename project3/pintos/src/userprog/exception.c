@@ -202,12 +202,18 @@ page_fault(struct intr_frame* f)
     tmp_spte = find_SPTE(cur->sptht, fault_addr_rounddown);
 
     if (tmp_spte != NULL) {
+        
         //load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir)
         if (tmp_spte->isValid == false) {
             //printf("checkpoint2\n");
             load_on_pagefault(cur->sptht, fault_addr_rounddown, cur->pagedir);
         }
-
+        else {
+            if (pagedir_get_page(cur->pagedir, fault_addr_rounddown)) return;
+            else exit(-1);
+        }
+        //void * pagedir_get_page(uint32_t * pd, const void* uaddr)
+        
         return;
     }
     else {
