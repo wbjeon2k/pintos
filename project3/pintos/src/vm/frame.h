@@ -47,7 +47,7 @@ struct FTE {
 void frame_init(void);
 void* frame_alloc(palloc_flags);
 void frame_free(void*);
-void* frame_evict();
+void* frame_evict(void);
 
 unsigned frame_hf(const struct hash_elem*, void* UNUSED);
 bool frame_hash_comp(const struct hash_elem*, const struct hash_elem*, void* UNUSED);

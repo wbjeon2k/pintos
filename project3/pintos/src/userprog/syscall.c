@@ -368,7 +368,7 @@ struct mmap_entry {
 struct mmap_entry* create_mmap_entry() {
     struct mmap_entry* new_mmap = NULL;
     new_mmap = malloc(sizeof(struct SPTE));
-    if (new_spte == NULL) {
+    if (new_mmap == NULL) {
         PANIC("Panic at create_new_SPTE : malloc fail, used all kernel pool");
         return NULL;
     }
@@ -408,7 +408,6 @@ int mmap(int fd, void* addr) {
     }
 
     //enroll spte
-    int i = 0;
     int ofs = 0;
     int last_enroll = 0;
     void* upage = addr;
