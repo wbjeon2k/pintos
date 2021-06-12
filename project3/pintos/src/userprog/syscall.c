@@ -385,6 +385,9 @@ struct mmap_entry* create_mmap_entry() {
 6. enroll SPTE addr + i*PGSIZE
 7. set mmap_id as (cur->last_mmap)+1
 8. return mmap_id
+
+@ where to use file_reopen?
+@ finish munmap
 */
 int mmap(int fd, void* addr) {
     if (fd == 0 || fd == 1) return -1;
