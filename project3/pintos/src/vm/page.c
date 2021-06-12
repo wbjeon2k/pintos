@@ -199,14 +199,12 @@ bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir) {
 		return false; // no spte in spt table
 	}
 
-	//4
-	void* get_frame = frame_alloc(PAL_USER | PAL_ZERO);
-	if (get_frame == NULL) { return false; }
-	//get frame / evict fail
+	
 
 	bool load_check = false;
 
 	if (spte->isValid == true) {
+		/*
 		if (pagedir_set_page(pagedir, spte->VA, get_frame, spte->writable) == false) {
 			frame_free(get_frame);
 			return false;
@@ -215,9 +213,15 @@ bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir) {
 		//8. set SPTE valid --> make it on frame
 		spte->isValid = true;
 		spte->PA = get_frame;
+		*/
 
 		return true;
 	}
+
+	//4
+	void* get_frame = frame_alloc(PAL_USER | PAL_ZERO);
+	if (get_frame == NULL) { return false; }
+	//get frame / evict fail
 
 	//5-1
 	//off_t file_read(struct file* file, void* buffer, off_t size)
