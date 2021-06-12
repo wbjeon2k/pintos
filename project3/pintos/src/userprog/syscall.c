@@ -622,9 +622,9 @@ void exit(int exitcode) {
 #ifdef VM
     cur = thread_current();
 
-    while (list_empty(&(cur->child_list)) == false) {
+    while (list_empty(&(cur->mmap_list)) == false) {
         struct list_elem* e;
-        e = list_begin(&(cur->child_list));
+        e = list_begin(&(cur->mmap_list));
         struct mmap_entry* f = list_entry(e, struct mmap_entry, mmap_list_elem);
         munmap(f->mmap_id);
     }
