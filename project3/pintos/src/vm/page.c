@@ -226,7 +226,8 @@ bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir) {
 		ASSERT(spte->zero_bytes != PGSIZE);
 		//load a page with file_sys read
 		void* buffer = get_frame;
-		off_t read_success = file_read(spte->file, buffer, spte->read_bytes);
+		//offset 때문에 read at 써야함
+		off_t read_success = file_read_at(spte->file, buffer, spte->read_bytes, spte->file_offset);
 
 		if (read_success != spte->read_bytes){
 			frame_free(get_frame);
