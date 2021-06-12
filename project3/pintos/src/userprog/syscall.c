@@ -438,7 +438,7 @@ int mmap(int fd, void* addr) {
         return -1;
     }
 
-    if (!enroll_spte_filesys(cur->sptht, fd_file, ofs, upage, PGSIZE, 0, true)) {
+    if (!enroll_spte_filesys(cur->sptht, fd_file, ofs, upage, last_page_size, PGSIZE - last_page_size, true)) {
         return -1;
     }
 
