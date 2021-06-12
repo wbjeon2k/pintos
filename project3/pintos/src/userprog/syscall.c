@@ -338,8 +338,10 @@ syscall_handler (struct intr_frame *f)
     SYS_MMAP,                   
     SYS_MUNMAP,
     */
+
+#ifdef VM
     if (syscall_nr == SYS_MMAP) {
-        int fd =  *esp_offset(f, 4);
+        int fd = *esp_offset(f, 4);
         void* addr = *esp_offset(f, 5);
         f->eax = mmap(fd, addr);
     }
@@ -348,7 +350,11 @@ syscall_handler (struct intr_frame *f)
         int mmap_id = *esp_offset(f, 1);
         munmap(mmap_id);
     }
+#endif // VM
+    
 }
+
+#ifdef VM
 
 struct mmap_entry {
     int mmap_id;
@@ -435,11 +441,37 @@ int mmap(int fd, void* addr) {
     mentry = create_mmap_entry();
     if (mentry == NULL) return -1;
 
+    mentry->file = file;
+    mentry->base_addr = addr;
+    mentry->file_size = file_size;
+    ++cur->last_mmap;
+    mentry->mmap_id = cur->last_mmap;
+
+    //void list_push_back (struct list *, struct list_elem *);
+    list_push_back(&(cur->mmap_list), &(mentry->mmap_list_elem));
+
+    return mentry->mmap_id;
 }
 
 void munmap(int mmap_id) {
-
+    struct thread* cur = thread_current();
+    struct list_elem* e;
+    for (e = list_begin(&(cur->mmap_list)); e != list_end(&(cur->mmap_list));
+        e = list_next(e))
+    {
+        struct mmap_entry* f = list_entry(e, struct mmap_entry, mmap_list_elem);
+        if (f->mmap_id == mmap_id) {
+            void* upage = f->base_addr;
+            int i = 0;
+            int s = (f->file_size / PGSIZE) + ((f->file_size % PGSIZE) == 0 ? 0 : 1);
+            for (i = 0; i < s; ++i) {
+                delete_SPTE(cur->sptht, find_SPTE(cur->sptht, upage + i * PGSIZE));
+            }
+        }
+    }
 }
+
+#endif
 
 void halt(void) {
     //in src/devices/shutdown
