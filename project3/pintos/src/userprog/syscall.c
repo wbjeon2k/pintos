@@ -96,12 +96,14 @@ inline bool check_esp(void* ptr) {
 }
 
 inline bool check_VA(void* ptr) {
-
+    /*
     struct thread* cur = thread_current();
     void* ptr_page = (void*)pg_round_down(ptr);
     struct SPTE* tmp = find_SPTE(cur->sptht, ptr_page);
     if (tmp == NULL) return false;
 
+    return true;
+    */
     return true;
 }
 
