@@ -395,14 +395,22 @@ int mmap(int fd, void* addr) {
     if (addr == 0 || addr == NULL) return -1;
     if (addr != pg_round_down(addr)) return -1;
 
+    lock_acquire(&file_lock);
+
     struct thread* cur = thread_current();
     //use reopen here as manual file_reopen (struct file *file) 
     struct file* fd_file = cur->fd_table[fd];
-    if (fd_file == NULL) return -1;
+    if (fd_file == NULL) {
+        lock_release(&file_lock);
+        return -1;
+    }
     fd_file = file_reopen(cur->fd_table[fd]);
 
     int file_size = file_length(fd_file);
-    if (file_size == 0) return -1;
+    if (file_size == 0) {
+        lock_release(&file_lock);
+        return -1;
+    }
 
     int full_page_cnt, last_page_size;
     full_page_cnt = file_size / PGSIZE;
@@ -411,7 +419,10 @@ int mmap(int fd, void* addr) {
     // check overlap
     int i = 0;
     for (i = 0; i <= full_page_cnt; ++i) {
-        if (find_SPTE(cur->sptht, addr + i*PGSIZE) != NULL) return -1;
+        if (find_SPTE(cur->sptht, addr + i * PGSIZE) != NULL) {
+            lock_release(&file_lock);
+            return -1;
+        }
     }
 
     //enroll spte
@@ -435,17 +446,22 @@ int mmap(int fd, void* addr) {
         for (i = 0; i < last_enroll; ++i) {
             delete_SPTE(cur->sptht, find_SPTE(cur->sptht, addr + i * PGSIZE));
         }
+        lock_release(&file_lock);
         return -1;
     }
 
     if (!enroll_spte_filesys(cur->sptht, fd_file, ofs, upage, last_page_size, PGSIZE - last_page_size, true)) {
+        lock_release(&file_lock);
         return -1;
     }
 
     //make mmap entry
     struct mmap_entry* mentry = NULL;
     mentry = create_mmap_entry();
-    if (mentry == NULL) return -1;
+    if (mentry == NULL) {
+        lock_release(&file_lock);
+        return -1;
+    }
 
     mentry->file = fd_file;
     mentry->base_addr = addr;
@@ -456,7 +472,7 @@ int mmap(int fd, void* addr) {
 
     //void list_push_back (struct list *, struct list_elem *);
     list_push_back(&(cur->mmap_list), &(mentry->mmap_list_elem));
-
+    lock_release(&file_lock);
     return mentry->mmap_id;
 }
 
@@ -473,14 +489,19 @@ void munmap(int mmap_id) {
             int s = (f->file_size / PGSIZE) + ((f->file_size % PGSIZE) == 0 ? 0 : 1);
             struct file* mapped_file = f->file;
             for (i = 0; i < s; ++i) {
+                
                 struct SPTE* tmp_spte;
                 void* ith_page = upage + i * PGSIZE;
                 tmp_spte = find_SPTE(cur->sptht, ith_page);
 
                 //bool pagedir_is_dirty(uint32_t * pd, const void* vpage)
                 if (tmp_spte->isValid && pagedir_is_dirty(cur->pagedir, ith_page)) {
+                    lock_acquire(&file_lock);
+
                     if (i != s - 1) file_write_at(mapped_file, ith_page, PGSIZE, i * PGSIZE);
                     else file_write_at(mapped_file, ith_page, f->last_size, i * PGSIZE);
+
+                    lock_release(&file_lock);
                 }
 
                 delete_SPTE(cur->sptht, tmp_spte);
