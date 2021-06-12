@@ -162,6 +162,8 @@ struct thread
 
 #ifdef VM
     struct SPTHT* sptht;
+    int last_mmap;
+    struct list mmap_list;
 #endif
 
     void* kernel_esp;

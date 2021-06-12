@@ -521,6 +521,10 @@ init_thread (struct thread *t, const char *name, int priority)
   t->going_to_exit = false;
   //t->parent_thread = thread_current();
 
+#ifdef VM
+  t->last_mmap = 0;
+  list_init(&(t->mmap_list));
+#endif // VM
 
 
 }
