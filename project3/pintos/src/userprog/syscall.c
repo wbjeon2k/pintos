@@ -585,7 +585,7 @@ void halt(void) {
 
 void exit(int exitcode) {
     //printf("exit called\n");
-    
+
     //print_cur_thread();
 
     struct thread* cur;
@@ -599,7 +599,7 @@ void exit(int exitcode) {
     //exit test
     //printf("cur exit code %d\n", cur->exit_code);
     //printf("checkpoint 0");
-    
+
     /*
     이걸 process exit 에서 한다면?
     if (list_empty(&(cur->child_list)) == false) {
@@ -612,12 +612,25 @@ void exit(int exitcode) {
         }
     }
     */
-  
+
     //여기서 중복해서 지우는게 문제였다.
     //close all opening files before exit
-    
+
     //munmap at exit? here?
     //munmap();
+
+#ifdef VM
+    cur = thread_current();
+
+    while (list_empty(&(cur->child_list)) == false) {
+        struct list_elem* e;
+        e = list_begin(&(cur->child_list));
+        struct mmap_entry* f = list_entry(e, struct mmap_entry, mmap_list_elem);
+        munmap(f->mmap_id);
+    }
+
+#endif // VM
+
 
     thread_exit();
 }
