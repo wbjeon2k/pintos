@@ -401,17 +401,40 @@ int mmap(int fd, void* addr) {
         if (find_SPTE(cur->sptht, addr + i*PGSIZE) != NULL) return -1;
     }
 
+    //enroll spte
+    int i = 0;
+    int ofs = 0;
+    int last_enroll = 0;
+    void* upage = addr;
+    bool enroll_chk = true;
+    //bool enroll_spte_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint8_t* upage, uint32_t read_bytes, uint32_t zero_bytes, bool writable) {
+    for (i = 0; i < full_page_cnt; ++i) {
+        if (!enroll_spte_filesys(cur->sptht, fd_file, ofs, upage, PGSIZE, 0, true)) {
+            last_enroll = i;
+            enroll_chk = false;
+            break;
+        }
+
+        ofs += PGSIZE;
+        upage += PGSIZE;
+    }
+
+    if (!enroll_chk) {
+        for (i = 0; i < last_enroll; ++i) {
+            delete_SPTE(cur->sptht, find_SPTE(cur->sptht, addr + i * PGSIZE));
+        }
+        return -1;
+    }
+
+    if (!enroll_spte_filesys(cur->sptht, fd_file, ofs, upage, PGSIZE, 0, true)) {
+        return -1;
+    }
+
+    //make mmap entry
     struct mmap_entry* mentry = NULL;
     mentry = create_mmap_entry();
     if (mentry == NULL) return -1;
 
-    //enroll spte
-    int i = 0;
-    int ofs = 0;
-    void* upage = addr;
-    for (i = 0; i < full_page_cnt; ++i) {
-        enroll_spte_filesys(cur->sptht, fd_file, ofs, upage, PGSIZE, 0, true);
-    }
 }
 
 void munmap(int mmap_id) {
