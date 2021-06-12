@@ -46,6 +46,8 @@ struct SPTE {
     struct hash_elem spte_hash_elem;
     bool isValid; // valid == on frame, invalid == not on frame.
 
+    bool dirty_check; //have to save dirty state when swap out or write back
+
     enum spte_flags spte_flags;
 
     /* for filesys */

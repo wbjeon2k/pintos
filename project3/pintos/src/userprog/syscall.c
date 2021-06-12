@@ -364,6 +364,7 @@ struct mmap_entry {
     struct file* file;
     void* base_addr;
     int file_size;
+    int last_size;
 };
 
 struct mmap_entry* create_mmap_entry() {
@@ -395,8 +396,10 @@ int mmap(int fd, void* addr) {
     if (addr != pg_round_down(addr)) return -1;
 
     struct thread* cur = thread_current();
+    //use reopen here as manual file_reopen (struct file *file) 
     struct file* fd_file = cur->fd_table[fd];
     if (fd_file == NULL) return -1;
+    fd_file = file_reopen(cur->fd_table[fd]);
 
     int file_size = file_length(fd_file);
     if (file_size == 0) return -1;
@@ -449,6 +452,7 @@ int mmap(int fd, void* addr) {
     mentry->file_size = file_size;
     ++cur->last_mmap;
     mentry->mmap_id = cur->last_mmap;
+    mentry->last_size = last_page_size;
 
     //void list_push_back (struct list *, struct list_elem *);
     list_push_back(&(cur->mmap_list), &(mentry->mmap_list_elem));
@@ -467,9 +471,24 @@ void munmap(int mmap_id) {
             void* upage = f->base_addr;
             int i = 0;
             int s = (f->file_size / PGSIZE) + ((f->file_size % PGSIZE) == 0 ? 0 : 1);
+            struct file* mapped_file = f->file;
             for (i = 0; i < s; ++i) {
-                delete_SPTE(cur->sptht, find_SPTE(cur->sptht, upage + i * PGSIZE));
+                struct SPTE* tmp_spte;
+                void* ith_page = upage + i * PGSIZE;
+                tmp_spte = find_SPTE(cur->sptht, ith_page);
+
+                //bool pagedir_is_dirty(uint32_t * pd, const void* vpage)
+                if (tmp_spte->isValid && pagedir_is_dirty(cur->pagedir, ith_page)) {
+                    if (i != s - 1) file_write_at(mapped_file, ith_page, PGSIZE, i * PGSIZE);
+                    else file_write_at(mapped_file, ith_page, f->last_size, i * PGSIZE);
+                }
+
+                delete_SPTE(cur->sptht, tmp_spte);
             }
+
+            list_remove(f->mmap_list_elem);
+            file_close(f->file);
+            free(f);
         }
     }
 }
@@ -514,6 +533,8 @@ void exit(int exitcode) {
     //여기서 중복해서 지우는게 문제였다.
     //close all opening files before exit
     
+    //munmap at exit? here?
+    //munmap();
 
     thread_exit();
 }
