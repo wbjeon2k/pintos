@@ -540,7 +540,7 @@ void munmap(int mmap_id) {
             }
 
             */
-
+            struct file* mapped_file = f->file;
             int read_bytes = f->file_size;
             int zero_bytes = 0;
             int ofs = 0;
