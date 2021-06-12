@@ -486,7 +486,7 @@ void munmap(int mmap_id) {
                 delete_SPTE(cur->sptht, tmp_spte);
             }
 
-            list_remove(f->mmap_list_elem);
+            list_remove(&(f->mmap_list_elem));
             file_close(f->file);
             free(f);
         }
