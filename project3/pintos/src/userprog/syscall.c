@@ -433,6 +433,7 @@ int mmap(int fd, void* addr) {
     void* upage = addr;
     bool enroll_chk = true;
     //bool enroll_spte_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint8_t* upage, uint32_t read_bytes, uint32_t zero_bytes, bool writable) {
+    /*
     for (i = 0; i < full_page_cnt; ++i) {
         if (!enroll_spte_filesys(cur->sptht, fd_file, ofs, upage, PGSIZE, 0, true)) {
             last_enroll = i;
@@ -456,6 +457,32 @@ int mmap(int fd, void* addr) {
         lock_release(&file_lock);
         return -1;
     }
+    */
+
+    int read_bytes = file_size;
+    int zero_bytes = 0;
+    while (read_bytes > 0 || zero_bytes > 0) {
+        size_t page_read_bytes = read_bytes < PGSIZE ? read_bytes : PGSIZE;
+        size_t page_zero_bytes = PGSIZE - page_read_bytes;
+
+        if (!enroll_spte_filesys(cur->sptht, fd_file, ofs, upage, page_read_bytes, page_zero_bytes, true)) {
+            enroll_chk = false;
+            break;
+        }
+        ++last_enroll;
+        read_bytes -= page_read_bytes;
+        zero_bytes -= page_zero_bytes;
+        ofs += PGSIZE;
+        upage += PGSIZE;
+    }
+
+    if (!enroll_chk) {
+        for (i = 0; i < last_enroll; ++i) {
+            delete_SPTE(cur->sptht, find_SPTE(cur->sptht, addr + i * PGSIZE));
+        }
+        lock_release(&file_lock);
+        return -1;
+    }
 
     //make mmap entry
     struct mmap_entry* mentry = NULL;
@@ -468,8 +495,10 @@ int mmap(int fd, void* addr) {
     mentry->file = fd_file;
     mentry->base_addr = addr;
     mentry->file_size = file_size;
+
     ++cur->last_mmap;
     mentry->mmap_id = cur->last_mmap;
+
     mentry->last_size = last_page_size;
 
     //void list_push_back (struct list *, struct list_elem *);
