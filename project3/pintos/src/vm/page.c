@@ -201,6 +201,8 @@ bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir) {
 		return false; // no spte in spt table
 	}
 
+	
+
 	bool load_check = false;
 
 	if (spte->isValid == true) {
@@ -231,8 +233,7 @@ bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir) {
 		//load a page with file_sys read
 		void* buffer = get_frame;
 		//offset 때문에 read at 써야함
-		struct file* tmp_file = file_reopen(spte->file);
-		off_t read_success = file_read_at(tmp_file, buffer, spte->read_bytes, spte->file_offset);
+		off_t read_success = file_read_at(spte->file, buffer, spte->read_bytes, spte->file_offset);
 
 		if (read_success != spte->read_bytes){
 			frame_free(get_frame);
@@ -243,8 +244,6 @@ bool load_on_pagefault(struct SPTHT* sptht, void* VA, uint32_t* pagedir) {
 			frame_free(get_frame);
 			return false;
 		}
-
-		file_close(tmp_file);
 
 		//8. set SPTE valid --> make it on frame
 		spte->isValid = true;
