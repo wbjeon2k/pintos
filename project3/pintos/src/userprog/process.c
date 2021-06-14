@@ -864,11 +864,11 @@ install_page (void *upage, void *kpage, bool writable)
 
   if (pte_set) {
 #ifdef VM
-      
+      /*
       bool spte_set;
       spte_set = enroll_spte_va(t->sptht, upage, kpage, writable);
       pte_set = (pte_set && spte_set);
-      
+      */
       
 #endif
       return pte_set;

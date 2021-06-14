@@ -433,7 +433,6 @@ int mmap(int fd, void* addr) {
     void* upage = addr;
     bool enroll_chk = true;
     //bool enroll_spte_filesys(struct SPTHT* sptht, struct file* file, off_t ofs, uint8_t* upage, uint32_t read_bytes, uint32_t zero_bytes, bool writable) {
-    /*
     for (i = 0; i < full_page_cnt; ++i) {
         if (!enroll_spte_filesys(cur->sptht, fd_file, ofs, upage, PGSIZE, 0, true)) {
             last_enroll = i;
@@ -457,32 +456,6 @@ int mmap(int fd, void* addr) {
         lock_release(&file_lock);
         return -1;
     }
-    */
-
-    int read_bytes = file_size;
-    int zero_bytes = 0;
-    while (read_bytes > 0 || zero_bytes > 0) {
-        size_t page_read_bytes = read_bytes < PGSIZE ? read_bytes : PGSIZE;
-        size_t page_zero_bytes = PGSIZE - page_read_bytes;
-
-        if (!enroll_spte_filesys(cur->sptht, fd_file, ofs, upage, page_read_bytes, page_zero_bytes, true)) {
-            enroll_chk = false;
-            break;
-        }
-        ++last_enroll;
-        read_bytes -= page_read_bytes;
-        zero_bytes -= page_zero_bytes;
-        ofs += PGSIZE;
-        upage += PGSIZE;
-    }
-
-    if (!enroll_chk) {
-        for (i = 0; i < last_enroll; ++i) {
-            delete_SPTE(cur->sptht, find_SPTE(cur->sptht, addr + i * PGSIZE));
-        }
-        lock_release(&file_lock);
-        return -1;
-    }
 
     //make mmap entry
     struct mmap_entry* mentry = NULL;
@@ -495,10 +468,8 @@ int mmap(int fd, void* addr) {
     mentry->file = fd_file;
     mentry->base_addr = addr;
     mentry->file_size = file_size;
-
     ++cur->last_mmap;
     mentry->mmap_id = cur->last_mmap;
-
     mentry->last_size = last_page_size;
 
     //void list_push_back (struct list *, struct list_elem *);
@@ -517,7 +488,6 @@ void munmap(int mmap_id) {
         if (f->mmap_id == mmap_id) {
             void* upage = f->base_addr;
             int i = 0;
-            /*
             int s = (f->file_size / PGSIZE) + ((f->file_size % PGSIZE) == 0 ? 0 : 1);
             struct file* mapped_file = f->file;
             for (i = 0; i < s; ++i) {
@@ -539,36 +509,6 @@ void munmap(int mmap_id) {
                 delete_SPTE(cur->sptht, tmp_spte);
             }
 
-            */
-            struct file* mapped_file = f->file;
-            int read_bytes = f->file_size;
-            int zero_bytes = 0;
-            int ofs = 0;
-            while (read_bytes > 0 || zero_bytes > 0) {
-                size_t page_read_bytes = read_bytes < PGSIZE ? read_bytes : PGSIZE;
-                size_t page_zero_bytes = PGSIZE - page_read_bytes;
-
-                struct SPTE* tmp_spte;
-                void* ith_page = upage + i * PGSIZE;
-                tmp_spte = find_SPTE(cur->sptht, ith_page);
-
-                if (pagedir_is_dirty(cur->pagedir, ith_page)) {
-                    lock_acquire(&file_lock);
-
-                    file_write_at(mapped_file, ith_page, page_read_bytes, ofs);
-
-                    lock_release(&file_lock);
-                }
-
-                delete_SPTE(cur->sptht, tmp_spte);
-
-
-                ++i;
-                read_bytes -= page_read_bytes;
-                zero_bytes -= page_zero_bytes;
-                ofs += PGSIZE;
-            }
-
             list_remove(&(f->mmap_list_elem));
             file_close(f->file);
             free(f);
@@ -585,7 +525,7 @@ void halt(void) {
 
 void exit(int exitcode) {
     //printf("exit called\n");
-
+    
     //print_cur_thread();
 
     struct thread* cur;
@@ -599,7 +539,7 @@ void exit(int exitcode) {
     //exit test
     //printf("cur exit code %d\n", cur->exit_code);
     //printf("checkpoint 0");
-
+    
     /*
     이걸 process exit 에서 한다면?
     if (list_empty(&(cur->child_list)) == false) {
@@ -612,25 +552,12 @@ void exit(int exitcode) {
         }
     }
     */
-
+  
     //여기서 중복해서 지우는게 문제였다.
     //close all opening files before exit
-
+    
     //munmap at exit? here?
     //munmap();
-
-#ifdef VM
-    cur = thread_current();
-
-    while (list_empty(&(cur->mmap_list)) == false) {
-        struct list_elem* e;
-        e = list_begin(&(cur->mmap_list));
-        struct mmap_entry* f = list_entry(e, struct mmap_entry, mmap_list_elem);
-        munmap(f->mmap_id);
-    }
-
-#endif // VM
-
 
     thread_exit();
 }
